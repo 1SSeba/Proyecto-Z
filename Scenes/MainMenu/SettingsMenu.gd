@@ -17,28 +17,28 @@ extends Control
 @onready var controls_menu: Control = $Controls
 
 # -----------------------
-#  AUDIO MENU ELEMENTS
+#  AUDIO MENU ELEMENTS (Optional - may not exist in scene)
 # -----------------------
-@onready var master_slider: HSlider = $Audio/AudioPanel/AudioOptions/MasterBox/MasterSlider
-@onready var master_label: Label = $Audio/AudioPanel/AudioOptions/MasterBox/MasterLabel
-@onready var music_slider: HSlider = $Audio/AudioPanel/AudioOptions/MusicBox/MusicSlider
-@onready var music_label: Label = $Audio/AudioPanel/AudioOptions/MusicBox/MusicLabel
-@onready var sfx_slider: HSlider = $Audio/AudioPanel/AudioOptions/EffectsBox/EffectsSlider
-@onready var sfx_label: Label = $Audio/AudioPanel/AudioOptions/EffectsBox/EffectsLabel
-@onready var back_audiomenu: Button = $Audio/AudioPanel/AudioOptions/Back
+@onready var master_slider: HSlider = get_node_or_null("Audio/AudioPanel/AudioOptions/MasterBox/MasterSlider")
+@onready var master_label: Label = get_node_or_null("Audio/AudioPanel/AudioOptions/MasterBox/MasterLabel")
+@onready var music_slider: HSlider = get_node_or_null("Audio/AudioPanel/AudioOptions/MusicBox/MusicSlider")
+@onready var music_label: Label = get_node_or_null("Audio/AudioPanel/AudioOptions/MusicBox/MusicLabel")
+@onready var sfx_slider: HSlider = get_node_or_null("Audio/AudioPanel/AudioOptions/EffectsBox/EffectsSlider")
+@onready var sfx_label: Label = get_node_or_null("Audio/AudioPanel/AudioOptions/EffectsBox/EffectsLabel")
+@onready var back_audiomenu: Button = get_node_or_null("Audio/AudioPanel/AudioOptions/Back")
 
 # -----------------------
-#  VIDEO MENU ELEMENTS
+#  VIDEO MENU ELEMENTS (Optional - may not exist in scene)
 # -----------------------
-@onready var screen_mode_btn: OptionButton = $Video/VideoPanel/VideoOptions/ScreenModeBox/ScreenModeBtn
-@onready var resolution_btn: OptionButton = $Video/VideoPanel/VideoOptions/ResolutionBox/ResolutionBtn
-@onready var vsync_checkbtn: CheckButton = $Video/VideoPanel/VideoOptions/VSyncBox/VSyncBtn
-@onready var apply_btn: Button = $Video/VideoPanel/VideoOptions/SaveBox/Apply
-@onready var reset_btn: Button = $Video/VideoPanel/VideoOptions/SaveBox/Reset
-@onready var back_videomenu: Button = $Video/VideoPanel/VideoOptions/Back
+@onready var screen_mode_btn: OptionButton = get_node_or_null("Video/VideoPanel/VideoOptions/ScreenModeBox/ScreenModeBtn")
+@onready var resolution_btn: OptionButton = get_node_or_null("Video/VideoPanel/VideoOptions/ResolutionBox/ResolutionBtn")
+@onready var vsync_checkbtn: CheckButton = get_node_or_null("Video/VideoPanel/VideoOptions/VSyncBox/VSyncBtn")
+@onready var apply_btn: Button = get_node_or_null("Video/VideoPanel/VideoOptions/SaveBox/Apply")
+@onready var reset_btn: Button = get_node_or_null("Video/VideoPanel/VideoOptions/SaveBox/Reset")
+@onready var back_videomenu: Button = get_node_or_null("Video/VideoPanel/VideoOptions/Back")
 
 # Labels de estado (opcional - crear solo si existen en tu escena)
-@onready var status_label: Label = $Video/VideoPanel/VideoOptions/StatusLabel
+@onready var status_label: Label = get_node_or_null("Video/VideoPanel/VideoOptions/StatusLabel")
 
 # -----------------------
 #  VARIABLES TEMPORALES PARA VIDEO
@@ -331,6 +331,15 @@ func _update_apply_button_state():
 
 func _on_apply_video_settings():
 	print("========== APPLYING VIDEO SETTINGS ==========")
+	
+	# Verificar si estamos en editor
+	if OS.has_feature("editor"):
+		print("WARNING: Running in Godot editor")
+		print("Video settings (resolution/fullscreen) won't work in embedded window")
+		print("Export the game and run the executable to test video settings")
+		_update_status_label("⚠️ Editor mode: Export game to test video settings")
+		return
+	
 	print("Current settings:")
 	print("  Screen Mode: %d -> %d" % [saved_screen_mode, temp_screen_mode])
 	print("  Resolution: %d -> %d" % [saved_resolution, temp_resolution])
@@ -408,10 +417,14 @@ func _on_reset_video_settings():
 func _apply_screen_mode(mode: int):
 	print("Setting screen mode to: %d" % mode)
 	
-	# Verificar si estamos en el editor (embedded window)
-	if DisplayServer.get_name() == "headless" or OS.has_feature("editor"):
-		print("  -> Skipping: Running in editor/headless mode")
+	# Solo saltar si estamos en el editor Y es headless
+	if DisplayServer.get_name() == "headless":
+		print("  -> Skipping: Running in headless mode")
 		return
+	
+	# Advertir si estamos en editor pero continuar
+	if OS.has_feature("editor"):
+		print("  -> Warning: Running in editor - some features may not work properly")
 	
 	match mode:
 		0: # Windowed
@@ -433,22 +446,44 @@ func _apply_screen_mode(mode: int):
 	print("  -> Verification: Mode = %d, Borderless = %s" % [current_mode, is_borderless])
 
 func _apply_resolution(res_index: int):
+	print("=== APPLYING RESOLUTION ===")
+	print("Resolution index: %d" % res_index)
+	print("Available resolutions count: %d" % available_resolutions.size())
+	
 	if res_index >= 0 and res_index < available_resolutions.size():
 		var resolution = available_resolutions[res_index]
-		print("Setting resolution to: %dx%d" % [resolution.x, resolution.y])
+		print("Target resolution: %dx%d" % [resolution.x, resolution.y])
+		print("Current resolution: %s" % str(DisplayServer.window_get_size()))
 		
-		# Verificar si estamos en el editor
-		if DisplayServer.get_name() == "headless" or OS.has_feature("editor"):
-			print("  -> Skipping: Running in editor/headless mode")
+		# Solo saltar si estamos en headless
+		if DisplayServer.get_name() == "headless":
+			print("  -> Skipping: Running in headless mode")
 			return
 		
+		# Verificar si estamos en editor embebido
+		if OS.has_feature("editor"):
+			print("  -> WARNING: Running in embedded editor window")
+			print("  -> Resolution changes require running as exported game")
+			print("  -> Current size is controlled by editor viewport")
+			print("  -> To test: Export project and run the executable")
+			return
+		
+		# Intentar aplicar la resolución
+		print("  -> Applying resolution...")
 		DisplayServer.window_set_size(resolution)
 		
 		# Verificar que se aplicó
 		await get_tree().process_frame  # Esperar un frame
 		var current_size = DisplayServer.window_get_size()
-		print("  -> Applied resolution: %dx%d" % [resolution.x, resolution.y])
-		print("  -> Verification: Current size = %dx%d" % [current_size.x, current_size.y])
+		print("  -> Target: %dx%d" % [resolution.x, resolution.y])
+		print("  -> Actual: %dx%d" % [current_size.x, current_size.y])
+		
+		var success = (current_size.x == resolution.x and current_size.y == resolution.y)
+		print("  -> Resolution change successful: %s" % success)
+		
+		if not success:
+			print("  -> WARNING: Resolution change may not have been applied")
+			print("  -> This can happen in windowed mode or due to system constraints")
 	else:
 		print("ERROR: Invalid resolution index: %d" % res_index)
 
@@ -549,3 +584,26 @@ func debug_print_info():
 	print("DEBUG: Printing all info")
 	_print_current_settings()
 	_print_current_display_info()
+
+func debug_test_resolution_change():
+	print("DEBUG: Testing resolution change manually")
+	print("Current resolution: %s" % str(DisplayServer.window_get_size()))
+	
+	# Intentar cambiar a 1920x1080
+	var test_resolution = Vector2i(1920, 1080)
+	print("Trying to set resolution to: %s" % str(test_resolution))
+	
+	DisplayServer.window_set_size(test_resolution)
+	await get_tree().process_frame
+	
+	var new_size = DisplayServer.window_get_size()
+	print("New resolution: %s" % str(new_size))
+	print("Change successful: %s" % (new_size == test_resolution))
+
+func debug_force_resolution(width: int, height: int):
+	print("DEBUG: Force setting resolution to %dx%d" % [width, height])
+	var target_resolution = Vector2i(width, height)
+	DisplayServer.window_set_size(target_resolution)
+	await get_tree().process_frame
+	var actual_resolution = DisplayServer.window_get_size()
+	print("Target: %s, Actual: %s" % [str(target_resolution), str(actual_resolution)])
