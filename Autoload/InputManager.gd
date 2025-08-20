@@ -451,7 +451,7 @@ func reset_action_to_default(action: String) -> bool:
 	if not GAME_ACTIONS.has(action):
 		return false
 	
-	var default_action = GAME_ACTIONS[action]
+	var _default_action = GAME_ACTIONS[action]  # Referenced for potential future use
 	custom_action_map.erase(action)
 	
 	# Actualizar configuración
