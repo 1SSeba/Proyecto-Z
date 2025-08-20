@@ -97,7 +97,13 @@ func spawn_player(position: Vector2 = Vector2.ZERO) -> CharacterBody2D:
 	player.global_position = spawn_pos
 	
 	# Agregar al scene tree
-	get_tree().current_scene.add_child(player)
+	var current_scene = get_tree().current_scene
+	if not current_scene:
+		print("GameManager: ERROR - No current scene to add player")
+		player.queue_free()
+		return null
+	
+	current_scene.add_child(player)
 	
 	# Configurar salud
 	player_current_health = player_max_health

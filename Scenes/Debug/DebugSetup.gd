@@ -273,10 +273,13 @@ func is_debug_system_ready() -> bool:
 
 func get_debug_info() -> Dictionary:
 	"""Obtiene información del sistema de debug"""
+	var current_scene = get_tree().current_scene
+	var scene_name = current_scene.name if current_scene else "Unknown"
+	
 	return {
 		"debug_manager_ready": is_debug_system_ready(),
 		"console_exists": _find_debug_console() != null,
-		"scene_name": get_tree().current_scene.name if get_tree().current_scene else "Unknown",
+		"scene_name": scene_name,
 		"fps": Engine.get_frames_per_second(),
 		"resolution": str(get_viewport().size),
 		"auto_test_enabled": auto_test_enabled

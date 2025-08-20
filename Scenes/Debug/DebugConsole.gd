@@ -251,12 +251,16 @@ func execute_local_command(command: String) -> String:
 			return "No current scene"
 		
 		"player":
-			var player = get_tree().current_scene
+			var current_scene = get_tree().current_scene
+			if not current_scene:
+				return "No current scene available"
+				
+			var player = current_scene
 			if player and player.get_script() and player.get_script().resource_path.ends_with("Player.gd"):
 				return "Player found: " + str(player.global_position)
 			
 			# Buscar hijo Player
-			var found_player = get_tree().current_scene.find_child("Player", true, false)
+			var found_player = current_scene.find_child("Player", true, false)
 			if found_player:
 				return "Player child: " + str(found_player.global_position)
 			

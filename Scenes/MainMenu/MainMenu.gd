@@ -13,7 +13,7 @@ func _ready():
 
 func _on_start_pressed():
 	print("Start Game")
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	get_tree().change_scene_to_file("res://Scenes/Main.tscn")
 
 func _on_settings_pressed():
 	settings_menu.show()
