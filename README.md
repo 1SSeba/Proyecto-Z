@@ -2,6 +2,21 @@
 
 Un juego top-down desarrollado en Godot 4.4 con sistemas modulares y arquitectura escalable.
 
+## 🚀 Quick Start
+
+```bash
+# Run the game in editor
+./dev.sh run
+
+# Check for errors
+./dev.sh check
+
+# Export for testing (requires export templates)
+./dev.sh export
+```
+
+> **⚠️ Nota**: Las configuraciones de video no funcionan en el editor. Usa `./dev.sh export` para testearlas.
+
 ## 🎮 Descripción
 
 Este es un juego de vista cenital (top-down) con elementos de roguelike, featuring:

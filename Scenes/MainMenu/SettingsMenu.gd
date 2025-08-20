@@ -334,10 +334,8 @@ func _on_apply_video_settings():
 	
 	# Verificar si estamos en editor
 	if OS.has_feature("editor"):
-		print("WARNING: Running in Godot editor")
-		print("Video settings (resolution/fullscreen) won't work in embedded window")
-		print("Export the game and run the executable to test video settings")
-		_update_status_label("⚠️ Editor mode: Export game to test video settings")
+		print("INFO: Running in Godot editor - Limited video settings available")
+		_handle_editor_mode_settings()
 		return
 	
 	print("Current settings:")
@@ -539,6 +537,52 @@ func _apply_initial_audio_settings():
 # =======================
 func _is_config_manager_available() -> bool:
 	return get_node_or_null("/root/ConfigManager") != null
+
+# Función específica para manejar configuraciones en modo editor
+func _handle_editor_mode_settings():
+	# En modo editor, aplicamos solo las configuraciones que funcionan
+	_apply_vsync(temp_vsync)
+	
+	# Guardar configuraciones usando el ConfigManager
+	if _is_config_manager_available():
+		ConfigManager.set_setting("video", "screen_mode", temp_screen_mode)
+		ConfigManager.set_setting("video", "resolution", temp_resolution)
+		ConfigManager.set_setting("video", "vsync", temp_vsync)
+		ConfigManager.save()  # Usar save() en lugar de save_config()
+		
+		# Actualizar valores guardados
+		saved_screen_mode = temp_screen_mode
+		saved_resolution = temp_resolution
+		saved_vsync = temp_vsync
+	
+	# Notificar cambios a DevTools
+	if get_node_or_null("/root/DevTools"):
+		if temp_screen_mode != saved_screen_mode:
+			DevTools.notify_video_settings_changed("Screen Mode", saved_screen_mode, temp_screen_mode)
+		if temp_resolution != saved_resolution:
+			DevTools.notify_video_settings_changed("Resolution", saved_resolution, temp_resolution)
+	
+	# Crear un mensaje más informativo y útil
+	var dev_message = "🔧 DEVELOPMENT MODE ACTIVE\n"
+	dev_message += "✅ VSync: Applied successfully\n"
+	
+	if temp_screen_mode != saved_screen_mode:
+		dev_message += "⚠️ Screen Mode: Will apply on export\n"
+	
+	if temp_resolution != saved_resolution:
+		dev_message += "⚠️ Resolution: Will apply on export\n"
+	
+	dev_message += "\n💡 SHORTCUTS:\n"
+	dev_message += "  F6: Quick export to test settings\n"
+	dev_message += "  F7: Basic fullscreen toggle\n"
+	dev_message += "  Ctrl+Shift+P: Run Quick Export task"
+	
+	_update_status_label(dev_message)
+	print(dev_message)
+	
+	# Auto-ocultar el mensaje después de unos segundos
+	await get_tree().create_timer(6.0).timeout
+	_update_status_label("")
 
 func _update_status_label(text: String):
 	if status_label:

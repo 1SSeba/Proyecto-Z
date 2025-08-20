@@ -35,18 +35,24 @@ Thumbs.db
 *.swo
 *~
 
-# Build files
-build/
+# Build outputs
+builds/
 dist/
-release/
-builds/*.x86_64
-builds/*.exe
-builds/*.pck
-builds/*.dmg
-builds/*.app
-builds/*.deb
-builds/*.apk
-builds/*.ipa
+exports/
+
+# Pero mantener la estructura y el README
+!builds/README.md
+!builds/.gitkeep
+
+# Archivos temporales de desarrollo
+*.tmp
+temp_*
+test_*
+
+# Development builds (opcional - descomenta si quieres trackearlos)
+# !builds/debug/
+# builds/debug/*.log
+# builds/debug/logs/
 
 # Temporary files
 *.tmp
