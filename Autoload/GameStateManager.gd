@@ -472,7 +472,7 @@ func get_current_run_time() -> float:
 func get_run_time_formatted() -> String:
 	"""Tiempo con milisegundos: MM:SS.mmm"""
 	var total_seconds = get_current_run_time()
-	var minutes = int(total_seconds) / 60
+	var minutes = int(total_seconds) / 60.0
 	var seconds = int(total_seconds) % 60
 	var milliseconds = int((total_seconds - int(total_seconds)) * 1000)
 	return "%02d:%02d.%03d" % [minutes, seconds, milliseconds]
@@ -480,7 +480,7 @@ func get_run_time_formatted() -> String:
 func get_run_time_formatted_simple() -> String:
 	"""Tiempo simple: MM:SS"""
 	var total_seconds = get_current_run_time()
-	var minutes = int(total_seconds) / 60
+	var minutes = int(total_seconds) / 60.0
 	var seconds = int(total_seconds) % 60
 	return "%02d:%02d" % [minutes, seconds]
 
@@ -491,7 +491,7 @@ func get_best_time_formatted() -> String:
 	"""Mejor tiempo con milisegundos"""
 	if run_best_time == 0.0:
 		return "--:--.---"
-	var minutes = int(run_best_time) / 60
+	var minutes = int(run_best_time) / 60.0
 	var seconds = int(run_best_time) % 60
 	var milliseconds = int((run_best_time - int(run_best_time)) * 1000)
 	return "%02d:%02d.%03d" % [minutes, seconds, milliseconds]
@@ -500,7 +500,7 @@ func get_best_time_formatted_simple() -> String:
 	"""Mejor tiempo simple"""
 	if run_best_time == 0.0:
 		return "--:--"
-	var minutes = int(run_best_time) / 60
+	var minutes = int(run_best_time) / 60.0
 	var seconds = int(run_best_time) % 60
 	return "%02d:%02d" % [minutes, seconds]
 

@@ -370,11 +370,11 @@ func set_max_health(new_max_health: float):
 # =======================
 #  UTILIDADES
 # =======================
-func teleport_to(position: Vector2):
+func teleport_to(target_position: Vector2):
 	"""Teletransporta al jugador"""
-	global_position = position
+	global_position = target_position
 	velocity = Vector2.ZERO
-	_log_to_debug("Player teleported to %s" % str(position), "yellow")
+	_log_to_debug("Player teleported to %s" % str(target_position), "yellow")
 
 func reset_player():
 	"""Resetea el jugador a estado inicial"""

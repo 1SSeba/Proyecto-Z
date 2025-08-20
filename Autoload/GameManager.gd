@@ -220,8 +220,8 @@ func _generate_enemies_for_room(room_number: int) -> int:
 	"""Genera la cantidad de enemigos para una habitación"""
 	# Más enemigos en habitaciones posteriores
 	var base_enemies = 3
-	var extra_enemies = (room_number - 1) / 2
-	return base_enemies + extra_enemies
+	var extra_enemies = (room_number - 1) / 2.0
+	return base_enemies + int(extra_enemies)
 
 func defeat_enemy(enemy_name: String = ""):
 	"""Registra la derrota de un enemigo"""

@@ -235,7 +235,7 @@ func set_sfx_volume(volume: float):
 func _set_bus_volume(bus_name: String, volume: float):
 	var bus_index = AudioServer.get_bus_index(bus_name)
 	if bus_index != -1:
-		var db_value = linear_to_db(volume / 100.0) if volume > 0 else -80
+		var db_value = linear_to_db(volume / 100.0) if volume > 0.0 else -80.0
 		AudioServer.set_bus_volume_db(bus_index, db_value)
 	else:
 		print("AudioManager: ERROR - Bus '%s' not found" % bus_name)
@@ -545,7 +545,7 @@ func _on_game_state_changed(old_state, new_state):
 			# Sonido de game over
 			play_player_death()
 
-func _on_new_best_time(time: float):
+func _on_new_best_time(_time: float):
 	"""Reproduce sonido de nuevo record"""
 	play_new_record()
 

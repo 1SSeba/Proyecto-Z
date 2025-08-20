@@ -39,6 +39,14 @@ Thumbs.db
 build/
 dist/
 release/
+builds/*.x86_64
+builds/*.exe
+builds/*.pck
+builds/*.dmg
+builds/*.app
+builds/*.deb
+builds/*.apk
+builds/*.ipa
 
 # Temporary files
 *.tmp
