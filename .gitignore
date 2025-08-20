@@ -1,0 +1,58 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Export presets and binaries
+export_presets.cfg
+*.tmp
+*.exe
+*.pck
+*.zip
+*.dmg
+*.app
+*.deb
+*.apk
+*.ipa
+
+# Logs and debug files
+logs/
+*.log
+debug.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build files
+build/
+dist/
+release/
+
+# Temporary files
+*.tmp
+*~
+.#*
+
+# Backup files
+*.bak
+*.backup
+*_backup
+
+# Game specific ignores
+saves/
+user_data/
+
+# Addons that should not be tracked (uncomment if needed)
+# addons/

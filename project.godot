@@ -1,0 +1,38 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Topdown-game"
+run/main_scene="uid://db6rxffmwo8ot"
+config/features=PackedStringArray("4.4", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+ConfigManager="*res://Autoload/ConfigManager.gd"
+InputManager="*res://Autoload/InputManager.gd"
+GameStateManager="*res://Autoload/GameStateManager.gd"
+GameManager="*res://Autoload/GameManager.gd"
+AudioManager="*res://Autoload/AudioManager.gd"
+
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=540
+window/stretch/mode="canvas_items"
+
+[dotnet]
+
+project/assembly_name="New Game Project"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
