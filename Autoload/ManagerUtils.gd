@@ -108,7 +108,7 @@ static func wait_for_manager(manager_name: String, max_wait_time: float = 5.0) -
 	
 	while not manager.is_ready() and wait_time < max_wait_time:
 		await tree.process_frame
-		wait_time += tree.get_process_frame()
+		wait_time += 0.016  # Approximate frame time (60 FPS)
 	
 	return manager.is_ready()
 
@@ -165,10 +165,10 @@ static func get_system_info() -> Dictionary:
 static func _get_manager(manager_name: String) -> Node:
 	"""Obtiene referencia a un manager"""
 	var tree = Engine.get_main_loop() as SceneTree
-	if not tree:
+	if not tree or not tree.root:
 		return null
 	
-	return tree.get_node_or_null("/root/" + manager_name)
+	return tree.root.get_node_or_null("/root/" + manager_name)
 
 static func _get_viewport_size() -> Vector2:
 	"""Obtiene el tamaño del viewport"""
