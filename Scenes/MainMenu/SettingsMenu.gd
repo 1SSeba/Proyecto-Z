@@ -348,13 +348,28 @@ func _on_apply_video_settings():
 	# Solo aplicar si hay cambios reales
 	var changes_applied = false
 	
-	# Aplicar modo de pantalla
+	# ORDEN IMPORTANTE: Aplicar resolución ANTES del modo de pantalla
+	
+	# 1. Aplicar VSync primero (es independiente)
+	if temp_vsync != saved_vsync:
+		print("Applying VSync change...")
+		_apply_vsync(temp_vsync)
+		changes_applied = true
+		await get_tree().process_frame  # Esperar un frame
+	
+	# 2. Aplicar resolución
+	if temp_resolution != saved_resolution:
+		print("Applying resolution change...")
+		await _apply_resolution(temp_resolution)
+		changes_applied = true
+		await get_tree().process_frame  # Esperar un frame
+	
+	# 3. Aplicar modo de pantalla al final
 	if temp_screen_mode != saved_screen_mode:
 		print("Applying screen mode change...")
-		_apply_screen_mode(temp_screen_mode)
+		await _apply_screen_mode(temp_screen_mode)
 		changes_applied = true
-	
-	# Aplicar resolución
+		await get_tree().process_frame  # Esperar un frame
 	if temp_resolution != saved_resolution:
 		print("Applying resolution change...")
 		_apply_resolution(temp_resolution)
@@ -422,7 +437,12 @@ func _apply_screen_mode(mode: int):
 	
 	# Advertir si estamos en editor pero continuar
 	if OS.has_feature("editor"):
-		print("  -> Warning: Running in editor - some features may not work properly")
+		print("  -> Warning: Running in editor - limited functionality")
+		# En editor, algunas funciones no trabajarán completamente
+		# pero intentamos aplicar lo que podemos
+	
+	# Esperar un frame para asegurar que otros cambios se aplicaron
+	await get_tree().process_frame
 	
 	match mode:
 		0: # Windowed
@@ -458,20 +478,35 @@ func _apply_resolution(res_index: int):
 			print("  -> Skipping: Running in headless mode")
 			return
 		
-		# Verificar si estamos en editor embebido
+		# Si estamos en editor, advertir pero intentar aplicar
 		if OS.has_feature("editor"):
 			print("  -> WARNING: Running in embedded editor window")
-			print("  -> Resolution changes require running as exported game")
-			print("  -> Current size is controlled by editor viewport")
-			print("  -> To test: Export project and run the executable")
-			return
+			print("  -> May not work fully - export for complete testing")
 		
-		# Intentar aplicar la resolución
-		print("  -> Applying resolution...")
-		DisplayServer.window_set_size(resolution)
+		# Aplicar la resolución
+		var current_mode = DisplayServer.window_get_mode()
+		
+		# Si estamos en ventana, cambiar tamaño directamente
+		if current_mode == DisplayServer.WINDOW_MODE_WINDOWED:
+			DisplayServer.window_set_size(resolution)
+			# Centrar la ventana
+			var screen_size = DisplayServer.screen_get_size()
+			var window_pos = (screen_size - resolution) / 2
+			DisplayServer.window_set_position(window_pos)
+			print("  -> Applied windowed resolution: %dx%d" % [resolution.x, resolution.y])
+		else:
+			# Para fullscreen, primero cambiar a ventana, redimensionar, luego volver
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			await get_tree().process_frame
+			DisplayServer.window_set_size(resolution)
+			await get_tree().process_frame
+			DisplayServer.window_set_mode(current_mode)
+			print("  -> Applied fullscreen resolution: %dx%d" % [resolution.x, resolution.y])
 		
 		# Verificar que se aplicó
-		await get_tree().process_frame  # Esperar un frame
+		await get_tree().process_frame
+		var final_size = DisplayServer.window_get_size()
+		print("  -> Final size: %dx%d" % [final_size.x, final_size.y])
 		var current_size = DisplayServer.window_get_size()
 		print("  -> Target: %dx%d" % [resolution.x, resolution.y])
 		print("  -> Actual: %dx%d" % [current_size.x, current_size.y])

@@ -1,175 +1,135 @@
-# Topdown Game
+# Top-Down Game 🎮
 
-Un juego top-down desarrollado en Godot 4.4 con sistemas modulares y arquitectura escalable.
+Un juego top-down desarrollado en **Godot Engine 4.4** con una arquitectura modular y profesional.
 
-## 🚀 Quick Start
+[![Godot Engine](https://img.shields.io/badge/Godot-4.4-blue.svg)](https://godotengine.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Documentation](https://img.shields.io/badge/Docs-Complete-brightgreen.svg)](docs/)
 
-```bash
-# Run the game in editor
-./dev.sh run
+## 🚀 Inicio rápido
 
-# Check for errors
-./dev.sh check
-
-# Export for testing (requires export templates)
-./dev.sh export
-```
-
-> **⚠️ Nota**: Las configuraciones de video no funcionan en el editor. Usa `./dev.sh export` para testearlas.
-
-## 🎮 Descripción
-
-Este es un juego de vista cenital (top-down) con elementos de roguelike, featuring:
-
-- Sistema de jugador con movimiento fluido
-- Sistema de salud y combate
-- Sistema de habitaciones/salas
-- Interfaz de usuario completa con menús
-- Sistema de debug integrado
-- Arquitectura modular con Autoloads
-
-## 🚀 Características
-
-### Jugabilidad
-- Movimiento del jugador en 8 direcciones
-- Sistema de salud con invulnerabilidad temporal
-- Progresión por habitaciones
-- Interfaz de usuario responsive
-
-### Sistemas Técnicos
-- **GameManager**: Gestión del estado del juego
-- **InputManager**: Manejo centralizado de inputs
-- **AudioManager**: Gestión de audio
-- **ConfigManager**: Configuración del juego
-- **DebugManager**: Sistema de debug con consola
-
-### Interface
-- Menú principal completo
-- Menú de configuración con opciones de audio y video
-- Sistemas de navegación intuitivos
-
-## 🛠️ Requisitos
-
-- **Godot 4.4** o superior
-- Sistema operativo compatible con Godot (Windows, macOS, Linux)
-
-## 📁 Estructura del Proyecto
-
-```
-topdown-game/
-├── Assets/                 # Recursos del juego
-│   ├── Audio/             # Música y efectos de sonido
-│   ├── Characters/        # Sprites de personajes
-│   │   └── Player/        # Animaciones del jugador
-│   ├── Fonts/            # Fuentes tipográficas
-│   ├── Icons/            # Iconos de UI
-│   └── Ui/               # Elementos de interfaz
-├── Autoload/             # Scripts de gestión global
-│   ├── AudioManager.gd
-│   ├── ConfigManager.gd
-│   ├── DebugManager.gd
-│   ├── GameManager.gd
-│   ├── GameStateManager.gd
-│   ├── InputManager.gd
-│   └── ManagerUtils.gd
-├── Scenes/               # Escenas del juego
-│   ├── Characters/       # Personajes jugables
-│   ├── Debug/           # Herramientas de debug
-│   ├── MainMenu/        # Menús principales
-│   └── Room/            # Habitaciones del juego
-├── Scripts/             # Scripts auxiliares
-├── UI/                  # Elementos de interfaz
-└── Data/               # Datos del juego
-```
-
-## 🎯 Cómo Jugar
-
-1. **Ejecutar el juego**: Abre el proyecto en Godot y presiona F5
-2. **Navegación**: 
-   - WASD o flechas del teclado para moverse
-   - Espacio/Enter para interactuar
-3. **Debug**: 
-   - ` (tilde) para abrir la consola de debug
-   - F1 para información rápida
-   - F12 para toggle del modo debug
-
-## 🔧 Instalación y Desarrollo
-
-1. **Clonar el repositorio**:
+1. **Clona el repositorio**
    ```bash
-   git clone https://github.com/tu-usuario/topdown-game.git
+   git clone https://github.com/1SSeba/topdown-game.git
    cd topdown-game
    ```
 
-2. **Abrir en Godot**:
-   - Abre Godot Engine
-   - Importa el proyecto seleccionando el archivo `project.godot`
-   - Espera a que Godot importe todos los assets
+2. **Abre en Godot 4.4**
+   - Ejecuta Godot Engine 4.4
+   - Importa el proyecto usando `project.godot`
 
-3. **Ejecutar**:
-   - Presiona F5 o el botón "Play" en Godot
-   - Selecciona la escena principal si es solicitado
+3. **Ejecuta el juego**
+   - Presiona F5 o haz clic en "Play"
+   - La escena principal se cargará automáticamente
 
-## 🎨 Sistemas de Arte
+## 🎯 Características principales
 
-### Animaciones del Jugador
-- **Idle**: Estados de reposo en 4 direcciones
-- **Run**: Animaciones de movimiento en 4 direcciones  
-- **Attack1/Attack2**: Dos tipos de ataques en 4 direcciones
+- **🏗️ Arquitectura modular** con sistema de managers
+- **🔄 State Machine profesional** para gestión de estados
+- **🎵 Sistema de audio** completo (música y efectos)
+- **⚙️ Gestión de configuración** persistente
+- **🐛 Herramientas de debug** integradas
+- **📱 Sistema de input** flexible y configurable
 
-### Resoluciones Soportadas
-- 960x540 (base)
-- Escalado automático para diferentes resoluciones
-- Soporte para pantalla completa y ventana
+## 🎮 Controles
 
-## 🔊 Audio
+- **ESC**: Pausar/reanudar, volver en menús
+- **P**: Pausar/reanudar juego
+- **M** (en pausa): Volver al menú principal
+- **Enter**: Confirmar selecciones
+- **WASD/Flechas**: Movimiento del jugador
 
-El juego incluye sistemas para:
-- Música de fondo
-- Efectos de sonido
-- Control de volumen por categorías (Master, Music, SFX)
+## 📁 Estructura del proyecto
 
-## 🐛 Debug y Desarrollo
+```
+topdown-game/
+├── docs/              # 📚 Documentación completa
+├── Assets/            # 🎨 Recursos (sprites, audio, UI)
+├── Autoload/          # 🔄 Sistemas globales (managers)
+├── Core/              # 🏗️ Arquitectura central
+│   ├── StateMachine/  # Sistema de estados
+│   └── Events/        # Sistema de eventos
+├── Scenes/            # 🎭 Escenas del juego
+├── Scripts/           # 📜 Scripts auxiliares
+└── UI/                # 🖥️ Interfaces de usuario
+```
 
-### Consola de Debug
-- Acceso con tecla ` (tilde)
-- Comandos disponibles para testing
-- Información en tiempo real del estado del juego
+## 📚 Documentación
 
-### Shortcuts de Debug
-- `F1`: Estado rápido
-- `F11`: Test rápido
-- `F12`: Toggle modo debug
+Toda la documentación está en la carpeta [`docs/`](docs/):
 
-## 🤝 Contribuir
+- 📋 [Índice de documentación](docs/README.md)
+- 🏗️ [Estructura del proyecto](docs/PROJECT_STRUCTURE.md)
+- 📊 [Estado del proyecto](docs/PROJECT_STATUS.md)
+- 🔄 [Guía del State Machine](docs/STATEMACHINE_USAGE.md)
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+## 🛠️ Tecnologías utilizadas
 
-## 📝 Licencia
+- **Motor**: Godot Engine 4.4
+- **Lenguaje**: GDScript
+- **Arquitectura**: Modular con Autoload managers
+- **Patrones**: State Machine, Event Bus, Singleton
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+## 🎮 Estados del juego
 
-## 🎮 Estado del Desarrollo
+El juego utiliza un sistema de state machine con los siguientes estados:
 
-- [x] Sistema básico de jugador
-- [x] Managers fundamentales
-- [x] Interfaz de usuario
-- [x] Sistema de debug
-- [ ] Sistema de combate completo
-- [ ] Enemigos y AI
-- [ ] Sistema de inventario
-- [ ] Generación procedural de niveles
-- [ ] Sistema de save/load
+- **🔄 LoadingState**: Carga inicial del juego
+- **🏠 MainMenuState**: Menú principal y navegación
+- **🎯 GameplayState**: Juego activo
+- **⏸️ PausedState**: Juego pausado
+- **⚙️ SettingsState**: Configuración del juego
 
-## 🔗 Enlaces
+## 🔧 Desarrollo
 
-- [Godot Engine](https://godotengine.org/)
-- [Documentación de Godot](https://docs.godotengine.org/)
+### Requisitos
+- Godot Engine 4.4 o superior
+- Conocimientos básicos de GDScript
+
+### Arquitectura
+El proyecto usa una arquitectura modular con:
+- **Managers (Autoload)**: Sistemas globales
+- **State Machine**: Control de flujo del juego
+- **EventBus**: Comunicación entre componentes
+
+### Extender el juego
+1. **Nuevos estados**: Crea archivos en `Core/StateMachine/States/`
+2. **Nuevos managers**: Añade a `Autoload/` y registra en project.godot
+3. **Nuevas escenas**: Organiza en `Scenes/` por categoría
+
+## 📈 Estado del proyecto
+
+✅ **Sistema base completado**
+- State Machine funcional
+- Managers modulares operativos
+- Documentación completa
+- Sin errores de compilación
+
+🔄 **En desarrollo**
+- Mecánicas específicas del jugador
+- Contenido de juego (niveles, enemigos)
+- Assets definitivos
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. **Fork** el proyecto
+2. **Crea una rama** para tu feature (`git checkout -b feature/AmazingFeature`)
+3. **Commit** tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** a la rama (`git push origin feature/AmazingFeature`)
+5. **Abre un Pull Request**
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## 👤 Autor
+
+**1SSeba** - [GitHub](https://github.com/1SSeba)
 
 ---
 
-**Nota**: Este proyecto está en desarrollo activo. Algunas características pueden estar incompletas o sujetas a cambios.
+⭐ **¡Dale una estrella al proyecto si te parece útil!**
+
+*Última actualización: Agosto 2025*
