@@ -227,7 +227,7 @@ func cmd_status() -> String:
 	]
 	
 	for manager_info in managers:
-		var name = manager_info[0]
+		var manager_name = manager_info[0]
 		var path = manager_info[1]
 		var manager = get_node_or_null(path)
 		var status = "NOT FOUND"
@@ -235,7 +235,7 @@ func cmd_status() -> String:
 		if manager:
 			status = "READY" if (manager.has_method("is_ready") and manager.is_ready()) else "FOUND"
 		
-		status_lines.append("%s: %s" % [name, status])
+		status_lines.append("%s: %s" % [manager_name, status])
 	
 	var player = _get_player()
 	status_lines.append("Player: %s" % ("FOUND" if player else "NOT FOUND"))
@@ -266,17 +266,17 @@ func cmd_managers() -> String:
 	]
 	
 	for manager_info in manager_list:
-		var name = manager_info[0]
+		var manager_name = manager_info[0]
 		var path = manager_info[1]
 		var manager = get_node_or_null(path)
 		
 		var status_line = ""
 		if manager:
-			status_line = "%s: FOUND" % name
+			status_line = "%s: FOUND" % manager_name
 			if manager.has_method("is_ready"):
 				status_line += " (Ready: %s)" % manager.is_ready()
 		else:
-			status_line = "%s: NOT FOUND" % name
+			status_line = "%s: NOT FOUND" % manager_name
 		
 		print(status_line)
 		var color = "green" if manager else "red"

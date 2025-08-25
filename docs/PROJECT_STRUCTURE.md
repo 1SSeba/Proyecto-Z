@@ -36,11 +36,11 @@ topdown-game/
 │   ├── InputManager.gd            # Manejo de input
 │   └── ManagerUtils.gd            # Utilidades para managers
 │
-├── Core/                          # 🏗️ Sistemas centrales
-│   ├── StateMachine/              # Sistema de máquina de estados
+├── Core/                          # 🏗️ Sistema central modular
+│   ├── StateMachine/              # State Machine principal (ÚNICO)
 │   │   ├── StateMachine.gd        # Motor principal
-│   │   ├── State.gd               # Clase base de estados
-│   │   └── States/                # Estados específicos
+│   │   ├── State.gd               # clase base para estados
+│   │   └── States/                # Estados específicos del juego
 │   │       ├── MainMenuState.gd   # Estado del menú principal
 │   │       ├── GameplayState.gd   # Estado de juego
 │   │       ├── PausedState.gd     # Estado de pausa
@@ -49,25 +49,34 @@ topdown-game/
 │   └── Events/
 │       └── EventBus.gd            # Sistema de eventos global
 │
-├── Scenes/                        # 🎭 Escenas del juego
-│   ├── Main.tscn                  # Escena principal
+├── Scenes/                        # � Escenas del juego
+│   ├── Main.tscn                  # Escena principal del juego
 │   ├── Characters/
-│   │   └── Player/                # Escenas del jugador
-│   │       ├── Player.gd          # Lógica del jugador
+│   │   └── Player/                # Jugador y sus scripts
+│   │       ├── Player.gd          # Script del jugador
 │   │       └── Player.tscn        # Escena del jugador
-│   ├── Debug/                     # Herramientas de debug
-│   │   ├── DebugConsole.gd        # Consola de debug
-│   │   ├── DebugConsole.tscn      # UI de la consola
-│   │   └── DebugSetup.gd          # Configuración de debug
-│   ├── MainMenu/                  # Menú principal
-│   │   ├── MainMenu.gd            # Lógica del menú
-│   │   ├── MainMenu.tscn          # UI del menú
-│   │   └── SettingsMenu.gd        # Menú de configuración
+│   ├── Debug/
+│   │   ├── DebugConsole.gd        # Consola de debug interactiva
+│   │   ├── DebugConsole.tscn      # Escena de la consola
+│   │   ├── DebugSetup.gd          # Configuración del sistema de debug
+│   │   └── DebugSetup.tscn        # Escena de configuración debug
+│   ├── Menus/                     # Sistema de menús reorganizado
+│   │   ├── MainMenu.gd            # Script del menú principal
+│   │   ├── MainMenu.tscn          # Escena del menú principal (ESCENA PRINCIPAL)
+│   │   ├── SettingsMenu.gd        # Script de configuración
+│   │   └── SettingsMenu.tscn      # Escena de configuración (independiente)
 │   └── Room/                      # Salas/Niveles del juego
 │
 ├── Scripts/                       # 📜 Scripts auxiliares
 ├── UI/                           # 🖥️ Elementos de interfaz
 ├── Data/                         # 💾 Datos del juego
+├── Examples/                     # 📚 Ejemplos y referencias
+│   ├── README.md                 # Información sobre ejemplos
+│   └── StateMachines/            # Versiones alternativas de State Machine
+│       ├── StateMachine_Original.gd    # Versión original
+│       ├── ProfessionalStateMachine.gd # Versión empresarial
+│       ├── Advanced/             # Sistema avanzado con analytics
+│       └── USAGE_EXAMPLE.md      # Ejemplos de uso
 │
 └── Archivos de configuración:
     ├── project.godot             # Configuración del proyecto Godot

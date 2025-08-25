@@ -1,241 +1,296 @@
-# Contributing to Topdown Game
+# 🤝 Guía de Contribución - Topdown Game
 
-¡Gracias por tu interés en contribuir al proyecto! Este documento proporciona pautas para contribuir de manera efectiva.
+¡Gracias por tu interés en contribuir al proyecto! Esta guía te ayudará a hacer contribuciones efectivas.
 
-## 🚀 Cómo Contribuir
+## 🚀 Inicio Rápido para Contribuidores
 
-### Reportar Bugs
+### 1. Fork y Setup
+```bash
+# Fork el repositorio en GitHub
+# Luego clona tu fork:
+git clone https://github.com/TU_USUARIO/topdown-game.git
+cd topdown-game
 
-1. **Verifica que el bug no haya sido reportado**: Busca en los issues existentes
-2. **Crea un issue detallado** incluyendo:
-   - Descripción clara del problema
-   - Pasos para reproducir el bug
-   - Comportamiento esperado vs comportamiento actual
-   - Screenshots/videos si es apropiado
-   - Información del sistema (OS, versión de Godot)
+# Configura el upstream:
+git remote add upstream https://github.com/1SSeba/topdown-game.git
 
-### Sugerir Features
+# Instala y configura:
+godot project.godot
+```
 
-1. **Verifica que la feature no exista**: Revisa la documentación y issues
-2. **Crea un issue de feature request** con:
-   - Descripción clara de la funcionalidad
-   - Casos de uso
-   - Posible implementación (opcional)
-   - Mockups o diagramas si es relevante
+### 2. Desarrollo
+```bash
+# Crea una branch para tu feature:
+git checkout -b feature/nombre-descriptivo
 
-### Pull Requests
+# Desarrolla siguiendo las convenciones del proyecto
+# Ver DEVELOPMENT.md para detalles técnicos
 
-1. **Fork el repositorio**
-2. **Crea una rama desde `main`**: `git checkout -b feature/nombre-descriptivo`
-3. **Desarrolla tu feature**:
-   - Sigue las convenciones de código del proyecto
-   - Añade comentarios donde sea necesario
-   - Mantén commits pequeños y descriptivos
-4. **Testea tu código**: Asegúrate de que funciona correctamente
-5. **Actualiza documentación** si es necesario
-6. **Crea el Pull Request**
+# Verifica tu código:
+./scripts/check_syntax.sh
+./quick_export.sh  # Test básico
+```
 
-## 📝 Convenciones de Código
+### 3. Pull Request
+```bash
+# Commit con mensajes descriptivos:
+git add .
+git commit -m "feat: añadir nueva mecánica de combate"
 
-### GDScript Style Guide
+# Push a tu fork:
+git push origin feature/nombre-descriptivo
 
-Seguimos las convenciones estándar de Godot:
+# Crear Pull Request en GitHub
+```
 
+## 📋 Tipos de Contribuciones
+
+### 🐛 Bug Reports
+**Antes de reportar:**
+- [ ] Busca en issues existentes
+- [ ] Reproduce el bug consistentemente
+- [ ] Verifica en la última versión
+
+**Template de Bug Report:**
+```markdown
+**Bug Description:**
+Descripción clara y concisa del bug.
+
+**Steps to Reproduce:**
+1. Ir a '...'
+2. Hacer click en '...'
+3. Ver error
+
+**Expected Behavior:**
+Lo que debería pasar.
+
+**Actual Behavior:**
+Lo que realmente pasa.
+
+**Environment:**
+- OS: [e.g. Ubuntu 22.04]
+- Godot Version: [e.g. 4.4.1]
+- Game Version: [e.g. v1.0.0]
+
+**Console Output:**
+```
+Pegar logs relevantes aquí
+```
+
+**Additional Context:**
+Screenshots, videos, o contexto adicional.
+```
+
+### 💡 Feature Requests
+**Template de Feature Request:**
+```markdown
+**Feature Description:**
+Descripción clara de la nueva funcionalidad.
+
+**Use Case:**
+¿Por qué es útil esta feature? ¿Qué problema resuelve?
+
+**Proposed Implementation:**
+Ideas sobre cómo implementarla (opcional).
+
+**Alternatives Considered:**
+Otras soluciones que consideraste.
+
+**Additional Context:**
+Mockups, ejemplos de otros juegos, etc.
+```
+
+### 🔧 Code Contributions
+
+#### Areas Prioritarias
+1. **Bug Fixes** - Siempre bienvenidos
+2. **Performance Optimizations** - Especialmente en generación de mundo
+3. **New Game Features** - Mecánicas de gameplay
+4. **Documentation** - Mejoras a docs existentes
+5. **Testing** - Unit tests y testing automatizado
+
+#### Areas que Necesitan Aprobación
+- Cambios arquitecturales mayores
+- Nuevos sistemas de managers
+- Modificaciones al StateMachine core
+- Cambios de UI/UX significativos
+
+## 🎯 Estándares de Código
+
+### Convenciones de GDScript
 ```gdscript
-# Variables en snake_case
-var player_health: int = 100
-var movement_speed: float = 150.0
+# Clases: PascalCase
+class_name MyNewClass
 
-# Constantes en UPPER_SNAKE_CASE
+# Métodos y variables: snake_case
+func my_function_name():
+    var my_variable: int = 42
+
+# Constantes: UPPER_SNAKE_CASE
 const MAX_HEALTH: int = 100
-const PLAYER_SCENE = preload("res://scenes/Player.tscn")
 
-# Funciones en snake_case
-func handle_player_input():
-    pass
-
-# Funciones privadas con underscore
-func _process_movement(delta: float):
-    pass
-
-# Señales en past tense
-signal player_died
-signal health_changed(new_health: int)
+# Señales: snake_case con contexto descriptivo
+signal player_health_changed(new_health: int)
+signal game_state_updated(old_state: GameState, new_state: GameState)
 ```
 
 ### Estructura de Archivos
-
 ```gdscript
-extends Node
+# MyClass.gd - Descripción breve de la clase
+extends BaseClass
+
+# =======================
+#  DOCUMENTACIÓN
+# =======================
+## Descripción detallada de la clase
+## 
+## Esta clase maneja [función principal]
+## Uso típico:
+## ```gdscript
+## var instance = MyClass.new()
+## instance.setup()
+## ```
 
 # =======================
 #  SEÑALES
 # =======================
-signal example_signal
+signal my_signal(param: Type)
 
 # =======================
-#  CONSTANTES Y EXPORTS
+#  CONSTANTES
 # =======================
-const EXAMPLE_CONSTANT = 100
-@export var example_variable: int = 50
+const DEFAULT_VALUE: int = 42
+
+# =======================
+#  VARIABLES EXPORTADAS
+# =======================
+@export var public_property: String = "default"
 
 # =======================
 #  VARIABLES PRIVADAS
 # =======================
-var private_variable: bool = false
-@onready var node_reference: Node = $NodePath
+var _private_variable: bool = false
 
 # =======================
-#  MÉTODOS BUILT-IN
+#  INICIALIZACIÓN
 # =======================
 func _ready():
-    pass
-
-func _process(delta):
-    pass
+    print("MyClass: Initializing...")
+    _setup()
 
 # =======================
 #  MÉTODOS PÚBLICOS
 # =======================
-func public_method():
+func public_method() -> void:
+    """Descripción del método público"""
     pass
 
 # =======================
 #  MÉTODOS PRIVADOS
 # =======================
-func _private_method():
-    pass
-
-# =======================
-#  SEÑALES/CALLBACKS
-# =======================
-func _on_signal_received():
+func _setup():
+    """Configuración inicial privada"""
     pass
 ```
-
-### Comentarios
-
-- Usa comentarios para explicar **por qué**, no **qué**
-- Documenta funciones complejas
-- Usa secciones con `# ===` para organizar código
-- Inglés para código, español para documentación de usuario
-
-```gdscript
-# Calcula daño con bonificadores de crítico
-# Retorna: daño final calculado
-func calculate_damage(base_damage: float, is_critical: bool) -> float:
-    var final_damage = base_damage
-    
-    # Aplicar crítico si procede (x1.5 daño)
-    if is_critical:
-        final_damage *= 1.5
-    
-    return final_damage
-```
-
-## 🏗️ Arquitectura del Proyecto
-
-### Autoloads/Managers
-
-Cada manager debe:
-- Ser singleton via autoload
-- Tener método `is_ready()` 
-- Inicializarse de forma segura
-- Proporcionar API clara y documentada
-- Manejar cleanup en `_exit_tree()`
-
-### Escenas
-
-- Una responsabilidad por escena
-- Usar composition sobre inheritance
-- Nodes nombrados descriptivamente
-- Señales bien definidas
-
-### Scripts
-
-- Un script por archivo
-- Funciones pequeñas y enfocadas
-- Evitar dependencias circulares
-- Usar tipos explícitos cuando sea posible
 
 ## 🧪 Testing
 
-### Debug Console
+### Testing Manual Obligatorio
+```bash
+# 1. Verificar sintaxis
+./scripts/check_syntax.sh
 
-Usa el sistema de debug integrado:
+# 2. Test básico de funcionalidad
+./quick_export.sh
+./builds/debug/game_debug
 
-```gdscript
-# En cualquier script
-func _test_feature():
-    DebugManager.log_to_console("Testing feature X", "cyan")
-    # ... test code ...
-    DebugManager.log_success("Feature X works correctly")
+# 3. Test de estados del juego
+# En el juego:
+# - Navegar por menús ✓
+# - Iniciar gameplay ✓
+# - Pausar/despausar ✓
+# - Abrir settings ✓
+# - Debug console (F3) ✓
+
+# 4. Test específico de tu feature
+# Documentar los pasos de testing en el PR
 ```
 
-### Verificaciones
+## 📝 Commit Guidelines
 
-Antes de hacer commit:
+### Formato de Commits
+Usamos [Conventional Commits](https://www.conventionalcommits.org/):
 
-1. ✅ El juego arranca sin errores
-2. ✅ No hay warnings críticos en la consola
-3. ✅ Las funcionalidades básicas funcionan
-4. ✅ No se rompe la navegación de menús
-5. ✅ Los managers se inicializan correctamente
+```
+<type>[optional scope]: <description>
 
-## 📋 Proceso de Review
+[optional body]
 
-### Para Reviewers
+[optional footer(s)]
+```
 
-- ✅ Verificar que sigue las convenciones de código
-- ✅ Testear la funcionalidad
-- ✅ Revisar impacto en performance
-- ✅ Verificar que no rompe funcionalidades existentes
-- ✅ Comprobar que la documentación está actualizada
+### Tipos de Commit
+- `feat`: Nueva funcionalidad
+- `fix`: Bug fix
+- `docs`: Cambios en documentación
+- `style`: Cambios de formato (no afectan funcionalidad)
+- `refactor`: Refactoring de código
+- `perf`: Mejoras de performance
+- `test`: Añadir o modificar tests
+- `chore`: Mantenimiento, builds, etc.
 
-### Para Contributors
+### Ejemplos
+```bash
+# Features
+git commit -m "feat(world): añadir nuevo bioma volcánico"
+git commit -m "feat(combat): implementar sistema de combate básico"
 
-- 📝 Descripción clara del PR
-- 🔗 Link al issue relacionado (si existe)
-- 📸 Screenshots/videos si hay cambios visuales
-- ✅ Checklist de verificaciones completado
-- 🧪 Instrucciones para testear
+# Bug fixes
+git commit -m "fix(statemachine): corregir transición de pause a gameplay"
+git commit -m "fix(audio): resolver problema de volumen en música"
 
-## 🎯 Prioridades Actuales
+# Documentación
+git commit -m "docs(readme): actualizar guía de instalación"
+git commit -m "docs(development): añadir sección de testing"
+```
 
-1. **Sistema de combate**: Implementación de ataques y daño
-2. **Enemigos**: AI básica y spawning
-3. **Level design**: Herramientas para crear niveles
-4. **Audio**: Integración completa del sistema de audio
-5. **Save system**: Persistencia de progreso
+## 🔄 Pull Request Process
 
-## 🚫 Qué NO hacer
+### Antes del PR
+- [ ] Branch desde `master` actualizado
+- [ ] Código sigue convenciones del proyecto
+- [ ] Testing manual completado
+- [ ] No errores de sintaxis
+- [ ] Documentación actualizada si es necesario
 
-- ❌ Commits directos a `main`
-- ❌ PRs masivos sin discusión previa
-- ❌ Cambiar arquitectura sin consenso
-- ❌ Remover funcionalidades sin deprecation
-- ❌ Hardcodear valores sin constantes
-- ❌ Ignorar los sistemas de managers existentes
+### Template de Pull Request
+```markdown
+## Description
+Describe qué cambia este PR y por qué.
 
-## 💬 Comunicación
+## Type of Change
+- [ ] Bug fix (non-breaking change que arregla un issue)
+- [ ] New feature (non-breaking change que añade funcionalidad)
+- [ ] Breaking change (fix o feature que causa cambios incompatibles)
+- [ ] Documentation update
 
-- **Issues**: Para bugs y feature requests
-- **Discussions**: Para ideas y preguntas generales
-- **PRs**: Para code reviews
-- **Comments**: Para clarificaciones específicas
+## Testing
+Describe las pruebas que realizaste:
+- [ ] Testing manual básico
+- [ ] Testing específico de la feature
+- [ ] Performance testing (si aplica)
+- [ ] Debug console testing
 
-## 🏷️ Labels y Tags
+## Checklist
+- [ ] Código sigue convenciones del proyecto
+- [ ] Self-review completado
+- [ ] Documentación actualizada
+- [ ] No errores de sintaxis
+- [ ] Testing completado
+```
 
-### Issues
-- `bug`: Errores en el código
-- `enhancement`: Nuevas funcionalidades
-- `documentation`: Mejoras en documentación
-- `good first issue`: Ideal para nuevos contributors
-- `help wanted`: Se necesita asistencia externa
+---
 
-### PRs
-- `ready for review`: Listo para revisión
-- `work in progress`: En desarrollo
-- `needs testing`: Requiere testing adicional
+**¡Gracias por contribuir al proyecto! 🎮✨**
 
-¡Gracias por contribuir al proyecto! 🎮
+*Tu contribución hace que el juego sea mejor para todos.*

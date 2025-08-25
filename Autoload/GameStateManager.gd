@@ -2,6 +2,11 @@
 extends Node
 
 # =======================
+#  INTEGRACIÓN CON STATEMACHINE
+# =======================
+var state_machine: StateMachine = null
+
+# =======================
 #  SEÑALES
 # =======================
 signal state_changed(old_state: GameState, new_state: GameState)
@@ -78,14 +83,20 @@ func _ready():
 	# Esperar a que otros managers estén listos
 	await _wait_for_dependencies()
 	
+	# Inicializar StateMachine
+	_setup_state_machine()
+	
 	# Conectar con otros sistemas
 	_connect_managers()
 	
 	# Cargar datos persistentes
 	_load_persistent_data()
 	
-	# Configurar estado inicial
+	# Configurar estado inicial (sin transiciones)
 	_setup_initial_state()
+	
+	# Iniciar StateMachine con el estado configurado
+	start_state_machine()
 	
 	is_initialized = true
 	print("GameStateManager: Initialization complete - Ready for roguelike!")
@@ -126,7 +137,91 @@ func _connect_managers():
 
 func _setup_initial_state():
 	"""Configura el estado inicial del juego"""
-	change_state(GameState.MAIN_MENU)
+	# Solo configurar el estado inicial sin transiciones complejas
+	current_state = GameState.MAIN_MENU
+
+func _setup_state_machine():
+	"""Configura e integra el StateMachine"""
+	print("GameStateManager: Setting up StateMachine integration...")
+	
+	# Cargar la clase StateMachine
+	var StateMachineClass = load("res://Core/StateMachine/StateMachine.gd")
+	
+	# Crear StateMachine si no existe
+	if not state_machine:
+		state_machine = StateMachineClass.new()
+		state_machine.debug_mode = true
+		state_machine.auto_register_children = false  # Lo manejaremos manualmente
+		add_child(state_machine)
+		
+		# Conectar señales del StateMachine
+		state_machine.state_changed.connect(_on_state_machine_changed)
+		state_machine.state_entered.connect(_on_state_machine_entered)
+		state_machine.state_exited.connect(_on_state_machine_exited)
+		
+		print("GameStateManager: StateMachine created and configured")
+	
+	# Agregar estados al StateMachine
+	_register_state_machine_states()
+
+func _register_state_machine_states():
+	"""Registra los estados del juego en el StateMachine"""
+	print("GameStateManager: Registering states...")
+	
+	# Cargar las clases de estado
+	var LoadingStateClass = load("res://Core/StateMachine/States/LoadingState.gd")
+	var MainMenuStateClass = load("res://Core/StateMachine/States/MainMenuState.gd")
+	var GameplayStateClass = load("res://Core/StateMachine/States/GameplayState.gd")
+	var PausedStateClass = load("res://Core/StateMachine/States/PausedState.gd")
+	var SettingsStateClass = load("res://Core/StateMachine/States/SettingsState.gd")
+	
+	# Crear instancias de los estados
+	var loading_state = LoadingStateClass.new()
+	loading_state.name = "LoadingState"
+	
+	var main_menu_state = MainMenuStateClass.new()
+	main_menu_state.name = "MainMenuState"
+	
+	var gameplay_state = GameplayStateClass.new()
+	gameplay_state.name = "GameplayState"
+	
+	var paused_state = PausedStateClass.new()
+	paused_state.name = "PausedState"
+	
+	var settings_state = SettingsStateClass.new()
+	settings_state.name = "SettingsState"
+	
+	# Agregar estados al StateMachine
+	state_machine.add_child(loading_state)
+	state_machine.add_state("LoadingState", loading_state)
+	
+	state_machine.add_child(main_menu_state)
+	state_machine.add_state("MainMenuState", main_menu_state)
+	
+	state_machine.add_child(gameplay_state)
+	state_machine.add_state("GameplayState", gameplay_state)
+	
+	state_machine.add_child(paused_state)
+	state_machine.add_state("PausedState", paused_state)
+	
+	state_machine.add_child(settings_state)
+	state_machine.add_state("SettingsState", settings_state)
+	
+	print("GameStateManager: All states registered successfully")
+
+# Callbacks del StateMachine
+func _on_state_machine_changed(from_state: String, to_state: String):
+	"""Maneja cambios de estado del StateMachine"""
+	print("GameStateManager: StateMachine transition: %s → %s" % [from_state, to_state])
+	_log_to_debug("StateMachine: %s → %s" % [from_state, to_state], "yellow")
+
+func _on_state_machine_entered(state_name: String):
+	"""Maneja entrada a estados del StateMachine"""
+	print("GameStateManager: Entered StateMachine state: %s" % state_name)
+
+func _on_state_machine_exited(state_name: String):
+	"""Maneja salida de estados del StateMachine"""
+	print("GameStateManager: Exited StateMachine state: %s" % state_name)
 
 # =======================
 #  VERIFICACIONES DE MANAGERS
@@ -226,6 +321,15 @@ func change_state(new_state: GameState):
 	
 	# Ejecutar lógica de entrada del nuevo estado
 	_enter_state(new_state)
+	
+	# INTEGRACIÓN: También cambiar estado en StateMachine
+	if state_machine:
+		var state_name = _game_state_to_state_machine_name(new_state)
+		if state_machine.has_state(state_name):
+			var transition_data = _prepare_transition_data(new_state)
+			state_machine.transition_to(state_name, transition_data)
+		else:
+			print("GameStateManager: Warning - StateMachine state '%s' not found" % state_name)
 	
 	# Actualizar InputManager
 	_update_input_context()
@@ -604,11 +708,17 @@ func _on_input_action_pressed(action: String):
 			if current_state == GameState.PLAYING and _can_pause():
 				last_pause_input_time = current_time
 				pause_game()
-		
-		"unpause":
-			if current_state == GameState.PAUSED and _can_pause():
-				last_pause_input_time = current_time
-				resume_game()
+
+func on_player_died():
+	"""Callback cuando el jugador muere"""
+	print("GameStateManager: Player died - transitioning to RUN_FAILED")
+	_log_to_debug("Player died!", "red")
+	
+	# Emitir señal
+	player_died.emit()
+	
+	# Cambiar estado a run fallida
+	change_state(GameState.RUN_FAILED)
 
 # =======================
 #  INTEGRACIÓN CON AUDIOMANAGER
@@ -807,6 +917,57 @@ func _log_to_debug(message: String, color: String = "white"):
 	var debug_manager = get_node_or_null("/root/DebugManager")
 	if debug_manager and debug_manager.has_method("log_to_console"):
 		debug_manager.log_to_console(message, color)
+
+# =======================
+#  INTEGRACIÓN STATEMACHINE
+# =======================
+func _game_state_to_state_machine_name(game_state: GameState) -> String:
+	"""Convierte GameState enum a nombre de estado del StateMachine"""
+	match game_state:
+		GameState.LOADING:
+			return "LoadingState"
+		GameState.MAIN_MENU:
+			return "MainMenuState"
+		GameState.PLAYING:
+			return "GameplayState"
+		GameState.PAUSED:
+			return "PausedState"
+		GameState.RUN_COMPLETE, GameState.RUN_FAILED, GameState.GAME_OVER, GameState.VICTORY:
+			return "MainMenuState"  # Estos estados regresan al menú
+		_:
+			return "MainMenuState"  # Fallback
+
+func _prepare_transition_data(game_state: GameState) -> Dictionary:
+	"""Prepara datos para la transición del StateMachine"""
+	var data = {}
+	
+	match game_state:
+		GameState.PLAYING:
+			data["run_number"] = current_run_number
+			data["is_new_run"] = not is_run_active
+		GameState.PAUSED:
+			data["pause_reason"] = "user_input"
+			data["run_time"] = get_current_run_time()
+		GameState.RUN_COMPLETE:
+			data["completion_time"] = get_current_run_time()
+			data["run_number"] = current_run_number
+		GameState.RUN_FAILED:
+			data["failure_time"] = get_current_run_time()
+			data["run_number"] = current_run_number
+	
+	return data
+
+func get_state_machine() -> StateMachine:
+	"""Obtiene referencia al StateMachine"""
+	return state_machine
+
+func start_state_machine():
+	"""Inicia el StateMachine con el estado actual"""
+	if state_machine:
+		var state_name = _game_state_to_state_machine_name(current_state)
+		var transition_data = _prepare_transition_data(current_state)
+		state_machine.start(state_name, transition_data)
+		print("GameStateManager: StateMachine started with %s" % state_name)
 
 # =======================
 #  CLEANUP

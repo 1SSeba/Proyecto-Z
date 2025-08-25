@@ -1,14 +1,14 @@
-[gd_scene load_steps=76 format=3 uid="uid://8oyr33l6b4ry"]
+[gd_scene load_steps=76 format=3 uid="uid://bxk8n23l9fxnw"]
 
 [ext_resource type="Script" uid="uid://c7o8gt85sl75k" path="res://Scenes/Characters/Player/Player.gd" id="1_7vix2"]
-[ext_resource type="Texture2D" uid="uid://yxw5xrs0kxpq" path="res://Assets/Characters/Player/Idle/idle_down.png" id="1_uapsp"]
-[ext_resource type="Texture2D" uid="uid://cj28v1w8rpyb1" path="res://Assets/Characters/Player/Idle/idle_left.png" id="2_7vix2"]
-[ext_resource type="Texture2D" uid="uid://ba4v1666d606x" path="res://Assets/Characters/Player/Idle/idle_right.png" id="3_gu5w3"]
-[ext_resource type="Texture2D" uid="uid://bsu1pgiowgjr2" path="res://Assets/Characters/Player/Idle/idle_up.png" id="4_ov5rv"]
-[ext_resource type="Texture2D" uid="uid://e8jtd7yho7sj" path="res://Assets/Characters/Player/Run/run_down.png" id="6_p3isv"]
-[ext_resource type="Texture2D" uid="uid://b241dutgsd8cn" path="res://Assets/Characters/Player/Run/run_left.png" id="6_xst4l"]
-[ext_resource type="Texture2D" uid="uid://c7bl2ippct7nt" path="res://Assets/Characters/Player/Run/run_right.png" id="7_p3isv"]
-[ext_resource type="Texture2D" uid="uid://7c4vb0fdiorg" path="res://Assets/Characters/Player/Run/run_up.png" id="8_m81am"]
+[ext_resource type="Texture2D" uid="uid://bu2geurch2vi8" path="res://Assets/Characters/Player/Idle/idle_down.png" id="1_uapsp"]
+[ext_resource type="Texture2D" uid="uid://c8xi0osqhqs6j" path="res://Assets/Characters/Player/Idle/idle_left.png" id="2_7vix2"]
+[ext_resource type="Texture2D" uid="uid://dfrw4namuvy43" path="res://Assets/Characters/Player/Idle/idle_right.png" id="3_gu5w3"]
+[ext_resource type="Texture2D" uid="uid://3w6ywpv41x01" path="res://Assets/Characters/Player/Idle/idle_up.png" id="4_ov5rv"]
+[ext_resource type="Texture2D" uid="uid://dukxg5fxjxwow" path="res://Assets/Characters/Player/Run/run_down.png" id="6_p3isv"]
+[ext_resource type="Texture2D" uid="uid://cv0raakki72rq" path="res://Assets/Characters/Player/Run/run_left.png" id="6_xst4l"]
+[ext_resource type="Texture2D" uid="uid://c6pjq4v7a7mnt" path="res://Assets/Characters/Player/Run/run_right.png" id="7_p3isv"]
+[ext_resource type="Texture2D" uid="uid://t4y1k45tio55" path="res://Assets/Characters/Player/Run/run_up.png" id="8_m81am"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xst4l"]
 atlas = ExtResource("1_uapsp")
@@ -502,19 +502,17 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p3isv"]
+radius = 20.0
 
-[node name="Player" type="Node2D"]
-
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_7vix2")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_gdj77")
-animation = &"Run_up"
-frame_progress = 0.894633
+animation = &"Idle_down"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_p3isv")
 
 [node name="Camera2D" type="Camera2D" parent="."]

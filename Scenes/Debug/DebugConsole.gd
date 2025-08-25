@@ -1,4 +1,4 @@
-# DebugConsole.gd - Consola de debug interactiva para roguelike
+# DebugConsole.gd - Consola de debug interactiva optimizada
 extends Control
 
 # =======================
@@ -16,7 +16,7 @@ var command_history: Array[String] = []
 var history_index: int = -1
 var max_output_lines: int = 300
 
-# Variables para 960x540
+# Variables para responsividad
 var default_size: Vector2 = Vector2(800, 350)
 var default_position: Vector2 = Vector2(80, 50)
 
@@ -24,19 +24,16 @@ var default_position: Vector2 = Vector2(80, 50)
 #  INICIALIZACIÓN
 # =======================
 func _ready():
-	print("DebugConsole: Initializing for 960x540...")
+	print("DebugConsole: Initializing...")
 	
 	# Configurar para que funcione siempre
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	
-	# Configurar UI para 960x540
+	# Configurar UI
 	setup_console_ui()
 	
 	# Conectar señales
-	if input_line:
-		input_line.text_submitted.connect(_on_command_submitted)
-	else:
-		print("DebugConsole: ERROR - InputLine not found!")
+	_setup_connections()
 	
 	# Conectar resize para responsividad
 	get_viewport().size_changed.connect(_on_viewport_resized)
@@ -47,7 +44,14 @@ func _ready():
 	# Empezar oculta
 	hide_console()
 	
-	print("DebugConsole: Ready for 960x540")
+	print("DebugConsole: Ready")
+
+func _setup_connections():
+	"""Configura las conexiones de señales"""
+	if input_line:
+		input_line.text_submitted.connect(_on_command_submitted)
+	else:
+		print("DebugConsole: ERROR - InputLine not found!")
 
 func _connect_with_debug_manager():
 	"""Conecta con DebugManager para recibir mensajes"""
@@ -66,12 +70,12 @@ func _on_debug_message_received(message: String, color: String):
 	debug_log(message, color)
 
 func setup_console_ui():
-	"""Configura la interfaz de la consola para 960x540"""
+	"""Configura la interfaz de la consola"""
 	if not console_panel:
 		print("DebugConsole: ERROR - Panel not found!")
 		return
 	
-	# Panel principal - Optimizado para 960x540
+	# Panel principal
 	console_panel.size = default_size
 	console_panel.position = default_position
 	
@@ -95,7 +99,7 @@ func setup_console_ui():
 		input_line.placeholder_text = "Comando... (Esc para cerrar)"
 	
 	# Mensaje de bienvenida
-	add_output("[color=cyan]DEBUG CONSOLE [960x540][/color]")
+	add_output("[color=cyan]DEBUG CONSOLE READY[/color]")
 	add_output("Type 'help' for commands, Esc to close")
 	add_output("Up/Down for history, ` to toggle")
 	add_output("=====================================")
@@ -103,20 +107,22 @@ func setup_console_ui():
 func _on_viewport_resized():
 	"""Ajusta la consola cuando cambia el tamaño de ventana"""
 	var viewport_size = get_viewport().size
-	if viewport_size == Vector2(960, 540):
+	var base_size = Vector2(960, 540)
+	
+	if viewport_size == base_size:
 		# Mantener configuración optimizada
 		if console_panel:
 			console_panel.size = default_size
 			console_panel.position = default_position
 	else:
 		# Escalar proporcionalmente
-		var scale_x = viewport_size.x / 960.0
-		var scale_y = viewport_size.y / 540.0
-		var scale = min(scale_x, scale_y)
+		var scale_x = viewport_size.x / base_size.x
+		var scale_y = viewport_size.y / base_size.y
+		var scale_factor = min(scale_x, scale_y)
 		
 		if console_panel:
-			console_panel.size = default_size * scale
-			console_panel.position = default_position * scale
+			console_panel.size = default_size * scale_factor
+			console_panel.position = default_position * scale_factor
 
 # =======================
 #  CONTROL DE VISIBILIDAD
@@ -219,7 +225,7 @@ func execute_local_command(command: String) -> String:
 	
 	match main_cmd:
 		"help":
-			add_output("Available commands (960x540):")
+			add_output("Available commands:")
 			add_output("clear - Clear console")
 			add_output("exit - Close console")  
 			add_output("echo [text] - Echo text")
@@ -253,16 +259,11 @@ func execute_local_command(command: String) -> String:
 		"player":
 			var current_scene = get_tree().current_scene
 			if not current_scene:
-				return "No current scene available"
-				
-			var player = current_scene
-			if player and player.get_script() and player.get_script().resource_path.ends_with("Player.gd"):
-				return "Player found: " + str(player.global_position)
+				return "No current scene"
 			
-			# Buscar hijo Player
-			var found_player = current_scene.find_child("Player", true, false)
-			if found_player:
-				return "Player child: " + str(found_player.global_position)
+			var player = current_scene.find_child("Player", true, false)
+			if player:
+				return "Player found: " + str(player.global_position)
 			
 			return "No player found"
 		
@@ -270,8 +271,8 @@ func execute_local_command(command: String) -> String:
 			return "FPS: " + str(Engine.get_frames_per_second())
 		
 		"res":
-			var size = get_viewport().size
-			return "Resolution: " + str(size.x) + "x" + str(size.y)
+			var viewport_size = get_viewport().size
+			return "Resolution: " + str(viewport_size.x) + "x" + str(viewport_size.y)
 		
 		"pos":
 			if console_panel:
@@ -279,7 +280,7 @@ func execute_local_command(command: String) -> String:
 			return "Console panel not found"
 		
 		_:
-			return "Unknown: " + command + ". Type 'help'"
+			return "Unknown command: " + command + ". Type 'help' for available commands."
 
 # =======================
 #  GESTIÓN DE OUTPUT
@@ -350,7 +351,7 @@ func debug_log_info(message: String):
 	debug_log("INFO: " + message, "cyan")
 
 # =======================
-#  CONFIGURACIÓN PARA 960x540
+#  CONFIGURACIÓN
 # =======================
 func set_console_size(width: int, height: int):
 	"""Cambia el tamaño de la consola"""
@@ -362,22 +363,10 @@ func set_console_position(x: int, y: int):
 	if console_panel:
 		console_panel.position = Vector2(x, y)
 
-func set_small_mode():
-	"""Modo compacto para 960x540"""
-	if console_panel:
-		console_panel.size = Vector2(750, 300)
-		console_panel.position = Vector2(105, 80)
-
-func set_large_mode():
-	"""Modo grande para 960x540"""
-	if console_panel:
-		console_panel.size = Vector2(850, 400) 
-		console_panel.position = Vector2(55, 30)
-
 func center_console():
-	"""Centra la consola en pantalla 960x540"""
+	"""Centra la consola en pantalla"""
 	if console_panel:
-		var screen_size = Vector2(960, 540)
+		var screen_size = get_viewport().size
 		var console_size = console_panel.size
 		var center_pos = Vector2(
 			(screen_size.x - console_size.x) / 2,

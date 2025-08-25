@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Topdown-game"
-run/main_scene="uid://db6rxffmwo8ot"
+run/main_scene="res://Scenes/Menus/MainMenu.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -19,24 +19,17 @@ config/icon="res://icon.svg"
 
 ConfigManager="*res://Autoload/ConfigManager.gd"
 InputManager="*res://Autoload/InputManager.gd"
-CentralizedGameStateManager="*res://Core/CentralizedGameStateManager.gd"
 GameStateManager="*res://Autoload/GameStateManager.gd"
 GameManager="*res://Autoload/GameManager.gd"
 AudioManager="*res://Autoload/AudioManager.gd"
-DevTools="*res://Autoload/DevTools.gd"
+DebugManager="*res://Autoload/DebugManager.gd"
+EventBus="*res://Core/Events/EventBus.gd"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/size/resizable=true
-window/size/borderless=false
-window/size/always_on_top=false
-window/size/transparent=false
-window/size/extend_to_title=false
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
-window/vsync/vsync_mode=1
 
 [dotnet]
 

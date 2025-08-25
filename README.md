@@ -1,135 +1,336 @@
-# Top-Down Game 🎮
+# 🎮 Topdown Game - Roguelike
 
-Un juego top-down desarrollado en **Godot Engine 4.4** con una arquitectura modular y profesional.
+Un juego roguelike top-down desarrollado en Godot 4.4 con arquitectura modular y sistemas profesionales de gestión de estado.
 
-[![Godot Engine](https://img.shields.io/badge/Godot-4.4-blue.svg)](https://godotengine.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Documentation](https://img.shields.io/badge/Docs-Complete-brightgreen.svg)](docs/)
+## 📋 Descripción
 
-## 🚀 Inicio rápido
+Este proyecto es un roguelike top-down que combina mecánicas clásicas del género con una arquitectura técnica robusta. El juego presenta generación procedural de mundos, sistema de runs, gestión avanzada de estado y herramientas de desarrollo integradas.
 
-1. **Clona el repositorio**
-   ```bash
-   git clone https://github.com/1SSeba/topdown-game.git
-   cd topdown-game
-   ```
+## ✨ Características Principales
 
-2. **Abre en Godot 4.4**
-   - Ejecuta Godot Engine 4.4
-   - Importa el proyecto usando `project.godot`
+### 🎯 Gameplay
+- **Sistema de Runs**: Completar niveles consecutivos con estadísticas persistentes
+- **Generación Procedural**: Mundos únicos generados con ruido FastNoiseLite
+- **Múltiples Biomas**: 6 biomas diferentes (Grass, Desert, Forest, Mountains, Water, Snow)
+- **Sistema de Chunks**: Carga dinámica de mundo para optimización
+- **Estadísticas Avanzadas**: Tracking de tiempos, rachas y progreso
 
-3. **Ejecuta el juego**
-   - Presiona F5 o haz clic en "Play"
-   - La escena principal se cargará automáticamente
+### 🏗️ Arquitectura Técnica
+- **StateMachine Profesional**: Gestión robusta de estados del juego
+- **Sistema de Managers**: Autoloads modulares para diferentes aspectos
+- **Event Bus**: Comunicación desacoplada entre sistemas
+- **Configuración Persistente**: Guardado automático de settings y progreso
+- **Debug Console**: Herramientas de desarrollo integradas
 
-## 🎯 Características principales
+### 🛠️ Sistemas Implementados
+- **Audio Manager**: Gestión de música y efectos de sonido
+- **Input Manager**: Manejo centralizado de controles
+- **Config Manager**: Persistencia de configuración y datos
+- **Debug Manager**: Herramientas de desarrollo y testing
+- **World Generator**: Generación procedural con biomas y recursos
 
-- **🏗️ Arquitectura modular** con sistema de managers
-- **🔄 State Machine profesional** para gestión de estados
-- **🎵 Sistema de audio** completo (música y efectos)
-- **⚙️ Gestión de configuración** persistente
-- **🐛 Herramientas de debug** integradas
-- **📱 Sistema de input** flexible y configurable
+## 🚀 Instalación y Ejecución
+
+### Requisitos
+- Godot Engine 4.4+
+- Sistema operativo: Windows, Linux, macOS
+
+### Configuración Inicial
+```bash
+# Clonar el repositorio
+git clone https://github.com/1SSeba/topdown-game.git
+cd topdown-game
+
+# Abrir en Godot
+godot project.godot
+```
+
+### Ejecución Rápida
+```bash
+# Export debug (Linux)
+./quick_export.sh
+
+# Ejecutar directamente
+godot --main-pack builds/debug/game_debug
+```
 
 ## 🎮 Controles
 
-- **ESC**: Pausar/reanudar, volver en menús
-- **P**: Pausar/reanudar juego
-- **M** (en pausa): Volver al menú principal
-- **Enter**: Confirmar selecciones
-- **WASD/Flechas**: Movimiento del jugador
+| Acción | Tecla | Descripción |
+|--------|-------|-------------|
+| Movimiento | WASD / Flechas | Mover personaje |
+| Pausa | P / ESC | Pausar/Reanudar juego |
+| Debug Console | F3 | Abrir consola de desarrollo |
+| Configuración | ESC (en menú) | Abrir settings |
 
-## 📁 Estructura del proyecto
+## 🏗️ Arquitectura del Proyecto
+
+### 📁 Estructura de Directorios
 
 ```
 topdown-game/
-├── docs/              # 📚 Documentación completa
-├── Assets/            # 🎨 Recursos (sprites, audio, UI)
-├── Autoload/          # 🔄 Sistemas globales (managers)
-├── Core/              # 🏗️ Arquitectura central
-│   ├── StateMachine/  # Sistema de estados
-│   └── Events/        # Sistema de eventos
-├── Scenes/            # 🎭 Escenas del juego
-├── Scripts/           # 📜 Scripts auxiliares
-└── UI/                # 🖥️ Interfaces de usuario
+├── 🎨 Assets/              # Recursos del juego
+│   ├── Audio/              # Música y sonidos
+│   ├── Characters/Player/  # Sprites del jugador
+│   ├── Maps/Texture/       # Texturas de mapas
+│   └── UI/                 # Elementos de interfaz
+│
+├── 🔄 Autoload/            # Sistemas globales (Singletons)
+│   ├── AudioManager.gd     # Gestión de audio
+│   ├── ConfigManager.gd    # Configuración persistente
+│   ├── GameStateManager.gd # Estados del juego
+│   ├── InputManager.gd     # Manejo de input
+│   ├── GameManager.gd      # Lógica general
+│   └── DebugManager.gd     # Herramientas de debug
+│
+├── 🏗️ Core/               # Sistemas centrales
+│   ├── StateMachine/       # Máquina de estados
+│   │   ├── StateMachine.gd # Motor principal
+│   │   ├── State.gd        # Clase base
+│   │   └── States/         # Estados específicos
+│   └── Events/
+│       └── EventBus.gd     # Sistema de eventos
+│
+├── 🎭 Scenes/              # Escenas del juego
+│   ├── Main.tscn           # Escena principal
+│   ├── Characters/Player/  # Jugador
+│   ├── Menus/              # Menús del juego
+│   ├── World/              # Sistema de mundo
+│   └── Debug/              # Herramientas debug
+│
+└── 📚 docs/                # Documentación
+    ├── PROJECT_STRUCTURE.md
+    ├── STATEMACHINE_USAGE.md
+    └── TROUBLESHOOTING.md
 ```
 
-## 📚 Documentación
+### 🔧 Managers y Sistemas
 
-Toda la documentación está en la carpeta [`docs/`](docs/):
+#### GameStateManager
+- **Propósito**: Gestión central de estados del juego
+- **Estados**: Loading, MainMenu, Playing, Paused, RunComplete, RunFailed
+- **Características**: Tracking de runs, estadísticas persistentes, integración con StateMachine
 
-- 📋 [Índice de documentación](docs/README.md)
-- 🏗️ [Estructura del proyecto](docs/PROJECT_STRUCTURE.md)
-- 📊 [Estado del proyecto](docs/PROJECT_STATUS.md)
-- 🔄 [Guía del State Machine](docs/STATEMACHINE_USAGE.md)
+#### ConfigManager
+- **Propósito**: Gestión de configuración persistente
+- **Funciones**: Audio, video, controles, progreso del juego
+- **Persistencia**: Automática en `user://Data/config.cfg`
 
-## 🛠️ Tecnologías utilizadas
+#### AudioManager
+- **Propósito**: Gestión de audio del juego
+- **Características**: Música de fondo, efectos de sonido, control de volumen
+- **Integración**: Conectado con eventos de estado
 
-- **Motor**: Godot Engine 4.4
-- **Lenguaje**: GDScript
-- **Arquitectura**: Modular con Autoload managers
-- **Patrones**: State Machine, Event Bus, Singleton
+#### InputManager
+- **Propósito**: Manejo centralizado de input
+- **Características**: Mapeo configurable, eventos de input, contextos
+- **Flexibilidad**: Soporte para diferentes layouts de teclado
 
-## 🎮 Estados del juego
+#### WorldGenerator
+- **Propósito**: Generación procedural de mundos
+- **Características**: Múltiples capas de ruido, biomas, recursos, cuevas
+- **Optimización**: Sistema de chunks con carga dinámica
 
-El juego utiliza un sistema de state machine con los siguientes estados:
+## 🎯 Estados del Juego
 
-- **🔄 LoadingState**: Carga inicial del juego
-- **🏠 MainMenuState**: Menú principal y navegación
-- **🎯 GameplayState**: Juego activo
-- **⏸️ PausedState**: Juego pausado
-- **⚙️ SettingsState**: Configuración del juego
+```mermaid
+graph TD
+    A[Loading] --> B[MainMenu]
+    B --> C[Playing]
+    C --> D[Paused]
+    D --> C
+    C --> E[RunComplete]
+    C --> F[RunFailed]
+    E --> B
+    F --> B
+    B --> G[Settings]
+    G --> B
+```
 
-## 🔧 Desarrollo
+### Descripción de Estados
 
-### Requisitos
-- Godot Engine 4.4 o superior
-- Conocimientos básicos de GDScript
+- **Loading**: Carga inicial de recursos y configuración
+- **MainMenu**: Menú principal con opciones del juego
+- **Playing**: Estado activo de gameplay durante una run
+- **Paused**: Pausa temporal del juego (mantiene estado)
+- **RunComplete**: Run completada exitosamente
+- **RunFailed**: Run fallida (muerte del jugador)
+- **Settings**: Configuración de audio, video y controles
 
-### Arquitectura
-El proyecto usa una arquitectura modular con:
-- **Managers (Autoload)**: Sistemas globales
-- **State Machine**: Control de flujo del juego
-- **EventBus**: Comunicación entre componentes
+## 🛠️ Herramientas de Desarrollo
 
-### Extender el juego
-1. **Nuevos estados**: Crea archivos en `Core/StateMachine/States/`
-2. **Nuevos managers**: Añade a `Autoload/` y registra en project.godot
-3. **Nuevas escenas**: Organiza en `Scenes/` por categoría
+### Debug Console (F3)
+Consola interactiva con comandos de desarrollo:
 
-## 📈 Estado del proyecto
+```bash
+# Comandos de estado
+help                    # Mostrar ayuda
+status                  # Estado de managers
+gamestate              # Estado actual del juego
 
-✅ **Sistema base completado**
-- State Machine funcional
-- Managers modulares operativos
-- Documentación completa
-- Sin errores de compilación
+# Comandos de runs
+start_run              # Iniciar nueva run
+complete_run           # Completar run actual
+fail_run               # Fallar run actual
+reset_stats            # Resetear estadísticas
 
-🔄 **En desarrollo**
-- Mecánicas específicas del jugador
-- Contenido de juego (niveles, enemigos)
-- Assets definitivos
+# Comandos de mundo
+WorldTester.help()              # Ayuda de generación
+WorldTester.test_basic_generation()  # Test básico
+WorldTester.generate_test_world()    # Mundo de prueba
+WorldTester.show_biome_info()        # Info de biomas
+```
 
-## 🤝 Contribuciones
+### Scripts de Desarrollo
 
-Las contribuciones son bienvenidas. Por favor:
+```bash
+# Verificar sintaxis
+./scripts/check_syntax.sh
 
-1. **Fork** el proyecto
-2. **Crea una rama** para tu feature (`git checkout -b feature/AmazingFeature`)
-3. **Commit** tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** a la rama (`git push origin feature/AmazingFeature`)
-5. **Abre un Pull Request**
+# Limpiar proyecto
+./scripts/clean_project.sh
+
+# Export rápido
+./quick_export.sh
+
+# Desarrollo con hot-reload
+./dev.sh
+```
+
+## 🎨 Generación de Mundo
+
+### Sistema de Biomas
+
+| Bioma | Color | Características |
+|-------|-------|----------------|
+| Grass | Verde | Bioma base, balanceado |
+| Desert | Amarillo | Seco, pocos recursos |
+| Forest | Verde Oscuro | Denso, alta cobertura |
+| Mountains | Gris/Marrón | Rocoso, elevado |
+| Water | Azul | Acuático, navegable |
+| Snow | Blanco | Frío, escaso |
+
+### Configuración de Generación
+
+```gdscript
+# Parámetros principales
+chunk_size = 64          # Tamaño de chunks
+render_distance = 3      # Distancia de renderizado
+noise_scale = 0.1        # Escala del ruido principal
+cave_threshold = 0.3     # Umbral para cuevas
+```
+
+## 📊 Estadísticas y Progreso
+
+### Tracking de Runs
+- **Tiempo Total**: Duración de cada run
+- **Mejor Tiempo**: Record personal persistente
+- **Rachas**: Runs consecutivas completadas
+- **Tasa de Éxito**: Porcentaje de runs completadas
+- **Estadísticas Globales**: Total de runs, tiempo jugado
+
+### Persistencia
+- Guardado automático en `user://Data/config.cfg`
+- Backup de seguridad en cambios importantes
+- Migración automática entre versiones
+
+## 🔧 Configuración Avanzada
+
+### Audio
+```gdscript
+# Buses de audio configurables
+master_volume: 0.8       # Volumen maestro
+music_volume: 0.7        # Música de fondo
+sfx_volume: 0.8          # Efectos de sonido
+```
+
+### Video
+```gdscript
+# Configuración de pantalla
+screen_mode: 0           # 0=Windowed, 1=Fullscreen, 2=Borderless
+vsync_enabled: true      # Sincronización vertical
+target_fps: 60           # FPS objetivo
+```
+
+### Gameplay
+```gdscript
+# Opciones de gameplay
+show_timer: true         # Mostrar timer de run
+show_fps: false          # Mostrar contador FPS
+particles_enabled: true  # Partículas activas
+screen_shake: true       # Efecto de screen shake
+```
+
+## 🚨 Solución de Problemas
+
+### Errores Comunes
+
+**Error: "Cannot start with unknown state"**
+```
+Solución: Verificar registro de estados en GameStateManager
+Archivo: GameStateManager.gd:_register_state_machine_states()
+```
+
+**Error: "TileSet not assigned"**
+```
+Solución: Crear TileSet manualmente en editor y asignar a TileMapLayer
+Ubicación: Scenes/World/world.tscn
+```
+
+**Error: "AudioManager not ready"**
+```
+Solución: Verificar orden de autoloads en project.godot
+Orden correcto: ConfigManager → InputManager → AudioManager
+```
+
+### Debug y Logging
+
+```bash
+# Verificar estado de managers
+DebugManager.cmd_managers()
+
+# Información completa del sistema
+GameStateManager.debug_info()
+
+# Test de acceso a managers
+ManagerUtils.debug_test_manager_access()
+```
+
+## 🎯 Roadmap y Próximas Características
+
+### Versión Actual (v1.0)
+- ✅ Sistema base de StateMachine
+- ✅ Managers fundamentales
+- ✅ Generación procedural básica
+- ✅ Sistema de runs y estadísticas
+
+### Próximas Versiones
+- 🔄 Sistema de inventario
+- 🔄 Múltiples tipos de enemigos
+- 🔄 Sistema de mejoras/upgrades
+- 🔄 Múltiples armas y habilidades
+- 🔄 Boss battles
+- 🔄 Achievements system
 
 ## 📄 Licencia
 
-Este proyecto está bajo la licencia MIT. Ver el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la licencia especificada en el archivo [LICENSE](LICENSE).
 
-## 👤 Autor
+## 🤝 Contribuciones
 
-**1SSeba** - [GitHub](https://github.com/1SSeba)
+Las contribuciones son bienvenidas. Ver [CONTRIBUTING.md](CONTRIBUTING.md) para detalles sobre:
+- Estilo de código
+- Proceso de pull requests
+- Reporte de bugs
+- Sugerencias de características
+
+## 📞 Contacto
+
+- **Desarrollador**: 1SSeba
+- **Repository**: [topdown-game](https://github.com/1SSeba/topdown-game)
+- **Issues**: [GitHub Issues](https://github.com/1SSeba/topdown-game/issues)
 
 ---
 
-⭐ **¡Dale una estrella al proyecto si te parece útil!**
-
 *Última actualización: Agosto 2025*
+*Desarrollado con ❤️ en Godot Engine*

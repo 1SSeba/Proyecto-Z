@@ -23,7 +23,7 @@ var is_invulnerable: bool = false
 var invulnerability_duration: float = 1.0
 
 # =======================
-#  REFERENCIAS DE NODOS
+#  REFERENCIAS DE NODOS (CORREGIDAS PARA LA ESTRUCTURA ACTUAL)
 # =======================
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -46,7 +46,7 @@ func _ready():
 	
 	# Configurar animación inicial
 	if animated_sprite:
-		animated_sprite.play("Idle_down")
+		animated_sprite.play("Idle_down")  # Usar nombre correcto con mayúscula
 	
 	is_initialized = true
 	print("Player: Ready - Health: %.1f/%.1f" % [current_health, max_health])
@@ -157,12 +157,13 @@ func _play_animation_safe(animation_name: String):
 	"""Reproduce una animación verificando que existe"""
 	if animated_sprite and animated_sprite.sprite_frames:
 		if animated_sprite.sprite_frames.has_animation(animation_name):
-			if animated_sprite.animation != animation_name:
-				animated_sprite.play(animation_name)
+			animated_sprite.play(animation_name)
 		else:
-			# Fallback a idle_down si la animación no existe
+			print("Player: Animation '%s' not found, playing default" % animation_name)
 			if animated_sprite.sprite_frames.has_animation("Idle_down"):
 				animated_sprite.play("Idle_down")
+			else:
+				print("Player: Warning - Even default animation 'Idle_down' not found!")
 
 # =======================
 #  SISTEMA DE SALUD
@@ -207,7 +208,6 @@ func heal(heal_amount: float):
 	if current_health > old_health:
 		health_changed.emit(current_health, max_health)
 		print("Player: Healed for %.1f (%.1f/%.1f HP)" % [current_health - old_health, current_health, max_health])
-		_log_to_debug("Player healed: +%.1f (%.1f HP)" % [current_health - old_health, current_health], "green")
 
 func die():
 	"""Mata al jugador"""
@@ -277,12 +277,8 @@ func _show_damage_effect():
 func _play_death_animation():
 	"""Reproduce animación de muerte"""
 	if animated_sprite:
-		if animated_sprite.sprite_frames and animated_sprite.sprite_frames.has_animation("Death"):
-			animated_sprite.play("Death")
-		else:
-			# Si no hay animación de muerte, hacer fade out
-			var tween = create_tween()
-			tween.tween_property(animated_sprite, "modulate:a", 0.3, 0.5)
+		animated_sprite.play("Idle_down")  # Fallback hasta que tengas animación de muerte
+		animated_sprite.modulate = Color.GRAY
 
 func _start_invulnerability_effect():
 	"""Inicia efecto visual de invulnerabilidad"""
@@ -298,7 +294,6 @@ func _start_invulnerability_effect():
 func _stop_invulnerability_effect():
 	"""Termina efecto visual de invulnerabilidad"""
 	if animated_sprite:
-		# Asegurar que vuelva a ser visible
 		animated_sprite.modulate = Color.WHITE
 
 # =======================
@@ -324,12 +319,9 @@ func _unhandled_input(event):
 	if input_manager and input_manager.has_method("is_action_just_pressed"):
 		if input_manager.is_action_just_pressed("interact"):
 			handle_interact()
-			get_viewport().set_input_as_handled()
 	else:
-		# Fallback - pero evitar conflictos con debug
-		if event.keycode == KEY_SPACE or event.keycode == KEY_ENTER:
+		if Input.is_action_just_pressed("ui_accept"):
 			handle_interact()
-			get_viewport().set_input_as_handled()
 
 func handle_interact():
 	"""Maneja la acción de interactuar"""

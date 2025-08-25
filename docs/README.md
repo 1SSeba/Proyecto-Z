@@ -1,47 +1,84 @@
-# Top-Down Game - Documentación 📚
+# 📚 Documentación del Proyecto Topdown Game
 
-Bienvenido a la documentación completa del proyecto **Top-Down Game** desarrollado en Godot Engine 4.4.
+Este directorio contiene la documentación técnica completa del proyecto.
 
-## 📋 Índice de documentación
+## � Índice de Documentos
 
-### 🎮 Información general
-- [README Principal](README.md) - Información general del proyecto
-- [Estado del Proyecto](PROJECT_STATUS.md) - Estado actual y progreso
+### �️ Arquitectura
+- **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)** - Estructura completa del proyecto y organización de archivos
+- **[CORE_README.md](CORE_README.md)** - Documentación del sistema Core y componentes centrales
 
-### 🏗️ Arquitectura del sistema
-- [Core README](CORE_README.md) - Información sobre el sistema Core
-- [State Machine](STATEMACHINE_STATUS.md) - Estado y funcionalidades del State Machine
-- [Uso del State Machine](STATEMACHINE_USAGE.md) - Ejemplos y guías de uso
+### 🔧 Sistemas Técnicos
+- **[STATEMACHINE_USAGE.md](STATEMACHINE_USAGE.md)** - Guía de uso del StateMachine y gestión de estados
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Solución de problemas comunes y debugging
 
-### 🔧 Guías de desarrollo
-- [Estructura del Proyecto](PROJECT_STRUCTURE.md) - Organización de archivos y carpetas
-- [Managers System](MANAGERS_GUIDE.md) - Guía de los sistemas de managers (Autoload)
-- [Guía de Contribución](CONTRIBUTING.md) - Cómo contribuir al proyecto
+## 🎯 Guías Rápidas
 
-### 🎯 Funcionalidades específicas
-- [Sistema de Input](INPUT_SYSTEM.md) - Manejo de controles y input
-- [Sistema de Audio](AUDIO_SYSTEM.md) - Gestión de música y efectos
-- [Sistema de Debug](DEBUG_SYSTEM.md) - Herramientas de debug y desarrollo
+### Para Desarrolladores
+1. **Inicio Rápido**: Leer [README.md](../README.md) principal
+2. **Estructura**: Revisar [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
+3. **Estados**: Consultar [STATEMACHINE_USAGE.md](STATEMACHINE_USAGE.md)
+4. **Problemas**: Ver [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
-## 🚀 Inicio rápido
+### Para Contribuidores
+1. **Contribución**: Ver [CONTRIBUTING.md](../CONTRIBUTING.md)
+2. **Desarrollo**: Consultar [DEVELOPMENT.md](../DEVELOPMENT.md)
+3. **Cambios**: Revisar [CHANGELOG.md](../CHANGELOG.md)
 
-1. **Clona el repositorio**
-2. **Abre el proyecto en Godot 4.4**
-3. **Revisa la [Estructura del Proyecto](PROJECT_STRUCTURE.md)**
-4. **Lee la [Guía de State Machine](STATEMACHINE_USAGE.md)**
+## 🔍 Documentos por Tema
 
-## 🎮 Acerca del proyecto
+### Sistema de Estados
+- Implementación: `STATEMACHINE_USAGE.md`
+- Estados disponibles: Loading, MainMenu, Playing, Paused, etc.
+- Transiciones y eventos
 
-Este es un juego top-down desarrollado en Godot Engine 4.4 con una arquitectura modular que incluye:
+### Arquitectura de Managers
+- GameStateManager: Estados del juego y runs
+- ConfigManager: Configuración persistente
+- AudioManager: Gestión de audio
+- InputManager: Manejo de controles
+- DebugManager: Herramientas de desarrollo
 
-- **Sistema de State Machine** simplificado pero profesional
-- **Managers modulares** (Audio, Input, Config, Game, Debug)
-- **Sistema de eventos** con EventBus
-- **Estructura organizada** y fácil de mantener
+### Generación de Mundo
+- WorldGenerator: Sistema procedural
+- Biomas: Grass, Desert, Forest, Mountains, Water, Snow
+- Chunks: Carga dinámica optimizada
 
-## 🔄 Estado actual
+### Debug y Desarrollo
+- Debug Console: Comandos interactivos
+- Scripts de desarrollo: Export, sintaxis, limpieza
+- Herramientas de testing
 
-El proyecto está en **desarrollo activo** con un sistema de state machine completamente funcional y sin errores de compilación.
+## 🛠️ Mantenimiento de Documentación
+
+### Convenciones
+- **Formato**: Markdown (.md)
+- **Idioma**: Español para documentación interna
+- **Estructura**: Usar headers jerárquicos (H1-H6)
+- **Enlaces**: Relativos para documentos internos
+
+### Actualización
+- Mantener sincronizada con cambios de código
+- Actualizar fecha de "última modificación"
+- Revisar enlaces rotos periódicamente
+
+## � Estado de Documentación
+
+| Documento | Estado | Última Actualización |
+|-----------|--------|---------------------|
+| README.md | ✅ Completo | Agosto 2025 |
+| PROJECT_STRUCTURE.md | ✅ Completo | Agosto 2025 |
+| STATEMACHINE_USAGE.md | ✅ Completo | Agosto 2025 |
+| TROUBLESHOOTING.md | ✅ Completo | Agosto 2025 |
+| CORE_README.md | ⚠️ Pendiente revisión | - |
+
+## 💡 Consejos para Navegación
+
+- **Búsqueda**: Usar Ctrl+F para buscar términos específicos
+- **Enlaces**: Hacer click en enlaces internos para navegación rápida
+- **Índices**: Usar los índices al inicio de cada documento
+- **Código**: Los ejemplos de código están en bloques con sintaxis
 
 ---
-*Última actualización: Agosto 2025*
+
+*Esta documentación se mantiene actualizada con cada release del proyecto.*
