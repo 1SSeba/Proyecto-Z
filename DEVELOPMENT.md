@@ -259,7 +259,7 @@ func update(delta: float):
 func _register_state_machine_states():
     # ... estados existentes ...
     
-    var MiNuevoStateClass = load("res://Core/StateMachine/States/MiNuevoState.gd")
+    var MiNuevoStateClass = load("res://src/systems/StateMachine/States/MiNuevoState.gd")
     var mi_nuevo_state = MiNuevoStateClass.new()
     mi_nuevo_state.name = "MiNuevoState"
     

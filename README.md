@@ -1,6 +1,191 @@
 # 🎮 Topdown Game - Roguelike
 
-Un juego roguelike top-down desarrollado en Godot 4.4 con arquitectura modular y sistemas profesionales de gestión de estado.
+# 🎮 Topdown Roguelike - Professional Game Architecture
+
+## 🚀 **Overview**
+
+A **professional-grade roguelike game** built with **Godot 4.4** featuring industry-standard architecture, modular systems, and scalable design patterns.
+
+## ✨ **Key Features**
+
+- 🏗️ **Professional Architecture**: Industry-standard src/content separation
+- 🎯 **Modular Systems**: Independent, testable components
+- 🔄 **State Machine**: Robust game state management
+- ⚙️ **Manager Pattern**: Centralized autoload system
+- 🎨 **Asset Pipeline**: Organized content structure
+- 🧪 **Testing Framework**: Built-in testing and debugging tools
+- 📚 **Comprehensive Documentation**: Full project documentation
+
+---
+
+## 🏗️ **Architecture Overview**
+
+### **📁 Project Structure**
+
+```
+topdown-game/
+├── 📁 src/                    # 💻 Source Code
+│   ├── managers/              # 🎯 Global Systems (Autoloads)
+│   ├── systems/               # 🏗️ Core Systems (StateMachine, Events)
+│   ├── entities/              # 🎭 Game Entities (Player, Enemies)
+│   ├── components/            # 🧩 Reusable Components
+│   ├── ui/                    # 🖥️ User Interface
+│   └── data/                  # 📊 Data Definitions
+│
+├── 📁 content/                # 🎨 Game Content
+│   ├── assets/                # 🎨 Visual & Audio Resources
+│   ├── scenes/                # 🎭 Game Scenes
+│   └── data/                  # 💾 Game Data
+│
+├── 📁 tools/                  # 🔧 Development Tools
+│   ├── dev/                   # 👨‍💻 Development Scripts
+│   ├── build/                 # 🏗️ Build Tools
+│   └── testing/               # 🧪 Testing Framework
+│
+├── 📁 config/                 # ⚙️ Project Configuration
+└── 📁 docs/                   # 📚 Documentation
+```
+
+### **🎯 Core Systems**
+
+#### **Managers (Autoloads)**
+- **ConfigManager**: Persistent configuration and settings
+- **InputManager**: Centralized input handling and mapping
+- **GameStateManager**: Game state management with StateMachine
+- **AudioManager**: Music and sound effects management
+- **GameManager**: Core gameplay logic
+- **DebugManager**: Development and debugging tools
+
+#### **Core Architecture**
+- **StateMachine**: Professional state management system
+- **EventBus**: Decoupled communication between systems
+- **ObjectPool**: Efficient object recycling
+- **NodeCache**: Optimized node caching system
+
+---
+
+## 🚀 **Getting Started**
+
+### **Prerequisites**
+- **Godot Engine 4.4+** ([Download](https://godotengine.org/download))
+- **Git** for version control
+
+### **Quick Setup**
+```bash
+# Clone the repository
+git clone https://github.com/1SSeba/topdown-game.git
+cd topdown-game
+
+# Open in Godot
+godot project.godot
+
+# Or use development script
+chmod +x dev.sh
+./dev.sh
+```
+
+### **Development Workflow**
+```bash
+# Verify syntax
+./tools/dev/check_syntax.sh
+
+# Quick export for testing
+./tools/dev/quick_export.sh
+
+# Clean temporary files
+./tools/dev/clean_cache.sh
+```
+
+---
+
+## 🎮 **Game Features**
+
+### **🏰 Roguelike System**
+- **Procedural Generation**: Room-based dungeon generation
+- **Multiple Dungeon Sizes**: Small, Medium, Large configurations
+- **Room Types**: START, NORMAL, TREASURE, BOSS, SECRET, SHOP
+- **Connectivity Algorithm**: Minimum Spanning Tree room connections
+
+### **🎯 Gameplay**
+- **State-Driven**: Professional state machine implementation
+- **Input System**: Configurable controls with multiple contexts
+- **Audio System**: Dynamic music and sound effects
+- **Debug Tools**: Real-time debugging and visualization
+
+---
+
+## 🔧 **Development**
+
+### **Architecture Principles**
+- **Separation of Concerns**: Code vs Content vs Tools
+- **Modular Design**: Independent, testable systems
+- **Scalable Structure**: Easy to extend and maintain
+- **Professional Standards**: Industry best practices
+
+### **Testing & Quality**
+- **Built-in Testing**: Comprehensive testing framework
+- **Debug Console**: Interactive debugging tools
+- **Performance Monitoring**: Built-in profiling
+- **Code Quality**: Consistent coding standards
+
+### **Documentation**
+- **[ARCHITECTURE.md](ARCHITECTURE.md)**: Detailed architecture guide
+- **[DEVELOPMENT.md](DEVELOPMENT.md)**: Development guidelines
+- **[CONTRIBUTING.md](CONTRIBUTING.md)**: Contribution guidelines
+- **[docs/](docs/)**: Comprehensive documentation
+
+---
+
+## 📊 **Technical Specifications**
+
+| Feature | Implementation |
+|---------|----------------|
+| **Engine** | Godot 4.4+ |
+| **Architecture** | Manager + State Machine Pattern |
+| **Code Organization** | src/content separation |
+| **State Management** | Professional StateMachine |
+| **Audio** | Dynamic with lazy loading |
+| **Input** | Context-aware system |
+| **World Generation** | Room-based procedural |
+
+---
+
+## 🤝 **Contributing**
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### **Development Setup**
+1. Fork the repository
+2. Create a feature branch
+3. Follow the coding standards in [DEVELOPMENT.md](DEVELOPMENT.md)
+4. Submit a pull request
+
+---
+
+## 📚 **Documentation**
+
+- **[Architecture Guide](ARCHITECTURE.md)** - Complete architecture overview
+- **[Development Guide](DEVELOPMENT.md)** - Development guidelines and workflows
+- **[API Reference](docs/API.md)** - Complete API documentation
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+
+---
+
+## 📜 **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🎖️ **Credits**
+
+Developed with **professional game development practices** and **industry-standard architecture patterns**.
+
+---
+
+*🏆 Professional Game Architecture*  
+*📅 Updated: August 31, 2025*  
+*🎯 Ready for Production*
 
 ## 📋 Descripción
 

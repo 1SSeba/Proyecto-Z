@@ -61,8 +61,8 @@ topdown-game/
 │   │   ├── DebugSetup.gd          # Configuración del sistema de debug
 │   │   └── DebugSetup.tscn        # Escena de configuración debug
 │   ├── Menus/                     # Sistema de menús reorganizado
-│   │   ├── MainMenu.gd            # Script del menú principal
-│   │   ├── MainMenu.tscn          # Escena del menú principal (ESCENA PRINCIPAL)
+│   │   ├── MainMenuModular.gd     # Script del menú principal (modular)
+│   │   ├── MainMenuModular.tscn   # Escena del menú principal (ESCENA PRINCIPAL)
 │   │   ├── SettingsMenu.gd        # Script de configuración
 │   │   └── SettingsMenu.tscn      # Escena de configuración (independiente)
 │   └── Room/                      # Salas/Niveles del juego

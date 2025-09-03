@@ -77,7 +77,7 @@ Settings ← Settings ← Settings ← Settings
 
 ### Crear un Nuevo Estado
 ```gdscript
-extends "res://Core/StateMachine/State.gd"
+extends "res://src/systems/StateMachine/State.gd"
 class_name MyCustomState
 
 func enter(_previous_state: Node = null) -> void:

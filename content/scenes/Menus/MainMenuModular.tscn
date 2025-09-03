@@ -1,0 +1,152 @@
+[gd_scene load_steps=4 format=3 uid="uid://4knmeixbaqb6"]
+
+[ext_resource type="Script" uid="uid://o4v7ofwdy4ou" path="res://content/scenes/Menus/MainMenuModular.gd" id="1_modular"]
+[ext_resource type="Script" uid="uid://dx0bnti7eh2py" path="res://content/scenes/Menus/SettingsPanelModular.gd" id="2_settings"]
+
+[sub_resource type="Theme" id="Theme_1"]
+
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("main_container", "start_button", "settings_button", "quit_button", "settings_panel", "title_label", "version_label", "background_control")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_1")
+script = ExtResource("1_modular")
+main_container = NodePath("MainContainer")
+start_button = NodePath("MainContainer/StartButton")
+settings_button = NodePath("MainContainer/SettingsButton")
+quit_button = NodePath("MainContainer/QuitButton")
+settings_panel = NodePath("SettingsPanel")
+title_label = NodePath("TitleLabel")
+version_label = NodePath("VersionLabel")
+background_control = NodePath("Background")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -250.0
+offset_right = 200.0
+offset_bottom = -180.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "ROGUELIKE GAME"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -75.0
+offset_right = 100.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="StartButton" type="Button" parent="MainContainer"]
+layout_mode = 2
+text = "Start Game"
+
+[node name="SettingsButton" type="Button" parent="MainContainer"]
+layout_mode = 2
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="MainContainer"]
+layout_mode = 2
+text = "Quit Game"
+
+[node name="VersionLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -30.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "v1.0.0"
+horizontal_alignment = 2
+
+[node name="SettingsPanel" type="Control" parent="." node_paths=PackedStringArray("audio_button", "video_button", "controls_button", "back_button", "settings_title", "settings_container")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_settings")
+audio_button = NodePath("SettingsContainer/AudioButton")
+video_button = NodePath("SettingsContainer/VideoButton")
+controls_button = NodePath("SettingsContainer/ControlsButton")
+back_button = NodePath("SettingsContainer/BackButton")
+settings_title = NodePath("SettingsContainer/SettingsTitle")
+settings_container = NodePath("SettingsContainer")
+
+[node name="SettingsBackground" type="ColorRect" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="SettingsContainer" type="VBoxContainer" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="SettingsTitle" type="Label" parent="SettingsPanel/SettingsContainer"]
+layout_mode = 2
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="AudioButton" type="Button" parent="SettingsPanel/SettingsContainer"]
+layout_mode = 2
+text = "Audio Settings"
+
+[node name="VideoButton" type="Button" parent="SettingsPanel/SettingsContainer"]
+layout_mode = 2
+text = "Video Settings"
+
+[node name="ControlsButton" type="Button" parent="SettingsPanel/SettingsContainer"]
+layout_mode = 2
+text = "Controls"
+
+[node name="BackButton" type="Button" parent="SettingsPanel/SettingsContainer"]
+layout_mode = 2
+text = "Back to Main Menu"
