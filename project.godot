@@ -10,8 +10,9 @@ config_version=5
 
 [application]
 
-config/name="Topdown Roguelike"
-run/main_scene="res://content/scenes/Menus/MainMenuModular.tscn"
+config/name="RougeLike- Base"
+config/version="pre-alpha_V0.0.1"
+run/main_scene="res://game/ui/MainMenu.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -21,23 +22,18 @@ buses/default_bus_layout="res://config/default_bus_layout.tres"
 
 [autoload]
 
-ManagerUtils="*res://src/managers/ManagerUtils.gd"
-#StateMachine="*res://src/systems/StateMachine/StateMachine.gd"
-ConfigManager="*res://src/managers/ConfigManager.gd"
-InputManager="*res://src/managers/InputManager.gd"
-GameStateManager="*res://src/managers/GameStateManager.gd"
-GameManager="*res://src/managers/GameManager.gd"
-AudioManager="*res://src/managers/AudioManager.gd"
-DebugManager="*res://src/managers/DebugManager.gd"
-EventBus="*res://src/systems/Events/EventBus.gd"
-NodeCache="*res://src/systems/NodeCache.gd"
-ObjectPool="*res://src/systems/ObjectPool.gd"
+EventBus="*res://game/core/events/EventBus.gd"
+ServiceManager="*res://game/core/ServiceManager.gd"
+GameStateManager="*res://game/core/systems/GameStateManager.gd"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
-window/stretch/mode="viewport"
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/resizable=true
+window/size/borderless=false
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 

@@ -1,191 +1,334 @@
-# 🎮 Topdown Game - Roguelike
-
-# 🎮 Topdown Roguelike - Professional Game Architecture
+# 🎮 Topdown Roguelike - Arquitectura Modular Profesional
 
 ## 🚀 **Overview**
 
-A **professional-grade roguelike game** built with **Godot 4.4** featuring industry-standard architecture, modular systems, and scalable design patterns.
+Un **roguelike profesional** construido con **Godot 4.4** que presenta una **arquitectura modular basada en componentes**, servicios centralizados y patrones de diseño escalables.
 
-## ✨ **Key Features**
+## ✨ **Características Principales**
 
-- 🏗️ **Professional Architecture**: Industry-standard src/content separation
-- 🎯 **Modular Systems**: Independent, testable components
-- 🔄 **State Machine**: Robust game state management
-- ⚙️ **Manager Pattern**: Centralized autoload system
-- 🎨 **Asset Pipeline**: Organized content structure
-- 🧪 **Testing Framework**: Built-in testing and debugging tools
-- 📚 **Comprehensive Documentation**: Full project documentation
+- 🧩 **Arquitectura de Componentes**: Sistema modular y reutilizable
+- ⚙️ **Servicios Centralizados**: Funcionalidades globales bien organizadas
+- 📡 **EventBus**: Comunicación desacoplada entre sistemas
+- �️ **Separación src/content**: Código vs recursos del juego
+- 🎯 **ServiceManager**: Coordinación profesional de servicios
+- 📚 **Documentación Completa**: Documentación organizada por categorías
+- 🧪 **Testing Integrado**: Pruebas y validación incorporadas
 
 ---
 
-## 🏗️ **Architecture Overview**
+## 🏗️ **Arquitectura Overview**
 
-### **📁 Project Structure**
+### **📁 Nueva Estructura del Proyecto**
 
 ```
 topdown-game/
-├── 📁 src/                    # 💻 Source Code
-│   ├── managers/              # 🎯 Global Systems (Autoloads)
-│   ├── systems/               # 🏗️ Core Systems (StateMachine, Events)
-│   ├── entities/              # 🎭 Game Entities (Player, Enemies)
-│   ├── components/            # 🧩 Reusable Components
-│   ├── ui/                    # 🖥️ User Interface
-│   └── data/                  # 📊 Data Definitions
+├── 📁 src/core/               # 🏗️ Arquitectura Base
+│   ├── components/            # 🧩 Sistema de Componentes
+│   │   ├── Component.gd       # 📄 Clase base
+│   │   ├── HealthComponent.gd # ❤️ Manejo de salud
+│   │   ├── MovementComponent.gd # 🏃 Movimiento
+│   │   └── MenuComponent.gd   # 📋 Lógica de menús
+│   │
+│   ├── services/              # ⚙️ Servicios Globales
+│   │   ├── ConfigService.gd   # ⚙️ Configuración
+│   │   ├── AudioService.gd    # 🎵 Gestión de audio
+│   │   └── InputService.gd    # 🎮 Input avanzado
+│   │
+│   ├── events/                # � Sistema de Eventos
+│   │   └── EventBus.gd        # 🚌 Bus centralizado
+│   │
+│   └── ServiceManager.gd      # 🎯 Coordinador central
 │
-├── 📁 content/                # 🎨 Game Content
-│   ├── assets/                # 🎨 Visual & Audio Resources
-│   ├── scenes/                # 🎭 Game Scenes
-│   └── data/                  # 💾 Game Data
+├── 📁 content/                # 🎨 Contenido del Juego
+│   ├── scenes/                # � Escenas
+│   │   ├── Main.tscn          # 🚪 Escena principal
+│   │   ├── Menus/             # 📋 Interfaces
+│   │   └── Characters/        # 👤 Personajes
+│   │
+│   └── assets/                # 🎨 Recursos visuales/audio
 │
-├── 📁 tools/                  # 🔧 Development Tools
-│   ├── dev/                   # 👨‍💻 Development Scripts
-│   ├── build/                 # 🏗️ Build Tools
-│   └── testing/               # 🧪 Testing Framework
+├── 📁 docs/                   # � Documentación
+│   ├── architecture/          # 🏗️ Documentación técnica
+│   ├── development/           # 👨‍💻 Guías de desarrollo
+│   ├── user-guides/           # 👥 Guías de usuario
+│   └── api-reference/         # 📋 Referencia de API
 │
-├── 📁 config/                 # ⚙️ Project Configuration
-└── 📁 docs/                   # 📚 Documentation
+└── 📁 builds/                 # 🏗️ Builds del proyecto
 ```
 
-### **🎯 Core Systems**
+### **🎯 Nueva Arquitectura Core**
 
-#### **Managers (Autoloads)**
-- **ConfigManager**: Persistent configuration and settings
-- **InputManager**: Centralized input handling and mapping
-- **GameStateManager**: Game state management with StateMachine
-- **AudioManager**: Music and sound effects management
-- **GameManager**: Core gameplay logic
-- **DebugManager**: Development and debugging tools
+#### **Sistema de Componentes**
+- **Component**: Clase base para funcionalidades modulares
+- **HealthComponent**: Manejo de salud y daño
+- **MovementComponent**: Física y movimiento
+- **MenuComponent**: Lógica de interfaces
 
-#### **Core Architecture**
-- **StateMachine**: Professional state management system
-- **EventBus**: Decoupled communication between systems
-- **ObjectPool**: Efficient object recycling
-- **NodeCache**: Optimized node caching system
+#### **Servicios Centralizados**
+- **ServiceManager**: Coordinador de todos los servicios
+- **ConfigService**: Configuración persistente
+- **AudioService**: Gestión de audio con pools
+- **InputService**: Input buffering y contextos
 
----
+#### **Comunicación**
+- **EventBus**: Sistema de eventos desacoplado
+- **Señales centralizadas**: Comunicación entre componentes
+- **API consistente**: Interfaces claras entre sistemas
 
 ## 🚀 **Getting Started**
 
-### **Prerequisites**
-- **Godot Engine 4.4+** ([Download](https://godotengine.org/download))
-- **Git** for version control
+### **Requisitos**
+- **Godot Engine 4.4+** ([Descargar](https://godotengine.org/download))
+- **Git** para control de versiones
 
-### **Quick Setup**
+### **Instalación Rápida**
 ```bash
-# Clone the repository
+# Clonar el repositorio
 git clone https://github.com/1SSeba/topdown-game.git
 cd topdown-game
 
-# Open in Godot
+# Abrir en Godot
 godot project.godot
 
-# Or use development script
-chmod +x dev.sh
-./dev.sh
+# Verificar que aparezca en consola:
+# "ServiceManager: All services initialized successfully"
 ```
 
-### **Development Workflow**
+### **Tu Primer Componente**
+```gdscript
+# Crear una entidad con componentes
+extends CharacterBody2D
+
+func _ready():
+    # Añadir componente de salud
+    var health = HealthComponent.new()
+    health.max_health = 100
+    add_child(health)
+    
+    # Añadir componente de movimiento
+    var movement = MovementComponent.new()
+    movement.speed = 150.0
+    add_child(movement)
+    
+    # Los componentes se inicializan automáticamente
+    print("Entidad creada con ", get_children().size(), " componentes")
+```
+
+### **Usar Servicios**
+```gdscript
+# Configuración
+var config = ServiceManager.get_config_service()
+config.set_master_volume(0.8)
+
+# Audio
+var audio = ServiceManager.get_audio_service()
+audio.play_sfx(explosion_sound)
+
+# Input
+var input_service = ServiceManager.get_input_service()
+input_service.set_input_context(InputService.InputContext.GAMEPLAY)
+```
+
+---
+
+## 📚 **Documentación**
+
+### **🏗️ [Arquitectura](docs/architecture/)**
+- **[Component Architecture](docs/architecture/component-architecture.md)** - Sistema de componentes modular
+- **[Service Layer](docs/architecture/service-layer.md)** - Servicios centralizados
+- **[Event System](docs/architecture/event-system.md)** - EventBus y comunicación
+- **[Project Structure](docs/architecture/project-structure.md)** - Organización del proyecto
+
+### **👨‍💻 [Desarrollo](docs/development/)**
+- **[Getting Started](docs/development/getting-started.md)** - Primeros pasos
+- **[Component Development](docs/development/component-development.md)** - Crear componentes
+- **[Service Development](docs/development/service-development.md)** - Desarrollar servicios
+- **[Testing Guide](docs/development/testing-guide.md)** - Pruebas y validación
+
+### **👥 [Guías de Usuario](docs/user-guides/)**
+- **[Installation](docs/user-guides/installation.md)** - Instalación completa
+- **[Game Controls](docs/user-guides/game-controls.md)** - Controles del juego
+- **[Settings Guide](docs/user-guides/settings-guide.md)** - Configuración
+- **[Troubleshooting](docs/user-guides/troubleshooting.md)** - Solución de problemas
+
+### **📋 [API Reference](docs/api-reference/)**
+- **[Components API](docs/api-reference/components-api.md)** - API de componentes
+- **[Services API](docs/api-reference/services-api.md)** - API de servicios
+- **[EventBus API](docs/api-reference/eventbus-api.md)** - Sistema de eventos
+- **[Utilities API](docs/api-reference/utilities-api.md)** - Utilidades
+
+---
+
+## 🎮 **Características del Juego**
+
+### **🧩 Sistema de Componentes**
+- **Modularidad**: Cada componente tiene una responsabilidad específica
+- **Reutilización**: Los componentes se pueden usar en múltiples entidades
+- **Configuración**: Propiedades exportadas para fácil configuración
+- **Comunicación**: EventBus para comunicación desacoplada
+
+### **⚙️ Servicios Profesionales**
+- **ConfigService**: Configuración persistente automática
+- **AudioService**: Gestión de audio con pools de reproductores
+- **InputService**: Input buffering y contextos de entrada
+- **ServiceManager**: Coordinación y lifecycle de servicios
+
+### **🏰 Generación Procedural**
+- **RoomsSystem**: Sistema de habitaciones y mazmorras
+- **RoomGenerator**: Generación de salas con diferentes tipos
+- **CorridorGenerator**: Conexión inteligente entre salas
+
+---
+
+## 🧪 **Testing y Desarrollo**
+
+### **Verificación de Arquitectura**
 ```bash
-# Verify syntax
-./tools/dev/check_syntax.sh
+# Verificar que los servicios funcionan
+godot --headless --script verify_services.gd
 
-# Quick export for testing
-./tools/dev/quick_export.sh
+# Resultado esperado:
+# ✅ ServiceManager: Initialized
+# ✅ ConfigService: Ready  
+# ✅ AudioService: Ready
+# ✅ InputService: Ready
+```
 
-# Clean temporary files
-./tools/dev/clean_cache.sh
+### **Desarrollo con Hot-Reload**
+```bash
+# Script de desarrollo (recompila automáticamente)
+./dev.sh
+
+# Export rápido para testing
+godot --headless --export-debug Linux/X11 builds/debug/game_debug
 ```
 
 ---
 
-## 🎮 **Game Features**
+## 📊 **Especificaciones Técnicas**
 
-### **🏰 Roguelike System**
-- **Procedural Generation**: Room-based dungeon generation
-- **Multiple Dungeon Sizes**: Small, Medium, Large configurations
-- **Room Types**: START, NORMAL, TREASURE, BOSS, SECRET, SHOP
-- **Connectivity Algorithm**: Minimum Spanning Tree room connections
+| Característica | Implementación |
+|----------------|----------------|
+| **Motor** | Godot 4.4+ |
+| **Arquitectura** | Componentes + Servicios |
+| **Comunicación** | EventBus centralizado |
+| **Configuración** | ConfigService persistente |
+| **Audio** | AudioService con pools |
+| **Input** | InputService con buffering |
+| **Estados** | StateMachine simplificada |
 
-### **🎯 Gameplay**
-- **State-Driven**: Professional state machine implementation
-- **Input System**: Configurable controls with multiple contexts
-- **Audio System**: Dynamic music and sound effects
-- **Debug Tools**: Real-time debugging and visualization
+## 🤝 **Contribuir**
 
----
+¡Las contribuciones son bienvenidas! Ver [CONTRIBUTING.md](CONTRIBUTING.md) para guías detalladas.
 
-## 🔧 **Development**
+### **Para Desarrolladores**
+1. **Fork** el repositorio
+2. **Leer** [Getting Started](docs/development/getting-started.md)
+3. **Seguir** [Coding Standards](docs/development/coding-standards.md)
+4. **Crear** feature branch con componentes/servicios
+5. **Probar** cambios con [Testing Guide](docs/development/testing-guide.md)
+6. **Submit** pull request
 
-### **Architecture Principles**
-- **Separation of Concerns**: Code vs Content vs Tools
-- **Modular Design**: Independent, testable systems
-- **Scalable Structure**: Easy to extend and maintain
-- **Professional Standards**: Industry best practices
-
-### **Testing & Quality**
-- **Built-in Testing**: Comprehensive testing framework
-- **Debug Console**: Interactive debugging tools
-- **Performance Monitoring**: Built-in profiling
-- **Code Quality**: Consistent coding standards
-
-### **Documentation**
-- **[ARCHITECTURE.md](ARCHITECTURE.md)**: Detailed architecture guide
-- **[DEVELOPMENT.md](DEVELOPMENT.md)**: Development guidelines
-- **[CONTRIBUTING.md](CONTRIBUTING.md)**: Contribution guidelines
-- **[docs/](docs/)**: Comprehensive documentation
+### **Para Usuarios**
+- **Reportar bugs** en [GitHub Issues](https://github.com/1SSeba/topdown-game/issues)
+- **Sugerir features** siguiendo la arquitectura modular
+- **Probar builds** de desarrollo y dar feedback
+- **Contribuir** a la documentación
 
 ---
 
-## 📊 **Technical Specifications**
+## 💡 **Ejemplos de Uso**
 
-| Feature | Implementation |
-|---------|----------------|
-| **Engine** | Godot 4.4+ |
-| **Architecture** | Manager + State Machine Pattern |
-| **Code Organization** | src/content separation |
-| **State Management** | Professional StateMachine |
-| **Audio** | Dynamic with lazy loading |
-| **Input** | Context-aware system |
-| **World Generation** | Room-based procedural |
+### **Crear Nueva Entidad**
+```gdscript
+# MyEnemy.gd
+extends CharacterBody2D
+
+func _ready():
+    # Componentes básicos
+    var health = HealthComponent.new()
+    health.max_health = 75
+    add_child(health)
+    
+    var movement = MovementComponent.new()
+    movement.speed = 80.0
+    add_child(movement)
+    
+    # Eventos
+    EventBus.entity_spawned.emit(self)
+```
+
+### **Nuevo Servicio**
+```gdscript
+# MyCustomService.gd
+extends GameService
+
+func initialize() -> void:
+    print("MyCustomService initialized")
+
+# En ServiceManager.gd
+func get_my_custom_service() -> MyCustomService:
+    return _my_custom_service
+```
+
+### **Usar EventBus**
+```gdscript
+# Emitir eventos
+EventBus.health_changed.emit(player, new_health)
+
+# Escuchar eventos
+func _ready():
+    EventBus.health_changed.connect(_on_health_changed)
+
+func _on_health_changed(entity: Node, health: int):
+    print("Health changed: ", health)
+```
 
 ---
 
-## 🤝 **Contributing**
+## 🏆 **Estado del Proyecto**
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+### **✅ Implementado**
+- 🧩 **Sistema de Componentes** completo y funcional
+- ⚙️ **Servicios Centralizados** con ServiceManager
+- 📡 **EventBus** para comunicación desacoplada
+- 📚 **Documentación Completa** organizada por categorías
+- 🎮 **MainMenu** funcional con arquitectura limpia
+- 🔧 **ConfigService** con persistencia automática
+- 🎵 **AudioService** con pools de reproductores
 
-### **Development Setup**
-1. Fork the repository
-2. Create a feature branch
-3. Follow the coding standards in [DEVELOPMENT.md](DEVELOPMENT.md)
-4. Submit a pull request
+### **🔄 En Desarrollo**
+- 🏰 **Sistema de Salas** mejorado con componentes
+- 👹 **EnemyComponent** para IA modular
+- 🎒 **InventoryComponent** para items
+- ⚔️ **CombatComponent** para peleas
 
----
-
-## 📚 **Documentation**
-
-- **[Architecture Guide](ARCHITECTURE.md)** - Complete architecture overview
-- **[Development Guide](DEVELOPMENT.md)** - Development guidelines and workflows
-- **[API Reference](docs/API.md)** - Complete API documentation
-- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
-
----
-
-## 📜 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### **📋 Roadmap**
+- 🎯 **QuestComponent** para misiones
+- 🏪 **ShopComponent** para comercio
+- 🎨 **EffectsComponent** para partículas
+- 🌍 **WorldComponent** para generación
 
 ---
 
-## 🎖️ **Credits**
+## 📜 **Licencia**
 
-Developed with **professional game development practices** and **industry-standard architecture patterns**.
+Este proyecto está bajo la licencia especificada en [LICENSE](LICENSE).
 
 ---
 
-*🏆 Professional Game Architecture*  
-*📅 Updated: August 31, 2025*  
-*🎯 Ready for Production*
+## 👨‍💻 **Desarrollado por**
+
+- **1SSeba** - [GitHub](https://github.com/1SSeba)
+- **Arquitectura**: Componentes modulares profesionales
+- **Principios**: Separation of Concerns, DRY, SOLID
+- **Stack**: Godot 4.4 + GDScript + Arquitectura Modular
+
+---
+
+*� Roguelike con arquitectura profesional y componentes modulares*  
+*📅 Actualizado: Septiembre 4, 2025*  
+*🚀 Listo para desarrollo colaborativo*
 
 ## 📋 Descripción
 

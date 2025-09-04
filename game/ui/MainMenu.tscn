@@ -1,0 +1,161 @@
+[gd_scene load_steps=6 format=3 uid="uid://moih6kjuhyf4"]
+
+[ext_resource type="Script" uid="uid://b8sg7722unv5r" path="res://game/ui/MainMenu.gd" id="1_main_menu"]
+[ext_resource type="PackedScene" uid="uid://bkj3m8yap2qrl" path="res://game/ui/SettingsMenu.tscn" id="2_settings_menu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.3, 0.3, 0.5, 0.9)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.6, 0.6, 0.8, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+bg_color = Color(0.2, 0.2, 0.3, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.6, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="Theme" id="Theme_professional"]
+Button/styles/hover = SubResource("StyleBoxFlat_button_hover")
+Button/styles/normal = SubResource("StyleBoxFlat_button_normal")
+
+[node name="MainMenuModular" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_professional")
+script = ExtResource("1_main_menu")
+
+[node name="Background" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BackgroundGradient" type="ColorRect" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.05, 0.05, 0.1, 1)
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 50.0
+offset_top = 50.0
+offset_right = -50.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HeaderContainer" type="VBoxContainer" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TopSpacer" type="Control" parent="MainContainer/HeaderContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TitleContainer" type="CenterContainer" parent="MainContainer/HeaderContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="GameTitle" type="Label" parent="MainContainer/HeaderContainer/TitleContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "ROGUELIKE ADVENTURE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonContainer" type="VBoxContainer" parent="MainContainer/CenterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="StartButton" type="Button" parent="MainContainer/CenterContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 18
+text = "START GAME"
+
+[node name="SettingsButton" type="Button" parent="MainContainer/CenterContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 18
+text = "SETTINGS"
+
+[node name="QuitButton" type="Button" parent="MainContainer/CenterContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 18
+text = "QUIT"
+
+[node name="FooterContainer" type="VBoxContainer" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BottomSpacer" type="Control" parent="MainContainer/FooterContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VersionContainer" type="HBoxContainer" parent="MainContainer/FooterContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="VersionLabel" type="Label" parent="MainContainer/FooterContainer/VersionContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+text = "v1.0.0"
+horizontal_alignment = 2
+
+[node name="SettingsMenu" parent="." instance=ExtResource("2_settings_menu")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[connection signal="pressed" from="MainContainer/CenterContainer/ButtonContainer/StartButton" to="." method="_on_start_button_activated"]
+[connection signal="pressed" from="MainContainer/CenterContainer/ButtonContainer/SettingsButton" to="." method="_on_settings_button_activated"]
+[connection signal="pressed" from="MainContainer/CenterContainer/ButtonContainer/QuitButton" to="." method="_on_quit_button_activated"]
+[connection signal="back_pressed" from="SettingsMenu" to="." method="_on_settings_back_pressed"]
+[connection signal="settings_closed" from="SettingsMenu" to="." method="_on_settings_menu_closed"]
