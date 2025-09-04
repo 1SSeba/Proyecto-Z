@@ -151,6 +151,26 @@ layout_mode = 2
 layout_mode = 2
 text = "Video"
 
+[node name="WindowModeContainer" type="HBoxContainer" parent="SettingsPanel/VBoxContainer/VideoSection"]
+layout_mode = 2
+
+[node name="WindowModeLabel" type="Label" parent="SettingsPanel/VBoxContainer/VideoSection/WindowModeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Modo de Ventana:"
+
+[node name="WindowModeOption" type="OptionButton" parent="SettingsPanel/VBoxContainer/VideoSection/WindowModeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 3
+popup/item_0/text = "Ventana"
+popup/item_0/id = 0
+popup/item_1/text = "Pantalla Completa"
+popup/item_1/id = 1
+popup/item_2/text = "Sin Bordes"
+popup/item_2/id = 2
+
 [node name="ResolutionContainer" type="HBoxContainer" parent="SettingsPanel/VBoxContainer/VideoSection"]
 layout_mode = 2
 
@@ -199,6 +219,32 @@ text = "VSync:"
 [node name="VSyncCheckbox" type="CheckBox" parent="SettingsPanel/VBoxContainer/VideoSection/VSyncContainer"]
 layout_mode = 2
 button_pressed = true
+
+[node name="FpsLimitContainer" type="HBoxContainer" parent="SettingsPanel/VBoxContainer/VideoSection"]
+layout_mode = 2
+
+[node name="FpsLimitLabel" type="Label" parent="SettingsPanel/VBoxContainer/VideoSection/FpsLimitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Límite FPS:"
+
+[node name="FpsLimitOption" type="OptionButton" parent="SettingsPanel/VBoxContainer/VideoSection/FpsLimitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 2
+item_count = 6
+popup/item_0/text = "30 FPS"
+popup/item_0/id = 0
+popup/item_1/text = "60 FPS"
+popup/item_1/id = 1
+popup/item_2/text = "120 FPS"
+popup/item_2/id = 2
+popup/item_3/text = "144 FPS"
+popup/item_3/id = 3
+popup/item_4/text = "240 FPS"
+popup/item_4/id = 4
+popup/item_5/text = "Sin Límite"
+popup/item_5/id = 5
 
 [node name="QualityContainer" type="HBoxContainer" parent="SettingsPanel/VBoxContainer/VideoSection"]
 layout_mode = 2
