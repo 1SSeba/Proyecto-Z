@@ -13,6 +13,15 @@ extends Node
 @export var enable_gamepad: bool = true
 @export var input_buffer_size: int = 5
 
+# Mouse settings
+@export var mouse_sensitivity: float = 1.0
+@export var mouse_invert_x: bool = false
+@export var mouse_invert_y: bool = false
+
+# Gamepad settings
+@export var gamepad_deadzone: float = 0.2
+@export var gamepad_vibration: bool = true
+
 # ============================================================================
 #  INPUT STATE
 # ============================================================================
@@ -42,7 +51,12 @@ func _start():
 	service_name = "InputService"
 	set_process_unhandled_input(true)
 	_initialize_input_state()
+	is_service_ready = true
 	print("InputService: Input system initialized")
+
+func start_service():
+	"""Public method to start the service"""
+	_start()
 
 func _initialize_input_state():
 	"""Initialize input state tracking"""
@@ -173,6 +187,46 @@ func get_action_strength(action: String) -> float:
 	return Input.get_action_strength(action)
 
 # ============================================================================
+#  ADVANCED INPUT CONFIGURATION
+# ============================================================================
+
+func set_mouse_sensitivity(sensitivity: float):
+	"""Set mouse sensitivity"""
+	mouse_sensitivity = clamp(sensitivity, 0.1, 5.0)
+
+func set_mouse_invert_x(invert: bool):
+	"""Set mouse X axis inversion"""
+	mouse_invert_x = invert
+
+func set_mouse_invert_y(invert: bool):
+	"""Set mouse Y axis inversion"""
+	mouse_invert_y = invert
+
+func set_gamepad_deadzone(deadzone: float):
+	"""Set gamepad stick deadzone"""
+	gamepad_deadzone = clamp(deadzone, 0.0, 0.9)
+	# Apply to movement actions
+	var movement_actions = ["move_up", "move_down", "move_left", "move_right"]
+	for action in movement_actions:
+		if InputMap.has_action(action):
+			InputMap.action_set_deadzone(action, gamepad_deadzone)
+
+func set_gamepad_vibration(enabled: bool):
+	"""Enable or disable gamepad vibration"""
+	gamepad_vibration = enabled
+
+func get_mouse_delta_adjusted(delta: Vector2) -> Vector2:
+	"""Get mouse delta with sensitivity and inversion applied"""
+	var adjusted_delta = delta * mouse_sensitivity
+	
+	if mouse_invert_x:
+		adjusted_delta.x *= -1
+	if mouse_invert_y:
+		adjusted_delta.y *= -1
+	
+	return adjusted_delta
+
+# ============================================================================
 #  SERVICE STATUS
 # ============================================================================
 
@@ -183,5 +237,10 @@ func get_input_status() -> Dictionary:
 		"current_inputs": current_input.duplicate(),
 		"buffer_size": input_buffer.size(),
 		"movement_vector": get_movement_vector(),
-		"tracked_actions": tracked_actions.size()
+		"tracked_actions": tracked_actions.size(),
+		"mouse_sensitivity": mouse_sensitivity,
+		"mouse_invert_x": mouse_invert_x,
+		"mouse_invert_y": mouse_invert_y,
+		"gamepad_deadzone": gamepad_deadzone,
+		"gamepad_vibration": gamepad_vibration
 	}

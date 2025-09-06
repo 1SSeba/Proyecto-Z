@@ -18,6 +18,11 @@ var is_service_ready: bool = false
 @export var music_volume: float = 0.8 : set = set_music_volume
 @export var sfx_volume: float = 1.0 : set = set_sfx_volume
 
+@export_group("Advanced Audio Settings")
+@export var spatial_audio_enabled: bool = true
+@export var audio_quality: int = 1 # 0=Low, 1=Medium, 2=High
+@export var current_audio_device: String = "Default"
+
 @export_group("Audio Resources")
 @export var audio_library: Dictionary = {}
 
@@ -39,7 +44,12 @@ func _start():
 	service_name = "AudioService"
 	_setup_audio_players()
 	_connect_event_bus()
+	is_service_ready = true
 	print("AudioService: Initialized successfully")
+
+func start_service():
+	"""Public method to start the service"""
+	_start()
 
 func _setup_audio_players():
 	"""Setup audio players"""
@@ -62,7 +72,7 @@ func _connect_event_bus():
 	if EventBus:
 		EventBus.audio_play_sfx.connect(_on_play_sfx)
 		EventBus.audio_play_music.connect(_on_play_music)
-		EventBus.audio_stop_music.connect(_on_stop_music)
+		# EventBus.audio_stop_music.connect(_on_stop_music)  # Signal commented out
 
 # ============================================================================
 #  MUSIC MANAGEMENT
@@ -195,6 +205,43 @@ func _on_stop_music():
 	stop_music()
 
 # ============================================================================
+#  ADVANCED AUDIO SETTINGS
+# ============================================================================
+
+func set_spatial_audio(enabled: bool):
+	"""Enable or disable spatial audio"""
+	spatial_audio_enabled = enabled
+	# Apply spatial audio settings to existing players
+	for player in sfx_players:
+		# This would configure 3D audio if using AudioStreamPlayer3D
+		pass
+	print("AudioService: Spatial audio ", "enabled" if enabled else "disabled")
+
+func set_audio_quality(quality_index: int):
+	"""Set audio quality level"""
+	audio_quality = quality_index
+	match quality_index:
+		0:
+			print("AudioService: Audio quality set to Low")
+		1:
+			print("AudioService: Audio quality set to Medium")
+		2:
+			print("AudioService: Audio quality set to High")
+
+func set_audio_device(device_name: String):
+	"""Set the audio output device"""
+	current_audio_device = device_name
+	print("AudioService: Audio device set to: ", device_name)
+	# Note: Godot doesn't have direct API for changing audio devices during runtime
+	# This would typically require engine restart or platform-specific code
+
+func get_available_audio_devices() -> Array[String]:
+	"""Get list of available audio devices"""
+	# This is a simplified implementation
+	# In a real scenario, you'd query the system for available devices
+	return ["Default Device", "Speakers", "Headphones", "USB Audio"]
+
+# ============================================================================
 #  SERVICE INFO
 # ============================================================================
 
@@ -206,5 +253,9 @@ func get_audio_status() -> Dictionary:
 		"master_volume": master_volume,
 		"music_volume": music_volume,
 		"sfx_volume": sfx_volume,
-		"registered_sounds": audio_library.size()
+		"spatial_audio": spatial_audio_enabled,
+		"audio_quality": audio_quality,
+		"audio_device": current_audio_device,
+		"registered_sounds": audio_library.size(),
+		"available_devices": get_available_audio_devices()
 	}

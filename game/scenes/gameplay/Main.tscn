@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://bmlgrso7rbxne"]
+
+[ext_resource type="Script" uid="uid://bphn4qhcev4kr" path="res://game/scenes/Main.gd" id="1_2x8k5"]
+[ext_resource type="PackedScene" uid="uid://dnoayasg0nmts" path="res://game/entities/characters/Player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://8lqiti3v0dqm" path="res://game/entities/Room/Room.tscn" id="3_world"]
+[ext_resource type="PackedScene" path="res://game/scenes/hud/GameHUD.tscn" id="4_hud"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_2x8k5")
+
+[node name="GameWorld" type="Node2D" parent="."]
+
+[node name="DungeonSystem" parent="GameWorld" instance=ExtResource("3_world")]
+
+[node name="Player" parent="GameWorld" instance=ExtResource("2_player")]
+position = Vector2(576, 312)
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="GameHUD" parent="UILayer" instance=ExtResource("4_hud")]
+grow_horizontal = 2
+grow_vertical = 2

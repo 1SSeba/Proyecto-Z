@@ -8,41 +8,54 @@ extends Node
 #  EVENT DEFINITIONS
 # ============================================================================
 
+# Audio Events (actively used by UI)
+# Audio signals - Active
+signal audio_play_sfx(sfx_name: String, volume: float)
+signal audio_play_music(music_name: String, volume: float, fade_in: bool)
+# signal audio_stop_music(fade_out: bool)  # TODO: Implement if needed
+
+# Audio signals - Placeholder (ready for future implementation)
+# signal audio_stop_sfx(sfx_name: String)
+# signal audio_set_master_volume(volume: float)
+# signal audio_set_sfx_volume(volume: float)
+# signal audio_set_music_volume(volume: float)
+
+# Future Implementation Events (ready for when needed)
+# Uncomment these signals when implementing the corresponding features:
+
 # Game State Events
-signal game_started()
-signal game_paused()
-signal game_resumed()
-signal game_over()
+# signal game_started()
+# signal game_paused()
+# signal game_resumed()
+# signal game_over()
 
 # Scene Events
-signal scene_changing(from_scene: String, to_scene: String)
-signal scene_changed(scene_name: String)
+# signal scene_changing(from_scene: String, to_scene: String)
+# signal scene_changed(scene_name: String)
 
-# Player Events
-signal player_spawned(player: Node)
-signal player_died(player: Node)
-signal player_health_changed(current: int, maximum: int)
+# Player Events  
+# signal player_spawned(player: Node)
+# signal player_died(player: Node)
+# signal player_health_changed(current: int, maximum: int)
 
 # UI Events
-signal ui_element_focused(element: Control)
-signal ui_button_pressed(button_name: String)
-signal menu_opened(menu_name: String)
-signal menu_closed(menu_name: String)
+# signal ui_element_focused(element: Control)
+# signal ui_button_pressed(button_name: String)
+# signal menu_opened(menu_name: String)
+# signal menu_closed(menu_name: String)
 
-# Audio Events
-signal audio_play_sfx(sound_name: String)
-signal audio_play_music(track_name: String)
-signal audio_stop_music()
+# Audio Events (extended)
+# signal audio_stop_music()
 
 # Input Events
-signal input_action_pressed(action: String)
-signal input_action_released(action: String)
+# signal input_action_pressed(action: String)
+# signal input_action_released(action: String)
 
 # Room Events (Roguelike specific)
-signal room_entered(room_id: String)
-signal room_cleared(room_id: String)
-signal enemy_spawned(enemy: Node)
-signal enemy_defeated(enemy: Node)
+# signal room_entered(room_id: String)
+# signal room_cleared(room_id: String)
+# signal enemy_spawned(enemy: Node)
+# signal enemy_defeated(enemy: Node)
 
 # ============================================================================
 #  EVENT MANAGEMENT
@@ -107,3 +120,5 @@ func request_audio(audio_type: String, audio_name: String):
 			audio_play_sfx.emit(audio_name)
 		"music":
 			audio_play_music.emit(audio_name)
+		_:
+			print("EventBus: Unknown audio type: ", audio_type)

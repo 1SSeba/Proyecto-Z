@@ -27,8 +27,9 @@ func _initialize_services():
 	# Define service load order (dependencies first)
 	service_load_order = [
 		"ConfigService",
-		"InputService",
-		"AudioService"
+		"InputService", 
+		"AudioService",
+		"TransitionService"
 	]
 	
 	# Load each service
@@ -58,17 +59,22 @@ func _create_service(service_name: String) -> Node:
 		"ConfigService":
 			var script = load("res://game/core/services/ConfigService.gd")
 			var service = script.new()
-			service.name = "ConfigService"
+			service.service_name = "ConfigService"
 			return service
 		"InputService":
 			var script = load("res://game/core/services/InputService.gd")
 			var service = script.new()
-			service.name = "InputService"
+			service.service_name = "InputService"
 			return service
 		"AudioService":
 			var script = load("res://game/core/services/AudioService.gd")
 			var service = script.new()
-			service.name = "AudioService"
+			service.service_name = "AudioService"
+			return service
+		"TransitionService":
+			var script = load("res://game/ui/components/TransitionManager.gd")
+			var service = script.new()
+			service.service_name = "TransitionService"
 			return service
 		_:
 			print("ServiceManager: Unknown service: %s" % service_name)
@@ -94,6 +100,17 @@ func is_service_ready(service_name: String) -> bool:
 	
 	if service.has_method("is_service_available"):
 		return service.is_service_available()
+	
+	return true
+
+func are_services_ready() -> bool:
+	"""Check if all services are ready"""
+	if not is_manager_ready:
+		return false
+	
+	for service_name in service_load_order:
+		if not is_service_ready(service_name):
+			return false
 	
 	return true
 
@@ -162,6 +179,10 @@ func get_input_service():
 func get_audio_service():
 	"""Get AudioService instance"""
 	return get_service("AudioService")
+
+func get_transition_service():
+	"""Get TransitionService instance"""
+	return get_service("TransitionService")
 
 # ============================================================================
 #  CLEANUP

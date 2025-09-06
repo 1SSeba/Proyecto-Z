@@ -1,0 +1,655 @@
+[gd_scene load_steps=3 format=3 uid="uid://5ipxliimxcfc"]
+
+[ext_resource type="Script" uid="uid://dpymh77wai847" path="res://game/scenes/menus/SettingsMenu.gd" id="1_1k8gm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1mwp2"]
+bg_color = Color(0.1, 0.1, 0.1, 0.95)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="SettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1k8gm")
+
+[node name="BackgroundPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1mwp2")
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -480.0
+offset_top = -360.0
+offset_right = 480.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HeaderContainer" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="MainContainer/HeaderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="MainContainer/HeaderContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="MainContainer"]
+layout_mode = 2
+
+[node name="ContentContainer" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TabContainer" type="VBoxContainer" parent="MainContainer/ContentContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="AudioTab" type="Button" parent="MainContainer/ContentContainer/TabContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Audio"
+
+[node name="VideoTab" type="Button" parent="MainContainer/ContentContainer/TabContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Video"
+
+[node name="ControlsTab" type="Button" parent="MainContainer/ContentContainer/TabContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Controls"
+
+[node name="GameplayTab" type="Button" parent="MainContainer/ContentContainer/TabContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Gameplay"
+
+[node name="AccessibilityTab" type="Button" parent="MainContainer/ContentContainer/TabContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Accessibility"
+
+[node name="VSeparator" type="VSeparator" parent="MainContainer/ContentContainer"]
+layout_mode = 2
+
+[node name="SettingsContainer" type="ScrollContainer" parent="MainContainer/ContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SettingsContent" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AudioSettings" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent"]
+layout_mode = 2
+
+[node name="AudioTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Audio Settings"
+
+[node name="MasterVolumeContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
+layout_mode = 2
+
+[node name="MasterVolumeLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/MasterVolumeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Master Volume:"
+
+[node name="MasterVolumeSlider" type="HSlider" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/MasterVolumeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[node name="MasterVolumeValue" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/MasterVolumeContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="MusicVolumeContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
+layout_mode = 2
+
+[node name="MusicVolumeLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/MusicVolumeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Music Volume:"
+
+[node name="MusicVolumeSlider" type="HSlider" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/MusicVolumeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 80.0
+
+[node name="MusicVolumeValue" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/MusicVolumeContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "80%"
+horizontal_alignment = 2
+
+[node name="SFXVolumeContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
+layout_mode = 2
+
+[node name="SFXVolumeLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/SFXVolumeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SFX Volume:"
+
+[node name="SFXVolumeSlider" type="HSlider" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/SFXVolumeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 90.0
+
+[node name="SFXVolumeValue" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/SFXVolumeContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "90%"
+horizontal_alignment = 2
+
+[node name="AudioDeviceContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
+layout_mode = 2
+
+[node name="AudioDeviceLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioDeviceContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Audio Device:"
+
+[node name="AudioDeviceOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioDeviceContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AudioQualityContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
+layout_mode = 2
+
+[node name="AudioQualityLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioQualityContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Audio Quality:"
+
+[node name="AudioQualityOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioQualityContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SpatialAudioContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
+layout_mode = 2
+
+[node name="SpatialAudioLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/SpatialAudioContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "3D Spatial Audio:"
+
+[node name="SpatialAudioCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/SpatialAudioContainer"]
+layout_mode = 2
+
+[node name="VideoSettings" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent"]
+visible = false
+layout_mode = 2
+
+[node name="VideoTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Video Settings"
+
+[node name="QualityPresetContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
+layout_mode = 2
+
+[node name="QualityPresetLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/QualityPresetContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quality Preset:"
+
+[node name="QualityPresetOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/QualityPresetContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResolutionContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
+layout_mode = 2
+
+[node name="ResolutionLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/ResolutionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Resolution:"
+
+[node name="ResolutionOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/ResolutionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FullscreenContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
+layout_mode = 2
+
+[node name="FullscreenLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FullscreenContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Fullscreen:"
+
+[node name="FullscreenCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FullscreenContainer"]
+layout_mode = 2
+
+[node name="VsyncContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
+layout_mode = 2
+
+[node name="VsyncLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/VsyncContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VSync:"
+
+[node name="VsyncCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/VsyncContainer"]
+layout_mode = 2
+
+[node name="WindowModeContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
+layout_mode = 2
+
+[node name="WindowModeLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/WindowModeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Window Mode:"
+
+[node name="WindowModeOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/WindowModeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FPSLimitContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
+layout_mode = 2
+
+[node name="FPSLimitLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FPSLimitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "FPS Limit:"
+
+[node name="FPSLimitOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FPSLimitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ControlsSettings" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent"]
+visible = false
+layout_mode = 2
+
+[node name="ControlsTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Controls Settings"
+
+[node name="MouseSensitivityContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
+layout_mode = 2
+
+[node name="MouseSensitivityLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseSensitivityContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mouse Sensitivity:"
+
+[node name="MouseSensitivitySlider" type="HSlider" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseSensitivityContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.1
+max_value = 3.0
+step = 0.1
+value = 1.0
+
+[node name="MouseSensitivityValue" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseSensitivityContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "1.0x"
+horizontal_alignment = 2
+
+[node name="KeybindingsLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Key Bindings:"
+
+[node name="KeybindingsContainer" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
+layout_mode = 2
+
+[node name="MouseInvertContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
+layout_mode = 2
+
+[node name="MouseInvertXLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseInvertContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Invert Mouse X:"
+
+[node name="MouseInvertXCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseInvertContainer"]
+layout_mode = 2
+
+[node name="MouseInvertYContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
+layout_mode = 2
+
+[node name="MouseInvertYLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseInvertYContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Invert Mouse Y:"
+
+[node name="MouseInvertYCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseInvertYContainer"]
+layout_mode = 2
+
+[node name="GamepadTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Gamepad Settings:"
+
+[node name="GamepadDeadzoneContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
+layout_mode = 2
+
+[node name="GamepadDeadzoneLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/GamepadDeadzoneContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Stick Deadzone:"
+
+[node name="GamepadDeadzoneSlider" type="HSlider" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/GamepadDeadzoneContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 0.9
+step = 0.1
+value = 0.2
+
+[node name="GamepadDeadzoneValue" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/GamepadDeadzoneContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "0.2"
+horizontal_alignment = 2
+
+[node name="GamepadVibrationContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
+layout_mode = 2
+
+[node name="GamepadVibrationLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/GamepadVibrationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Vibration:"
+
+[node name="GamepadVibrationCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/GamepadVibrationContainer"]
+layout_mode = 2
+
+[node name="GameplaySettings" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent"]
+visible = false
+layout_mode = 2
+
+[node name="GameplayTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Gameplay Settings"
+
+[node name="DifficultyContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
+layout_mode = 2
+
+[node name="DifficultyLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/DifficultyContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Difficulty:"
+
+[node name="DifficultyOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/DifficultyContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AutoSaveContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
+layout_mode = 2
+
+[node name="AutoSaveLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/AutoSaveContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Auto Save:"
+
+[node name="AutoSaveCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/AutoSaveContainer"]
+layout_mode = 2
+
+[node name="AutoSaveIntervalContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
+layout_mode = 2
+
+[node name="AutoSaveIntervalLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/AutoSaveIntervalContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Auto Save Interval:"
+
+[node name="AutoSaveIntervalOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/AutoSaveIntervalContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CameraShakeContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
+layout_mode = 2
+
+[node name="CameraShakeLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/CameraShakeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Camera Shake:"
+
+[node name="CameraShakeSlider" type="HSlider" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/CameraShakeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2.0
+step = 0.1
+value = 1.0
+
+[node name="CameraShakeValue" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/CameraShakeContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "1.0x"
+horizontal_alignment = 2
+
+[node name="UIScaleContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
+layout_mode = 2
+
+[node name="UIScaleLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/UIScaleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "UI Scale:"
+
+[node name="UIScaleSlider" type="HSlider" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/UIScaleContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.5
+max_value = 2.0
+step = 0.1
+value = 1.0
+
+[node name="UIScaleValue" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/UIScaleContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "1.0x"
+horizontal_alignment = 2
+
+[node name="TutorialHintsContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
+layout_mode = 2
+
+[node name="TutorialHintsLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/TutorialHintsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tutorial Hints:"
+
+[node name="TutorialHintsCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/TutorialHintsContainer"]
+layout_mode = 2
+
+[node name="AccessibilitySettings" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent"]
+visible = false
+layout_mode = 2
+
+[node name="AccessibilityTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Accessibility Settings"
+
+[node name="ColorBlindContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
+layout_mode = 2
+
+[node name="ColorBlindLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorBlindContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Colorblind Support:"
+
+[node name="ColorBlindCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorBlindContainer"]
+layout_mode = 2
+
+[node name="LargeFontContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
+layout_mode = 2
+
+[node name="LargeFontLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/LargeFontContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Large Font:"
+
+[node name="LargeFontCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/LargeFontContainer"]
+layout_mode = 2
+
+[node name="HighContrastContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
+layout_mode = 2
+
+[node name="HighContrastLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/HighContrastContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "High Contrast Mode:"
+
+[node name="HighContrastCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/HighContrastContainer"]
+layout_mode = 2
+
+[node name="ColorFilterContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
+layout_mode = 2
+
+[node name="ColorFilterLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorFilterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Color Filter:"
+
+[node name="ColorFilterDropdown" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorFilterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubtitlesContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
+layout_mode = 2
+
+[node name="SubtitlesLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/SubtitlesContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Show Subtitles:"
+
+[node name="SubtitlesCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/SubtitlesContainer"]
+layout_mode = 2
+
+[node name="ReduceMotionContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
+layout_mode = 2
+
+[node name="ReduceMotionLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ReduceMotionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Reduce Motion:"
+
+[node name="ReduceMotionCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ReduceMotionContainer"]
+layout_mode = 2
+
+[node name="ScreenReaderContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
+layout_mode = 2
+
+[node name="ScreenReaderLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ScreenReaderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Screen Reader Support:"
+
+[node name="ScreenReaderCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ScreenReaderContainer"]
+layout_mode = 2
+
+[node name="FontSizeContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
+layout_mode = 2
+
+[node name="FontSizeLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/FontSizeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Font Size Scale:"
+
+[node name="FontSizeSlider" type="HSlider" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/FontSizeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.5
+max_value = 2.0
+step = 0.1
+value = 1.0
+
+[node name="FontSizeValue" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/FontSizeContainer"]
+layout_mode = 2
+text = "100%"
+
+[node name="HSeparator2" type="HSeparator" parent="MainContainer"]
+layout_mode = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+
+[node name="ResetButton" type="Button" parent="MainContainer/ButtonContainer"]
+layout_mode = 2
+text = "Reset to Defaults"
+
+[node name="HSpacer" type="Control" parent="MainContainer/ButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CancelButton" type="Button" parent="MainContainer/ButtonContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="ApplyButton" type="Button" parent="MainContainer/ButtonContainer"]
+layout_mode = 2
+text = "Apply"
+
+[node name="OKButton" type="Button" parent="MainContainer/ButtonContainer"]
+layout_mode = 2
+text = "OK"
+
+[connection signal="pressed" from="MainContainer/HeaderContainer/CloseButton" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/TabContainer/AudioTab" to="." method="_on_audio_tab_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/TabContainer/VideoTab" to="." method="_on_video_tab_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/TabContainer/ControlsTab" to="." method="_on_controls_tab_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/TabContainer/GameplayTab" to="." method="_on_gameplay_tab_pressed"]
+[connection signal="pressed" from="MainContainer/ContentContainer/TabContainer/AccessibilityTab" to="." method="_on_accessibility_tab_pressed"]
+[connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/MasterVolumeContainer/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
+[connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/MusicVolumeContainer/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
+[connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/SFXVolumeContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_changed"]
+[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioDeviceContainer/AudioDeviceOption" to="." method="_on_audio_device_selected"]
+[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioQualityContainer/AudioQualityOption" to="." method="_on_audio_quality_selected"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/SpatialAudioContainer/SpatialAudioCheck" to="." method="_on_spatial_audio_toggled"]
+[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/QualityPresetContainer/QualityPresetOption" to="." method="_on_quality_preset_selected"]
+[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/ResolutionContainer/ResolutionOption" to="." method="_on_resolution_selected"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FullscreenContainer/FullscreenCheck" to="." method="_on_fullscreen_toggled"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/VsyncContainer/VsyncCheck" to="." method="_on_vsync_toggled"]
+[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/WindowModeContainer/WindowModeOption" to="." method="_on_window_mode_selected"]
+[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FPSLimitContainer/FPSLimitOption" to="." method="_on_fps_limit_selected"]
+[connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseSensitivityContainer/MouseSensitivitySlider" to="." method="_on_mouse_sensitivity_changed"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseInvertContainer/MouseInvertXCheck" to="." method="_on_mouse_invert_x_toggled"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseInvertYContainer/MouseInvertYCheck" to="." method="_on_mouse_invert_y_toggled"]
+[connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/GamepadDeadzoneContainer/GamepadDeadzoneSlider" to="." method="_on_gamepad_deadzone_changed"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/GamepadVibrationContainer/GamepadVibrationCheck" to="." method="_on_gamepad_vibration_toggled"]
+[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/DifficultyContainer/DifficultyOption" to="." method="_on_difficulty_selected"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/AutoSaveContainer/AutoSaveCheck" to="." method="_on_auto_save_toggled"]
+[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/AutoSaveIntervalContainer/AutoSaveIntervalOption" to="." method="_on_auto_save_interval_selected"]
+[connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/CameraShakeContainer/CameraShakeSlider" to="." method="_on_camera_shake_changed"]
+[connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/UIScaleContainer/UIScaleSlider" to="." method="_on_ui_scale_changed"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/TutorialHintsContainer/TutorialHintsCheck" to="." method="_on_tutorial_hints_toggled"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorBlindContainer/ColorBlindCheck" to="." method="_on_colorblind_support_toggled"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/LargeFontContainer/LargeFontCheck" to="." method="_on_large_font_toggled"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/HighContrastContainer/HighContrastCheck" to="." method="_on_high_contrast_toggled"]
+[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorFilterContainer/ColorFilterDropdown" to="." method="_on_color_filter_selected"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/SubtitlesContainer/SubtitlesCheck" to="." method="_on_subtitles_toggled"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ReduceMotionContainer/ReduceMotionCheck" to="." method="_on_reduce_motion_toggled"]
+[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ScreenReaderContainer/ScreenReaderCheck" to="." method="_on_screen_reader_toggled"]
+[connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/FontSizeContainer/FontSizeSlider" to="." method="_on_font_size_changed"]
+[connection signal="pressed" from="MainContainer/ButtonContainer/ResetButton" to="." method="_on_reset_pressed"]
+[connection signal="pressed" from="MainContainer/ButtonContainer/CancelButton" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="MainContainer/ButtonContainer/ApplyButton" to="." method="_on_apply_pressed"]
+[connection signal="pressed" from="MainContainer/ButtonContainer/OKButton" to="." method="_on_ok_pressed"]

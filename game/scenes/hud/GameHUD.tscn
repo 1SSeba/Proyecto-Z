@@ -1,0 +1,98 @@
+[gd_scene load_steps=2 format=3 uid="uid://dpxt3k1amgw5o"]
+
+[ext_resource type="Script" path="res://game/scenes/hud/GameHUD.gd" id="1_hud_script"]
+
+[node name="GameHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_hud_script")
+
+[node name="TopBar" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+modulate = Color(0, 0, 0, 0.3)
+
+[node name="HealthContainer" type="HBoxContainer" parent="TopBar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 20.0
+offset_top = -15.0
+offset_right = 300.0
+offset_bottom = 15.0
+
+[node name="HealthLabel" type="Label" parent="TopBar/HealthContainer"]
+layout_mode = 2
+text = "HP:"
+theme_type_variation = &"HeaderLarge"
+
+[node name="HealthBar" type="ProgressBar" parent="TopBar/HealthContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="HealthText" type="Label" parent="TopBar/HealthContainer"]
+layout_mode = 2
+text = "100/100"
+theme_type_variation = &"HeaderMedium"
+
+[node name="ScoreContainer" type="VBoxContainer" parent="TopBar"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -25.0
+offset_right = -20.0
+offset_bottom = 25.0
+
+[node name="ScoreLabel" type="Label" parent="TopBar/ScoreContainer"]
+layout_mode = 2
+text = "Score: 0"
+horizontal_alignment = 2
+
+[node name="LevelLabel" type="Label" parent="TopBar/ScoreContainer"]
+layout_mode = 2
+text = "Level: 1"
+horizontal_alignment = 2
+
+[node name="BottomInfo" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -60.0
+modulate = Color(0, 0, 0, 0.3)
+
+[node name="InfoContainer" type="HBoxContainer" parent="BottomInfo"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 10.0
+offset_right = -20.0
+offset_bottom = -10.0
+
+[node name="PositionLabel" type="Label" parent="BottomInfo/InfoContainer"]
+layout_mode = 2
+text = "Position: (0, 0)"
+
+[node name="Spacer" type="Control" parent="BottomInfo/InfoContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FPSLabel" type="Label" parent="BottomInfo/InfoContainer"]
+layout_mode = 2
+text = "FPS: 60"

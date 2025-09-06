@@ -12,7 +12,7 @@ config_version=5
 
 config/name="RougeLike- Base"
 config/version="pre-alpha_V0.0.1"
-run/main_scene="res://game/ui/MainMenu.tscn"
+run/main_scene="res://game/scenes/menus/MainMenu.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -24,16 +24,13 @@ buses/default_bus_layout="res://config/default_bus_layout.tres"
 
 EventBus="*res://game/core/events/EventBus.gd"
 ServiceManager="*res://game/core/ServiceManager.gd"
-GameStateManager="*res://game/core/systems/GameStateManager.gd"
+GameStateManager="*res://game/systems/game-state/GameStateManager.gd"
 
 [display]
 
-window/size/viewport_width=1920
-window/size/viewport_height=1080
-window/size/resizable=true
-window/size/borderless=false
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="viewport"
 
 [dotnet]
 
