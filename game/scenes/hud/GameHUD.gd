@@ -1,171 +1,108 @@
 extends Control
-# GameHUD.gd - HUD simple del juego
+# GameHUD.gd - HUD simple para pre-alpha
 
-# =======================
-#  REFERENCIAS
-# =======================
-@onready var health_bar: ProgressBar = $TopBar/HealthContainer/HealthBar
-@onready var health_text: Label = $TopBar/HealthContainer/HealthText
-@onready var score_label: Label = $TopBar/ScoreContainer/ScoreLabel
-@onready var level_label: Label = $TopBar/ScoreContainer/LevelLabel
-@onready var position_label: Label = $BottomInfo/InfoContainer/PositionLabel
-@onready var fps_label: Label = $BottomInfo/InfoContainer/FPSLabel
+# Referencias
+@onready var health_bar: ProgressBar = $HealthBar
+@onready var health_text: Label = $HealthText
+@onready var fps_label: Label = $FPSLabel
+@onready var movement_keys: VBoxContainer = $MovementKeys
+@onready var console_logs: VBoxContainer = $ConsoleLogs
 
-# =======================
-#  VARIABLES
-# =======================
+# Variables
 var player_reference: CharacterBody2D = null
-var current_score: int = 0
-var current_level: int = 1
-var is_ready: bool = false
+var console_messages: Array[String] = []
 
-# =======================
-#  INICIALIZACIÓN
-# =======================
 func _ready():
-	print("GameHUD: Initializing...")
-	
-	# Configurar HUD inicial
-	_setup_initial_values()
-	
-	# Intentar conectar con el player
-	_connect_to_player()
-	
-	is_ready = true
 	print("GameHUD: Ready")
+	_load_resources()
+	_setup_movement_keys()
+	_connect_to_player()
 
-func _setup_initial_values():
-	"""Configura los valores iniciales del HUD"""
-	if health_bar:
-		health_bar.max_value = 100.0
-		health_bar.value = 100.0
-	
-	if health_text:
-		health_text.text = "100/100"
-	
-	if score_label:
-		score_label.text = "Score: 0"
-	
-	if level_label:
-		level_label.text = "Level: 1"
-	
-	if position_label:
-		position_label.text = "Position: (0, 0)"
-	
-	if fps_label:
-		fps_label.text = "FPS: 60"
+func _load_resources():
+	"""Carga recursos del juego"""
+	# Buscar ResourceLoader
+	var resource_loader = get_node("/root/ResourceLoader")
+	if not resource_loader:
+		resource_loader = preload("res://game/core/ResourceLoader.gd").new()
+		get_tree().root.add_child(resource_loader)
+
+	# Aplicar colores del juego
+	_apply_game_colors()
+
+func _apply_game_colors():
+	"""Aplica colores del juego al HUD"""
+	var resource_loader = get_node("/root/ResourceLoader")
+	if not resource_loader:
+		return
+
+	# Aplicar colores de fondo
+	var bg_color = resource_loader.get_ui_color("ui_background")
+	var panel_color = resource_loader.get_ui_color("ui_panel")
+
+	# Aplicar a paneles (si existen)
+	# Esto se puede expandir según la estructura del HUD
+
+func _setup_movement_keys():
+	"""Muestra las teclas de movimiento"""
+	var keys = [
+		"WASD - Moverse",
+		"SPACE - Interactuar",
+		"ESC - Menú"
+	]
+
+	for key in keys:
+		var label = Label.new()
+		label.text = key
+		label.add_theme_font_size_override("font_size", 12)
+		movement_keys.add_child(label)
 
 func _connect_to_player():
-	"""Intenta conectar con el player"""
-	# Buscar el player en la escena
+	"""Conecta con el player"""
 	var main_scene = get_tree().current_scene
 	if main_scene and main_scene.has_method("get_player"):
 		player_reference = main_scene.get_player()
-		
-		if player_reference:
-			# Conectar señales del player
-			if player_reference.has_signal("health_changed"):
-				var callable = Callable(self, "_on_player_health_changed")
-				if not player_reference.is_connected("health_changed", callable):
-					player_reference.health_changed.connect(_on_player_health_changed)
-			
-			if player_reference.has_signal("died"):
-				var callable = Callable(self, "_on_player_died")
-				if not player_reference.is_connected("died", callable):
-					player_reference.died.connect(_on_player_died)
-			
-			print("GameHUD: Connected to player successfully")
-		else:
-			print("GameHUD: Player not found, will retry later")
-			# Intentar de nuevo después de un frame
-			await get_tree().process_frame
-			_connect_to_player()
 
-# =======================
-#  ACTUALIZACIÓN
-# =======================
+		if player_reference and player_reference.has_signal("health_changed"):
+			player_reference.health_changed.connect(_on_health_changed)
+
 func _process(_delta):
-	"""Actualiza elementos del HUD que cambian constantemente"""
-	if not is_ready:
-		return
-	
-	# Actualizar FPS
+	"""Actualiza FPS"""
 	if fps_label:
-		fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
-	
-	# Actualizar posición del player si existe
-	if player_reference and position_label:
-		var pos = player_reference.global_position
-		position_label.text = "Position: (%d, %d)" % [pos.x, pos.y]
+		fps_label.text = "FPS: " + str(Engine.get_frames_per_second())
 
-# =======================
-#  CALLBACKS DEL PLAYER
-# =======================
-func _on_player_health_changed(current: float, max_health: float):
-	"""Actualiza la barra de vida cuando cambia la salud del player"""
+func _on_health_changed(current: float, max_health: float):
+	"""Actualiza la salud"""
 	if health_bar:
 		health_bar.max_value = max_health
 		health_bar.value = current
-	
+
 	if health_text:
-		health_text.text = "%.0f/%.0f" % [current, max_health]
-	
-	print("GameHUD: Health updated - %.0f/%.0f" % [current, max_health])
+		var percentage = (current / max_health) * 100
+		health_text.text = "%.0f/%.0f (%.0f%%)" % [current, max_health, percentage]
 
-func _on_player_died():
-	"""Maneja cuando el player muere"""
-	print("GameHUD: Player died")
-	# Aquí podríamos mostrar un mensaje de muerte, etc.
+	# Añadir a consola
+	add_log("Salud: %.0f%%" % ((current / max_health) * 100))
 
-# =======================
-#  FUNCIONES PÚBLICAS
-# =======================
-func update_score(new_score: int):
-	"""Actualiza el puntaje"""
-	current_score = new_score
-	if score_label:
-		score_label.text = "Score: %d" % current_score
+func add_log(message: String):
+	"""Añade mensaje a la consola"""
+	console_messages.append(message)
 
-func update_level(new_level: int):
-	"""Actualiza el nivel"""
-	current_level = new_level
-	if level_label:
-		level_label.text = "Level: %d" % current_level
+	# Limitar mensajes
+	if console_messages.size() > 8:
+		console_messages.pop_front()
 
-func add_score(points: int):
-	"""Añade puntos al puntaje actual"""
-	current_score += points
-	update_score(current_score)
+	# Actualizar display
+	_update_console()
 
-func set_player_reference(player: CharacterBody2D):
-	"""Establece la referencia al player manualmente"""
-	player_reference = player
-	_connect_to_player()
+func _update_console():
+	"""Actualiza la consola"""
+	# Limpiar
+	for child in console_logs.get_children():
+		child.queue_free()
 
-# =======================
-#  UTILIDADES
-# =======================
-func show_hud():
-	"""Muestra el HUD"""
-	visible = true
-
-func hide_hud():
-	"""Oculta el HUD"""
-	visible = false
-
-func toggle_hud():
-	"""Alterna la visibilidad del HUD"""
-	visible = not visible
-
-# =======================
-#  DEBUG
-# =======================
-func debug_info():
-	"""Muestra información de debug del HUD"""
-	print("=== HUD DEBUG INFO ===")
-	print("Ready: %s" % is_ready)
-	print("Player Connected: %s" % ("Yes" if player_reference else "No"))
-	print("Score: %d" % current_score)
-	print("Level: %d" % current_level)
-	print("Visible: %s" % visible)
-	print("======================")
+	# Mostrar últimos mensajes
+	for msg in console_messages:
+		var label = Label.new()
+		label.text = msg
+		label.add_theme_font_size_override("font_size", 10)
+		console_logs.add_child(label)

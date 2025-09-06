@@ -1,10 +1,41 @@
-# Godot 4+ specific ignores
-.godot/
-/android/
+# ============================================================================
+# MYSTIC DUNGEON CRAWLER - .gitignore
+# Professional Godot 4.4+ project gitignore
+# ============================================================================
 
-# Export presets and binaries
-export_presets.cfg
+# ============================================================================
+# GODOT ENGINE SPECIFIC
+# ============================================================================
+
+# Godot 4+ cache and temporary files
+.godot/
+.godot-version
+.godot-imported-files
+
+# Godot project files (keep project.godot)
+# export_presets.cfg  # Uncomment if you want to track export presets
+# config/  # Uncomment if you want to track config files
+
+# Godot import files (generated automatically)
+*.import
+*.uid
+
+# Godot temporary files
 *.tmp
+*.tmp.*
+
+# ============================================================================
+# BUILD OUTPUTS AND DISTRIBUTION
+# ============================================================================
+
+# Build directories
+builds/
+dist/
+exports/
+release/
+debug/
+
+# Platform-specific builds
 *.exe
 *.pck
 *.zip
@@ -13,13 +44,50 @@ export_presets.cfg
 *.deb
 *.apk
 *.ipa
+*.aab
 
-# Logs and debug files
+# Android specific
+android/
+android_export/
+android_build/
+
+# iOS specific
+ios/
+ios_export/
+ios_build/
+
+# Web specific
+web/
+web_export/
+web_build/
+
+# Desktop specific
+windows/
+linux/
+macos/
+
+# ============================================================================
+# LOGS AND DEBUG FILES
+# ============================================================================
+
+# Log files
 logs/
 *.log
 debug.log
+error.log
+crash.log
+performance.log
 
-# OS generated files
+# Debug outputs
+debug_output/
+profiling/
+memory_dumps/
+
+# ============================================================================
+# OPERATING SYSTEM FILES
+# ============================================================================
+
+# macOS
 .DS_Store
 .DS_Store?
 ._*
@@ -28,45 +96,196 @@ debug.log
 ehthumbs.db
 Thumbs.db
 
-# IDE files
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ============================================================================
+# IDE AND EDITOR FILES
+# ============================================================================
+
+# Visual Studio Code
 .vscode/
+*.code-workspace
+
+# IntelliJ IDEA / PyCharm
 .idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim/Neovim
 *.swp
 *.swo
 *~
+.#*
+.netrwhist
 
-# Build outputs
-builds/
-dist/
-exports/
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
 
-# Pero mantener la estructura y el README
-!builds/README.md
-!builds/.gitkeep
+# ============================================================================
+# DEVELOPMENT AND TESTING
+# ============================================================================
 
-# Archivos temporales de desarrollo
-*.tmp
+# Temporary development files
 temp_*
 test_*
-
-# Development builds (opcional - descomenta si quieres trackearlos)
-# !builds/debug/
-# builds/debug/*.log
-# builds/debug/logs/
-
-# Temporary files
-*.tmp
-*~
-.#*
+debug_*
+*_temp
+*_test
+*_debug
 
 # Backup files
 *.bak
 *.backup
 *_backup
+*.orig
+*.rej
 
-# Game specific ignores
+# Patch files
+*.patch
+*.diff
+
+# ============================================================================
+# GAME SPECIFIC FILES
+# ============================================================================
+
+# Save files and user data
 saves/
 user_data/
+user://
+saves/
+profiles/
+settings_profiles/
 
-# Addons that should not be tracked (uncomment if needed)
-# addons/
+# Screenshots and recordings
+screenshots/
+recordings/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.avi
+*.mov
+
+# ============================================================================
+# VERSION CONTROL
+# ============================================================================
+
+# Git
+.git/
+.gitignore.bak
+.gitattributes.bak
+
+# SVN
+.svn/
+
+# Mercurial
+.hg/
+
+# ============================================================================
+# PACKAGE MANAGERS
+# ============================================================================
+
+# Node.js (if using for tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if using for tools)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ============================================================================
+# DOCUMENTATION BUILD
+# ============================================================================
+
+# Generated documentation
+docs/_build/
+docs/build/
+site/
+
+# ============================================================================
+# KEEP IMPORTANT FILES
+# ============================================================================
+
+# Keep important project files
+!project.godot
+!README.md
+!LICENSE
+!CHANGELOG.md
+!CONTRIBUTING.md
+!DEVELOPMENT.md
+
+# Keep build directory structure
+!builds/README.md
+!builds/.gitkeep
+
+# Keep config examples
+!config/example_*
+!config/*.example
+
+# Keep documentation
+!docs/
+!docs/**/*.md
+
+# ============================================================================
+# CUSTOM PROJECT IGNORES
+# ============================================================================
+
+# Add your custom ignores here
+# Example:
+# custom_folder/
+# *.custom_extension
+
+# ============================================================================
+# NOTES
+# ============================================================================
+
+# This .gitignore is designed for:
+# - Godot 4.4+ projects
+# - Multi-platform development
+# - Collaborative development
+# - Professional game development
+
+# If you need to track any of these ignored files:
+# 1. Use: git add -f filename
+# 2. Or add an exception: !filename
+# 3. Or modify this .gitignore file

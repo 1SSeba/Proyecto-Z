@@ -1,0 +1,98 @@
+[gd_resource type="Theme" format=3]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
+bg_color = Color(0.2, 0.2, 0.2, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2"]
+bg_color = Color(0.1, 0.1, 0.1, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.3, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3"]
+bg_color = Color(0, 0.8, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4"]
+bg_color = Color(0.2, 0.2, 0.2, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5"]
+bg_color = Color(0.1, 0.1, 0.1, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+
+[sub_resource type="FontFile" id="FontFile_1"]
+antialiasing = 1
+antialiasing_type = 1
+generate_mipmaps = true
+
+[sub_resource type="FontFile" id="FontFile_2"]
+antialiasing = 1
+antialiasing_type = 1
+generate_mipmaps = true
+
+[resource]
+default_font = SubResource("FontFile_1")
+default_font_size = 14
+
+[Control]
+theme_override_styles/panel = SubResource("StyleBoxFlat_1")
+
+[Label]
+theme_override_fonts/font = SubResource("FontFile_2")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+
+[ProgressBar]
+theme_override_styles/background = SubResource("StyleBoxFlat_2")
+theme_override_styles/fill = SubResource("StyleBoxFlat_3")
+
+[Button]
+theme_override_fonts/font = SubResource("FontFile_2")
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_pressed_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2")
+
+[ScrollContainer]
+theme_override_styles/panel = SubResource("StyleBoxFlat_2")

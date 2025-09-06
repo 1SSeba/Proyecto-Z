@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://5ipxliimxcfc"]
 
-[ext_resource type="Script" uid="uid://dpymh77wai847" path="res://game/scenes/menus/SettingsMenu.gd" id="1_1k8gm"]
+[ext_resource type="Script" uid="uid://bxf3mu5ftgbvu" path="res://game/scenes/menus/SettingsMenu.gd" id="1_1k8gm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1mwp2"]
 bg_color = Color(0.1, 0.1, 0.1, 0.95)
@@ -105,6 +105,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="AudioSettings" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent"]
+visible = false
 layout_mode = 2
 
 [node name="AudioTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
@@ -181,18 +182,6 @@ text = "Audio Device:"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AudioQualityContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
-layout_mode = 2
-
-[node name="AudioQualityLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioQualityContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Audio Quality:"
-
-[node name="AudioQualityOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioQualityContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
 [node name="SpatialAudioContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
 layout_mode = 2
 
@@ -236,17 +225,6 @@ text = "Resolution:"
 [node name="ResolutionOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/ResolutionContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="FullscreenContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
-layout_mode = 2
-
-[node name="FullscreenLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FullscreenContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Fullscreen:"
-
-[node name="FullscreenCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FullscreenContainer"]
-layout_mode = 2
 
 [node name="VsyncContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
 layout_mode = 2
@@ -390,18 +368,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Gameplay Settings"
 
-[node name="DifficultyContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
-layout_mode = 2
-
-[node name="DifficultyLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/DifficultyContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Difficulty:"
-
-[node name="DifficultyOption" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/DifficultyContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
 [node name="AutoSaveContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
 layout_mode = 2
 
@@ -488,17 +454,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Accessibility Settings"
 
-[node name="ColorBlindContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
-layout_mode = 2
-
-[node name="ColorBlindLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorBlindContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Colorblind Support:"
-
-[node name="ColorBlindCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorBlindContainer"]
-layout_mode = 2
-
 [node name="LargeFontContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
 layout_mode = 2
 
@@ -519,40 +474,6 @@ size_flags_horizontal = 3
 text = "High Contrast Mode:"
 
 [node name="HighContrastCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/HighContrastContainer"]
-layout_mode = 2
-
-[node name="ColorFilterContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
-layout_mode = 2
-
-[node name="ColorFilterLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorFilterContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Color Filter:"
-
-[node name="ColorFilterDropdown" type="OptionButton" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorFilterContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SubtitlesContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
-layout_mode = 2
-
-[node name="SubtitlesLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/SubtitlesContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Show Subtitles:"
-
-[node name="SubtitlesCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/SubtitlesContainer"]
-layout_mode = 2
-
-[node name="ReduceMotionContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
-layout_mode = 2
-
-[node name="ReduceMotionLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ReduceMotionContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Reduce Motion:"
-
-[node name="ReduceMotionCheck" type="CheckBox" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ReduceMotionContainer"]
 layout_mode = 2
 
 [node name="ScreenReaderContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
@@ -622,11 +543,9 @@ text = "OK"
 [connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/MusicVolumeContainer/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
 [connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/SFXVolumeContainer/SFXVolumeSlider" to="." method="_on_sfx_volume_changed"]
 [connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioDeviceContainer/AudioDeviceOption" to="." method="_on_audio_device_selected"]
-[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/AudioQualityContainer/AudioQualityOption" to="." method="_on_audio_quality_selected"]
 [connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings/SpatialAudioContainer/SpatialAudioCheck" to="." method="_on_spatial_audio_toggled"]
 [connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/QualityPresetContainer/QualityPresetOption" to="." method="_on_quality_preset_selected"]
 [connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/ResolutionContainer/ResolutionOption" to="." method="_on_resolution_selected"]
-[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FullscreenContainer/FullscreenCheck" to="." method="_on_fullscreen_toggled"]
 [connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/VsyncContainer/VsyncCheck" to="." method="_on_vsync_toggled"]
 [connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/WindowModeContainer/WindowModeOption" to="." method="_on_window_mode_selected"]
 [connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings/FPSLimitContainer/FPSLimitOption" to="." method="_on_fps_limit_selected"]
@@ -635,18 +554,13 @@ text = "OK"
 [connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/MouseInvertYContainer/MouseInvertYCheck" to="." method="_on_mouse_invert_y_toggled"]
 [connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/GamepadDeadzoneContainer/GamepadDeadzoneSlider" to="." method="_on_gamepad_deadzone_changed"]
 [connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings/GamepadVibrationContainer/GamepadVibrationCheck" to="." method="_on_gamepad_vibration_toggled"]
-[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/DifficultyContainer/DifficultyOption" to="." method="_on_difficulty_selected"]
 [connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/AutoSaveContainer/AutoSaveCheck" to="." method="_on_auto_save_toggled"]
 [connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/AutoSaveIntervalContainer/AutoSaveIntervalOption" to="." method="_on_auto_save_interval_selected"]
 [connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/CameraShakeContainer/CameraShakeSlider" to="." method="_on_camera_shake_changed"]
 [connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/UIScaleContainer/UIScaleSlider" to="." method="_on_ui_scale_changed"]
 [connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings/TutorialHintsContainer/TutorialHintsCheck" to="." method="_on_tutorial_hints_toggled"]
-[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorBlindContainer/ColorBlindCheck" to="." method="_on_colorblind_support_toggled"]
 [connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/LargeFontContainer/LargeFontCheck" to="." method="_on_large_font_toggled"]
 [connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/HighContrastContainer/HighContrastCheck" to="." method="_on_high_contrast_toggled"]
-[connection signal="item_selected" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ColorFilterContainer/ColorFilterDropdown" to="." method="_on_color_filter_selected"]
-[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/SubtitlesContainer/SubtitlesCheck" to="." method="_on_subtitles_toggled"]
-[connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ReduceMotionContainer/ReduceMotionCheck" to="." method="_on_reduce_motion_toggled"]
 [connection signal="toggled" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/ScreenReaderContainer/ScreenReaderCheck" to="." method="_on_screen_reader_toggled"]
 [connection signal="value_changed" from="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings/FontSizeContainer/FontSizeSlider" to="." method="_on_font_size_changed"]
 [connection signal="pressed" from="MainContainer/ButtonContainer/ResetButton" to="." method="_on_reset_pressed"]

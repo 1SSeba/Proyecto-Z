@@ -1,0 +1,623 @@
+extends Node
+# ResourceLibrary.gd - Biblioteca centralizada de recursos del juego
+
+## Professional Resource Library
+## Centralized resource catalog with metadata, tags, and search capabilities
+## @author: Senior Developer (10+ years experience)
+
+# ============================================================================
+#  RESOURCE LIBRARY CONFIGURATION
+# ============================================================================
+
+# Service properties
+var service_name: String = "ResourceLibrary"
+var is_service_ready: bool = false
+
+# Resource categories
+enum ResourceCategory {
+	AUDIO,
+	TEXTURE,
+	SCENE,
+	SCRIPT,
+	FONT,
+	MATERIAL,
+	SHADER,
+	ANIMATION,
+	UI,
+	CHARACTER,
+	ENVIRONMENT,
+	EFFECTS,
+	OTHER
+}
+
+# Resource types
+enum ResourceType {
+	IMAGE_PNG,
+	IMAGE_JPG,
+	AUDIO_OGG,
+	AUDIO_WAV,
+	SCENE_MAIN,
+	SCENE_CHARACTER,
+	SCENE_UI,
+	SCRIPT_CORE,
+	SCRIPT_ENTITY,
+	SCRIPT_SYSTEM,
+	FONT_TTF,
+	FONT_OTF,
+	MATERIAL_STANDARD,
+	SHADER_CUSTOM,
+	ANIMATION_SPRITE,
+	OTHER
+}
+
+# Resource library data
+var resource_catalog: Dictionary = {}
+var resource_tags: Dictionary = {}
+var resource_metadata: Dictionary = {}
+var resource_dependencies: Dictionary = {}
+
+# Search and filter data
+var search_index: Dictionary = {}
+var category_index: Dictionary = {}
+var tag_index: Dictionary = {}
+
+# ============================================================================
+#  SERVICE LIFECYCLE
+# ============================================================================
+
+func _start():
+	service_name = "ResourceLibrary"
+	_initialize_library()
+	is_service_ready = true
+	print("ResourceLibrary: Initialized successfully")
+
+func start_service():
+	"""Public method to start the service"""
+	_start()
+
+func _initialize_library():
+	"""Initialize the resource library system"""
+	# Create resource directories if they don't exist
+	_create_library_directories()
+
+	# Load existing resource data
+	_load_resource_catalog()
+
+	# Build search indexes
+	_build_search_indexes()
+
+	# Scan for new resources
+	_scan_for_resources()
+
+# ============================================================================
+#  RESOURCE REGISTRATION
+# ============================================================================
+
+func register_resource(resource_path: String, category: ResourceCategory, resource_type: ResourceType, tags: Array[String] = [], metadata: Dictionary = {}):
+	"""Register a new resource in the library"""
+
+	# Validate resource path
+	if not _validate_resource_path(resource_path):
+		print("ResourceLibrary: Invalid resource path: ", resource_path)
+		return false
+
+	# Create resource entry
+	var resource_entry = {
+		"path": resource_path,
+		"category": category,
+		"type": resource_type,
+		"tags": tags,
+		"metadata": metadata,
+		"registered_at": Time.get_ticks_msec(),
+		"last_accessed": 0,
+		"access_count": 0,
+		"size": _get_resource_size(resource_path),
+		"hash": _calculate_resource_hash(resource_path)
+	}
+
+	# Add to catalog
+	resource_catalog[resource_path] = resource_entry
+
+	# Update indexes
+	_update_category_index(resource_path, category)
+	_update_tag_index(resource_path, tags)
+	_update_search_index(resource_path, resource_entry)
+
+	# Save catalog
+	_save_resource_catalog()
+
+	print("ResourceLibrary: Registered resource: ", resource_path)
+	return true
+
+func unregister_resource(resource_path: String):
+	"""Remove a resource from the library"""
+	if resource_catalog.has(resource_path):
+		var entry = resource_catalog[resource_path]
+
+		# Remove from indexes
+		_remove_from_category_index(resource_path, entry.category)
+		_remove_from_tag_index(resource_path, entry.tags)
+		_remove_from_search_index(resource_path)
+
+		# Remove from catalog
+		resource_catalog.erase(resource_path)
+
+		# Save catalog
+		_save_resource_catalog()
+
+		print("ResourceLibrary: Unregistered resource: ", resource_path)
+		return true
+
+	return false
+
+# ============================================================================
+#  RESOURCE QUERIES
+# ============================================================================
+
+func get_resources_by_category(category: ResourceCategory) -> Array[String]:
+	"""Get all resources of a specific category"""
+	return category_index.get(category, [])
+
+func get_resources_by_type(resource_type: ResourceType) -> Array[String]:
+	"""Get all resources of a specific type"""
+	var resources: Array[String] = []
+
+	for path in resource_catalog.keys():
+		if resource_catalog[path].type == resource_type:
+			resources.append(path)
+
+	return resources
+
+func get_resources_by_tag(tag: String) -> Array[String]:
+	"""Get all resources with a specific tag"""
+	return tag_index.get(tag, [])
+
+func search_resources(query: String) -> Array[String]:
+	"""Search resources by query string"""
+	var results: Array[String] = []
+	var query_lower = query.to_lower()
+
+	# Search in resource names, paths, and tags
+	for path in resource_catalog.keys():
+		var entry = resource_catalog[path]
+		var searchable_text = (path + " " + str(entry.tags)).to_lower()
+
+		if query_lower in searchable_text:
+			results.append(path)
+
+	# Sort by relevance (exact matches first)
+	results.sort_custom(func(a, b):
+		var a_exact = query_lower in a.to_lower()
+		var b_exact = query_lower in b.to_lower()
+		if a_exact != b_exact:
+			return a_exact
+		return a < b
+	)
+
+	return results
+
+func get_resource_info(resource_path: String) -> Dictionary:
+	"""Get detailed information about a resource"""
+	if resource_catalog.has(resource_path):
+		return resource_catalog[resource_path].duplicate()
+	else:
+		return {}
+
+func get_resource_metadata(resource_path: String) -> Dictionary:
+	"""Get metadata for a specific resource"""
+	if resource_catalog.has(resource_path):
+		return resource_catalog[resource_path].metadata
+	else:
+		return {}
+
+# ============================================================================
+#  RESOURCE TAGS
+# ============================================================================
+
+func add_tag_to_resource(resource_path: String, tag: String):
+	"""Add a tag to a resource"""
+	if resource_catalog.has(resource_path):
+		var entry = resource_catalog[resource_path]
+		if tag not in entry.tags:
+			entry.tags.append(tag)
+			_update_tag_index(resource_path, entry.tags)
+			_save_resource_catalog()
+			print("ResourceLibrary: Added tag '$tag' to resource: ", resource_path)
+
+func remove_tag_from_resource(resource_path: String, tag: String):
+	"""Remove a tag from a resource"""
+	if resource_catalog.has(resource_path):
+		var entry = resource_catalog[resource_path]
+		if tag in entry.tags:
+			entry.tags.erase(tag)
+			_update_tag_index(resource_path, entry.tags)
+			_save_resource_catalog()
+			print("ResourceLibrary: Removed tag '$tag' from resource: ", resource_path)
+
+func get_all_tags() -> Array[String]:
+	"""Get all unique tags in the library"""
+	var tags: Array[String] = []
+
+	for path in resource_catalog.keys():
+		var entry = resource_catalog[path]
+		for tag in entry.tags:
+			if tag not in tags:
+				tags.append(tag)
+
+	tags.sort()
+	return tags
+
+# ============================================================================
+#  RESOURCE STATISTICS
+# ============================================================================
+
+func get_library_stats() -> Dictionary:
+	"""Get comprehensive library statistics"""
+	var stats = {
+		"total_resources": resource_catalog.size(),
+		"categories": {},
+		"types": {},
+		"tags": {},
+		"total_size": 0,
+		"most_accessed": [],
+		"recently_added": []
+	}
+
+	# Count by category
+	for category in ResourceCategory.values():
+		stats.categories[ResourceCategory.keys()[category]] = get_resources_by_category(category).size()
+
+	# Count by type
+	for type in ResourceType.values():
+		stats.types[ResourceType.keys()[type]] = get_resources_by_type(type).size()
+
+	# Count by tag
+	var all_tags = get_all_tags()
+	for tag in all_tags:
+		stats.tags[tag] = get_resources_by_tag(tag).size()
+
+	# Calculate total size
+	for path in resource_catalog.keys():
+		stats.total_size += resource_catalog[path].size
+
+	# Get most accessed resources
+	var access_counts = []
+	for path in resource_catalog.keys():
+		var entry = resource_catalog[path]
+		access_counts.append({"path": path, "count": entry.access_count})
+
+	access_counts.sort_custom(func(a, b): return a.count > b.count)
+	stats.most_accessed = access_counts.slice(0, 10)
+
+	# Get recently added resources
+	var recent_resources = []
+	for path in resource_catalog.keys():
+		var entry = resource_catalog[path]
+		recent_resources.append({"path": path, "added_at": entry.registered_at})
+
+	recent_resources.sort_custom(func(a, b): return a.added_at > b.added_at)
+	stats.recently_added = recent_resources.slice(0, 10)
+
+	return stats
+
+func get_category_stats(category: ResourceCategory) -> Dictionary:
+	"""Get statistics for a specific category"""
+	var resources = get_resources_by_category(category)
+	var stats = {
+		"count": resources.size(),
+		"total_size": 0,
+		"types": {},
+		"tags": {}
+	}
+
+	# Calculate size and count by type
+	for path in resources:
+		var entry = resource_catalog[path]
+		stats.total_size += entry.size
+
+		var type_name = ResourceType.keys()[entry.type]
+		if not stats.types.has(type_name):
+			stats.types[type_name] = 0
+		stats.types[type_name] += 1
+
+		# Count tags
+		for tag in entry.tags:
+			if not stats.tags.has(tag):
+				stats.tags[tag] = 0
+			stats.tags[tag] += 1
+
+	return stats
+
+# ============================================================================
+#  RESOURCE DEPENDENCIES
+# ============================================================================
+
+func add_dependency(resource_path: String, dependency_path: String):
+	"""Add a dependency relationship between resources"""
+	if not resource_dependencies.has(resource_path):
+		resource_dependencies[resource_path] = []
+
+	if dependency_path not in resource_dependencies[resource_path]:
+		resource_dependencies[resource_path].append(dependency_path)
+		print("ResourceLibrary: Added dependency: ", resource_path, " -> ", dependency_path)
+
+func remove_dependency(resource_path: String, dependency_path: String):
+	"""Remove a dependency relationship"""
+	if resource_dependencies.has(resource_path):
+		resource_dependencies[resource_path].erase(dependency_path)
+		print("ResourceLibrary: Removed dependency: ", resource_path, " -> ", dependency_path)
+
+func get_dependencies(resource_path: String) -> Array[String]:
+	"""Get all dependencies for a resource"""
+	return resource_dependencies.get(resource_path, [])
+
+func get_dependents(resource_path: String) -> Array[String]:
+	"""Get all resources that depend on this resource"""
+	var dependents: Array[String] = []
+
+	for path in resource_dependencies.keys():
+		if resource_path in resource_dependencies[path]:
+			dependents.append(path)
+
+	return dependents
+
+# ============================================================================
+#  RESOURCE ACCESS TRACKING
+# ============================================================================
+
+func track_resource_access(resource_path: String):
+	"""Track when a resource is accessed"""
+	if resource_catalog.has(resource_path):
+		var entry = resource_catalog[resource_path]
+		entry.last_accessed = Time.get_ticks_msec()
+		entry.access_count += 1
+		_save_resource_catalog()
+
+func get_most_accessed_resources(limit: int = 10) -> Array[Dictionary]:
+	"""Get the most accessed resources"""
+	var access_data = []
+
+	for path in resource_catalog.keys():
+		var entry = resource_catalog[path]
+		access_data.append({
+			"path": path,
+			"access_count": entry.access_count,
+			"last_accessed": entry.last_accessed
+		})
+
+	access_data.sort_custom(func(a, b): return a.access_count > b.access_count)
+	return access_data.slice(0, limit)
+
+# ============================================================================
+#  INTERNAL METHODS
+# ============================================================================
+
+func _create_library_directories():
+	"""Create necessary library directories"""
+	var directories = [
+		"user://resource_library",
+		"user://resource_library/catalog",
+		"user://resource_library/metadata"
+	]
+
+	for dir_path in directories:
+		DirAccess.make_dir_recursive_absolute(dir_path)
+
+func _load_resource_catalog():
+	"""Load resource catalog from file"""
+	var catalog_file = "user://resource_library/catalog.json"
+
+	if FileAccess.file_exists(catalog_file):
+		var file = FileAccess.open(catalog_file, FileAccess.READ)
+		if file:
+			var json_string = file.get_as_text()
+			file.close()
+
+			var json = JSON.new()
+			var parse_result = json.parse(json_string)
+
+			if parse_result == OK:
+				resource_catalog = json.data
+				print("ResourceLibrary: Loaded catalog with ", resource_catalog.size(), " resources")
+
+func _save_resource_catalog():
+	"""Save resource catalog to file"""
+	var catalog_file = "user://resource_library/catalog.json"
+
+	var file = FileAccess.open(catalog_file, FileAccess.WRITE)
+	if file:
+		var json_string = JSON.stringify(resource_catalog, "\t")
+		file.store_string(json_string)
+		file.close()
+
+func _build_search_indexes():
+	"""Build search indexes for efficient querying"""
+	# Clear existing indexes
+	category_index.clear()
+	tag_index.clear()
+	search_index.clear()
+
+	# Build indexes from catalog
+	for path in resource_catalog.keys():
+		var entry = resource_catalog[path]
+		_update_category_index(path, entry.category)
+		_update_tag_index(path, entry.tags)
+		_update_search_index(path, entry)
+
+func _update_category_index(resource_path: String, category: ResourceCategory):
+	"""Update category index"""
+	if not category_index.has(category):
+		category_index[category] = []
+
+	if resource_path not in category_index[category]:
+		category_index[category].append(resource_path)
+
+func _update_tag_index(resource_path: String, tags: Array[String]):
+	"""Update tag index"""
+	for tag in tags:
+		if not tag_index.has(tag):
+			tag_index[tag] = []
+
+		if resource_path not in tag_index[tag]:
+			tag_index[tag].append(resource_path)
+
+func _update_search_index(resource_path: String, entry: Dictionary):
+	"""Update search index"""
+	search_index[resource_path] = {
+		"path": resource_path,
+		"category": entry.category,
+		"type": entry.type,
+		"tags": entry.tags
+	}
+
+func _remove_from_category_index(resource_path: String, category: ResourceCategory):
+	"""Remove resource from category index"""
+	if category_index.has(category):
+		category_index[category].erase(resource_path)
+
+func _remove_from_tag_index(resource_path: String, tags: Array[String]):
+	"""Remove resource from tag index"""
+	for tag in tags:
+		if tag_index.has(tag):
+			tag_index[tag].erase(tag)
+
+func _remove_from_search_index(resource_path: String):
+	"""Remove resource from search index"""
+	search_index.erase(resource_path)
+
+func _scan_for_resources():
+	"""Scan project for resources and auto-register them"""
+	var resource_extensions = [".png", ".jpg", ".ogg", ".wav", ".tscn", ".tres", ".gd", ".cs", ".ttf", ".otf"]
+	var project_dir = "res://"
+
+	for ext in resource_extensions:
+		var files = _scan_directory_for_resources(project_dir, [ext])
+		for file_path in files:
+			if not resource_catalog.has(file_path):
+				_auto_register_resource(file_path)
+
+func _scan_directory_for_resources(dir_path: String, extensions: Array[String]) -> Array[String]:
+	"""Recursively scan directory for resource files"""
+	var files: Array[String] = []
+
+	var dir = DirAccess.open(dir_path)
+	if not dir:
+		return files
+
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+
+	while file_name != "":
+		var full_path = dir_path + "/" + file_name
+
+		if dir.current_is_dir():
+			if file_name != ".git" and file_name != ".godot":
+				files.append_array(_scan_directory_for_resources(full_path, extensions))
+		else:
+			for ext in extensions:
+				if file_name.ends_with(ext):
+					files.append(full_path)
+					break
+
+		file_name = dir.get_next()
+
+	return files
+
+func _auto_register_resource(resource_path: String):
+	"""Auto-register a resource based on its path and extension"""
+	var category = _guess_category_from_path(resource_path)
+	var type = _guess_type_from_extension(resource_path)
+	var tags = _guess_tags_from_path(resource_path)
+
+	register_resource(resource_path, category, type, tags)
+
+func _guess_category_from_path(resource_path: String) -> ResourceCategory:
+	"""Guess resource category from path"""
+	if "audio" in resource_path.to_lower():
+		return ResourceCategory.AUDIO
+	elif "character" in resource_path.to_lower():
+		return ResourceCategory.CHARACTER
+	elif "ui" in resource_path.to_lower():
+		return ResourceCategory.UI
+	elif "scene" in resource_path.to_lower():
+		return ResourceCategory.SCENE
+	elif "texture" in resource_path.to_lower() or "sprite" in resource_path.to_lower():
+		return ResourceCategory.TEXTURE
+	else:
+		return ResourceCategory.OTHER
+
+func _guess_type_from_extension(resource_path: String) -> ResourceType:
+	"""Guess resource type from file extension"""
+	var ext = resource_path.get_extension().to_lower()
+
+	match ext:
+		"png":
+			return ResourceType.IMAGE_PNG
+		"jpg", "jpeg":
+			return ResourceType.IMAGE_JPG
+		"ogg":
+			return ResourceType.AUDIO_OGG
+		"wav":
+			return ResourceType.AUDIO_WAV
+		"tscn":
+			return ResourceType.SCENE_MAIN
+		"gd":
+			return ResourceType.SCRIPT_CORE
+		"ttf":
+			return ResourceType.FONT_TTF
+		"otf":
+			return ResourceType.FONT_OTF
+		_:
+			return ResourceType.OTHER
+
+func _guess_tags_from_path(resource_path: String) -> Array[String]:
+	"""Guess tags from resource path"""
+	var tags: Array[String] = []
+	var path_lower = resource_path.to_lower()
+
+	# Common tag patterns
+	var tag_patterns = {
+		"player": ["player", "character"],
+		"enemy": ["enemy", "monster"],
+		"ui": ["ui", "interface", "menu"],
+		"audio": ["audio", "sound", "music"],
+		"texture": ["texture", "sprite", "image"],
+		"scene": ["scene", "level", "world"]
+	}
+
+	for pattern in tag_patterns.keys():
+		if pattern in path_lower:
+			tags.append_array(tag_patterns[pattern])
+
+	return tags
+
+func _validate_resource_path(resource_path: String) -> bool:
+	"""Validate that a resource path exists and is accessible"""
+	return FileAccess.file_exists(resource_path)
+
+func _get_resource_size(resource_path: String) -> int:
+	"""Get resource size in bytes"""
+	var file = FileAccess.open(resource_path, FileAccess.READ)
+	if file:
+		var size = file.get_length()
+		file.close()
+		return size
+	return 0
+
+func _calculate_resource_hash(resource_path: String) -> String:
+	"""Calculate hash for resource integrity checking"""
+	var file = FileAccess.open(resource_path, FileAccess.READ)
+	if file:
+		var content = file.get_as_text()
+		file.close()
+		return content.hash()
+	return ""
+
+# ============================================================================
+#  CLEANUP
+# ============================================================================
+
+func _exit_tree():
+	"""Cleanup when service is destroyed"""
+	_save_resource_catalog()
+	print("ResourceLibrary: Cleanup complete")

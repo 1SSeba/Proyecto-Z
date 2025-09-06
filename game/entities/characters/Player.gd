@@ -1,4 +1,5 @@
 extends CharacterBody2D
+# Player.gd - Jugador con recursos .res integrados
 
 # =======================
 #  SEÑALES
@@ -23,7 +24,7 @@ var is_invulnerable: bool = false
 var invulnerability_duration: float = 1.0
 
 # =======================
-#  REFERENCIAS DE NODOS (CORREGIDAS PARA LA ESTRUCTURA ACTUAL)
+#  REFERENCIAS DE NODOS
 # =======================
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -33,412 +34,244 @@ var last_direction: Vector2 = Vector2.DOWN
 var is_alive: bool = true
 var is_initialized: bool = false
 
+# Referencias a recursos
+var resource_loader: Node
+var player_sprites: Resource
+
 # =======================
 #  INICIALIZACIÓN
 # =======================
 func _ready():
 	# Esperar a que los managers estén listos
 	await _wait_for_managers()
-	
+
+	# Cargar recursos
+	_load_resources()
+
 	# Configurar salud inicial
 	current_health = max_health
 	health_changed.emit(current_health, max_health)
-	
+
 	# Configurar animación inicial
 	if animated_sprite:
-		animated_sprite.play("Idle_down")  # Usar nombre correcto con mayúscula
-	
+		animated_sprite.play("Idle_down")
+
 	is_initialized = true
-	print("Player: Ready - Health: %.1f/%.1f" % [current_health, max_health])
-	
-	# Log al debug system de forma segura
-	_log_to_debug("Player initialized at %s" % str(global_position), "green")
+	print("Player: Initialized with resources")
+
+func _load_resources():
+	"""Carga los recursos del jugador"""
+	# Buscar ResourceLoader en la escena
+	resource_loader = get_node("/root/ResourceLoader")
+	if not resource_loader:
+		# Si no existe, crearlo
+		resource_loader = preload("res://game/core/ResourceLoader.gd").new()
+		get_tree().root.add_child(resource_loader)
+
+	# Obtener sprites del jugador
+	player_sprites = resource_loader.player_sprites
+	print("Player: Resources loaded")
 
 func _wait_for_managers():
-	"""Espera a que los managers necesarios estén listos"""
-	# Esperar un frame para que los autoloads estén completamente listos
-	await get_tree().process_frame
-	
-	# Esperar InputManager si está disponible
-	var input_manager = get_node_or_null("/root/InputManager")
-	if input_manager and input_manager.has_method("is_ready"):
-		while not input_manager.is_ready():
+	"""Espera a que los managers estén listos"""
+	var max_wait = 100 # Máximo 100 frames
+	var wait_count = 0
+
+	while wait_count < max_wait:
+		if GameStateManager and ServiceManager:
+			break
 			await get_tree().process_frame
-	
-	# Esperar GameManager si existe
-	var game_manager = get_node_or_null("/root/GameManager")
-	if game_manager and game_manager.has_method("is_ready"):
-		while not game_manager.is_ready():
-			await get_tree().process_frame
+		wait_count += 1
 
 # =======================
-#  VERIFICACIONES SEGURAS
-# =======================
-func _is_manager_available(manager_name: String) -> bool:
-	return get_node_or_null("/root/" + manager_name) != null
-
-func _log_to_debug(message: String, color: String = "white"):
-	"""Envía mensaje al sistema de debug de forma segura"""
-	var debug_manager = get_node_or_null("/root/DebugManager")
-	if debug_manager and debug_manager.has_method("log_to_console"):
-		debug_manager.log_to_console(message, color)
-
-# =======================
-#  MOVIMIENTO
+#  FÍSICA Y MOVIMIENTO
 # =======================
 func _physics_process(delta):
-	if not is_alive or not is_initialized:
+	if not is_initialized or not is_alive:
 		return
-	
-	# Solo moverse si estamos en gameplay (verificación segura)
-	var game_state_manager = get_node_or_null("/root/GameStateManager")
-	if game_state_manager and game_state_manager.has_method("is_playing"):
-		if not game_state_manager.is_playing():
-			return
-	
-	handle_movement(delta)
-	handle_animations()
 
-func handle_movement(delta):
+	# Solo procesar si el juego está en estado de juego
+	if GameStateManager and not GameStateManager.is_playing():
+			return
+
+	_handle_movement(delta)
+	_handle_animation()
+	_handle_debug_input()
+
+func _handle_movement(delta):
 	"""Maneja el movimiento del jugador"""
-	var input_direction = Vector2.ZERO
-	
-	# Obtener input de movimiento (con fallback seguro)
-	var input_manager = get_node_or_null("/root/InputManager")
-	if input_manager and input_manager.has_method("get_movement_vector"):
-		input_direction = input_manager.get_movement_vector()
+	var input_vector = Vector2.ZERO
+
+	# Obtener input usando InputService si está disponible
+	if ServiceManager and ServiceManager.has_service("InputService"):
+		var input_service = ServiceManager.get_input_service()
+		input_vector = input_service.get_movement_vector()
 	else:
 		# Fallback a input directo
-		input_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	
+		input_vector.x = Input.get_axis("move_left", "move_right")
+		input_vector.y = Input.get_axis("move_up", "move_down")
+
+	# Normalizar input diagonal
+	if input_vector.length() > 0:
+		input_vector = input_vector.normalized()
+		last_direction = input_vector
+
 	# Aplicar movimiento
-	if input_direction != Vector2.ZERO:
-		last_direction = input_direction
-		velocity = velocity.move_toward(input_direction * speed, acceleration * delta)
+	if input_vector != Vector2.ZERO:
+		velocity = velocity.move_toward(input_vector * speed, acceleration * delta)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
-	
-	# Mover el personaje
+
 	move_and_slide()
 
-func handle_animations():
+func _handle_animation():
 	"""Maneja las animaciones del jugador"""
 	if not animated_sprite:
 		return
-	
-	if velocity.length() > 10.0:  # Moviéndose
-		handle_running_animation(last_direction)
-	else:  # Idle
-		handle_idle_animation()
 
-func handle_running_animation(direction: Vector2):
-	"""Maneja animaciones de correr"""
-	var animation_to_play = ""
-	
-	if abs(direction.x) > abs(direction.y):
-		animation_to_play = "Run_right" if direction.x > 0 else "Run_left"
+	var animation_name = "Idle"
+
+	# Determinar animación basada en movimiento
+	if velocity.length() > 0:
+		animation_name = "Run"
+
+	# Determinar dirección
+	var direction = ""
+	if abs(last_direction.x) > abs(last_direction.y)):
+		direction = "left" if last_direction.x < 0 else "right"
 	else:
-		animation_to_play = "Run_down" if direction.y > 0 else "Run_up"
-	
-	_play_animation_safe(animation_to_play)
+		direction = "up" if last_direction.y < 0 else "down"
 
-func handle_idle_animation():
-	"""Maneja animaciones idle"""
-	var animation_to_play = ""
-	
-	if abs(last_direction.x) > abs(last_direction.y):
-		animation_to_play = "Idle_right" if last_direction.x > 0 else "Idle_left"
-	else:
-		animation_to_play = "Idle_down" if last_direction.y > 0 else "Idle_up"
-	
-	_play_animation_safe(animation_to_play)
-
-func _play_animation_safe(animation_name: String):
-	"""Reproduce una animación verificando que existe"""
-	if animated_sprite and animated_sprite.sprite_frames:
-		if animated_sprite.sprite_frames.has_animation(animation_name):
-			animated_sprite.play(animation_name)
-		else:
-			print("Player: Animation '%s' not found, playing default" % animation_name)
-			if animated_sprite.sprite_frames.has_animation("Idle_down"):
-				animated_sprite.play("Idle_down")
-			else:
-				print("Player: Warning - Even default animation 'Idle_down' not found!")
+	# Reproducir animación
+	var full_animation = animation_name + "_" + direction
+	animated_sprite.play(full_animation)
 
 # =======================
 #  SISTEMA DE SALUD
 # =======================
-func take_damage(damage_amount: float) -> bool:
-	"""Recibe daño"""
-	if not is_alive or is_invulnerable:
-		return false
-	
-	# Reducir salud
-	current_health -= damage_amount
-	current_health = max(0, current_health)
-	
-	# Emitir señales
-	damaged.emit(damage_amount)
+func take_damage(damage_amount: float):
+	"""Aplica daño al jugador"""
+	if is_invulnerable or not is_alive:
+		return
+
+	current_health = max(0, current_health - damage_amount)
 	health_changed.emit(current_health, max_health)
-	
-	# Activar invulnerabilidad temporal
-	make_invulnerable()
-	
-	# Efectos visuales de daño
-	_show_damage_effect()
-	
-	print("Player: Took %.1f damage (%.1f/%.1f HP remaining)" % [damage_amount, current_health, max_health])
-	_log_to_debug("Player damaged: %.1f (%.1f HP left)" % [damage_amount, current_health], "red")
-	
-	# Verificar muerte
+	damaged.emit(damage_amount)
+
+	print("Player: Took damage: %.1f, Health: %.1f/%.1f" % [damage_amount, current_health, max_health])
+
+	# Hacer invulnerable temporalmente
+	_make_invulnerable()
+
+	# Verificar si murió
 	if current_health <= 0:
 		die()
-		return true
-	
-	return true
 
 func heal(heal_amount: float):
 	"""Cura al jugador"""
 	if not is_alive:
 		return
-	
-	var old_health = current_health
+
 	current_health = min(max_health, current_health + heal_amount)
-	
-	if current_health > old_health:
 		health_changed.emit(current_health, max_health)
-		print("Player: Healed for %.1f (%.1f/%.1f HP)" % [current_health - old_health, current_health, max_health])
+
+	print("Player: Healed: %.1f, Health: %.1f/%.1f" % [heal_amount, current_health, max_health])
 
 func die():
 	"""Mata al jugador"""
 	if not is_alive:
 		return
-	
+
 	is_alive = false
 	current_health = 0
-	
-	# Parar movimiento
-	velocity = Vector2.ZERO
-	
-	# Animación de muerte
-	_play_death_animation()
-	
-	# Emitir señal
+	health_changed.emit(current_health, max_health)
 	died.emit()
-	
-	print("Player: Died!")
-	_log_to_debug("Player DIED", "red")
+
+	print("Player: Died")
+
+	# Cambiar estado del juego
+	if GameStateManager:
+		GameStateManager.on_player_died()
 
 func revive():
-	"""Revive al jugador (para respawn)"""
+	"""Revive al jugador"""
+	if is_alive:
+		return
+
 	is_alive = true
 	current_health = max_health
-	is_invulnerable = false
-	
 	health_changed.emit(current_health, max_health)
-	
-	if animated_sprite:
-		animated_sprite.play("Idle_down")
-	
-	print("Player: Revived with full health")
-	_log_to_debug("Player revived", "green")
 
-func make_invulnerable():
+	print("Player: Revived")
+
+func _make_invulnerable():
 	"""Hace al jugador invulnerable temporalmente"""
-	if is_invulnerable:
-		return
-	
 	is_invulnerable = true
-	
-	# Efecto visual de invulnerabilidad
-	_start_invulnerability_effect()
-	
-	# Timer para terminar invulnerabilidad - usar variable y Callable (Godot 4)
-	var t = get_tree().create_timer(invulnerability_duration)
-	var cb = Callable(self, "_end_invulnerability")
-	if not t.timeout.is_connected(cb):
-		t.timeout.connect(cb)
-
-func _end_invulnerability():
-	"""Termina la invulnerabilidad"""
+	await get_tree().create_timer(invulnerability_duration).timeout
 	is_invulnerable = false
-	_stop_invulnerability_effect()
 
 # =======================
-#  EFECTOS VISUALES
+#  DEBUG Y TESTING
 # =======================
-func _show_damage_effect():
-	"""Efecto visual al recibir daño"""
-	if not animated_sprite:
+func _handle_debug_input():
+	"""Maneja input de debug"""
+	if not GameStateManager or not GameStateManager.is_playing():
 		return
-	
-	# Flash rojo rápido
-	var tween = create_tween()
-	tween.tween_property(animated_sprite, "modulate", Color.RED, 0.1)
-	tween.tween_property(animated_sprite, "modulate", Color.WHITE, 0.1)
 
-func _play_death_animation():
-	"""Reproduce animación de muerte"""
-	if animated_sprite:
-		animated_sprite.play("Idle_down")  # Fallback hasta que tengas animación de muerte
-		animated_sprite.modulate = Color.GRAY
+	# Debug damage (F1)
+	if Input.is_action_just_pressed("ui_accept"): # Usar tecla existente
+		debug_damage()
 
-func _start_invulnerability_effect():
-	"""Inicia efecto visual de invulnerabilidad"""
-	if not animated_sprite:
-		return
-	
-	# Parpadeo durante invulnerabilidad
-	var tween = create_tween()
-	tween.set_loops()
-	tween.tween_property(animated_sprite, "modulate:a", 0.5, 0.1)
-	tween.tween_property(animated_sprite, "modulate:a", 1.0, 0.1)
+	# Debug heal (F2)
+	if Input.is_key_pressed(KEY_F2):
+		debug_heal()
 
-func _stop_invulnerability_effect():
-	"""Termina efecto visual de invulnerabilidad"""
-	if animated_sprite:
-		animated_sprite.modulate = Color.WHITE
+	# Debug kill (F3)
+	if Input.is_key_pressed(KEY_F3):
+		debug_kill()
 
-# =======================
-#  INPUT HANDLING - SIN CONFLICTOS CON DEBUG
-# =======================
-func _unhandled_input(event):
-	"""Maneja inputs específicos del jugador - usa _unhandled_input para evitar conflictos"""
-	if not is_alive or not is_initialized:
-		return
-	
-	# Solo procesar input durante gameplay (verificación segura)
-	var game_state_manager = get_node_or_null("/root/GameStateManager")
-	if game_state_manager and game_state_manager.has_method("is_playing"):
-		if not game_state_manager.is_playing():
-			return
-	
-	# Solo procesar eventos de teclado presionados
-	if not event is InputEventKey or not event.pressed:
-		return
-	
-	# Manejar acciones específicas (evitar teclas de debug)
-	var input_manager = get_node_or_null("/root/InputManager")
-	if input_manager and input_manager.has_method("is_action_just_pressed"):
-		if input_manager.is_action_just_pressed("interact"):
-			handle_interact()
-	else:
-		if Input.is_action_just_pressed("ui_accept"):
-			handle_interact()
+func debug_damage():
+	"""Debug: Aplica daño"""
+	take_damage(10.0)
 
-func handle_interact():
-	"""Maneja la acción de interactuar"""
-	print("Player: Interact!")
-	_log_to_debug("Player interaction!", "cyan")
+func debug_heal():
+	"""Debug: Cura"""
+	heal(20.0)
+
+func debug_kill():
+	"""Debug: Mata al jugador"""
+	die()
+
+func debug_info():
+	"""Debug: Muestra información"""
+	print("=== PLAYER DEBUG INFO ===")
+	print("Alive: %s" % is_alive)
+	print("Health: %.1f/%.1f" % [current_health, max_health])
+	print("Position: %s" % global_position)
+	print("Velocity: %s" % velocity)
+	print("Last Direction: %s" % last_direction)
+	print("Invulnerable: %s" % is_invulnerable)
+	print("=========================")
 
 # =======================
-#  GETTERS Y SETTERS
+#  FUNCIONES PÚBLICAS
 # =======================
-func get_health() -> float:
-	return current_health
-
-func get_max_health() -> float:
-	return max_health
-
 func get_health_percentage() -> float:
-	if max_health == 0:
-		return 0.0
-	return current_health / max_health
+	"""Obtiene el porcentaje de salud"""
+	return (current_health / max_health) * 100.0
 
-func is_player_alive() -> bool:
-	return is_alive
+func is_full_health() -> bool:
+	"""Verifica si tiene salud completa"""
+	return current_health >= max_health
 
-func is_player_invulnerable() -> bool:
-	return is_invulnerable
-
-func get_current_direction() -> Vector2:
+func get_direction() -> Vector2:
+	"""Obtiene la dirección actual"""
 	return last_direction
 
 func set_speed(new_speed: float):
+	"""Cambia la velocidad del jugador"""
 	speed = new_speed
 
-func set_max_health(new_max_health: float):
-	max_health = new_max_health
-	current_health = min(current_health, max_health)
-	health_changed.emit(current_health, max_health)
-
-# =======================
-#  UTILIDADES
-# =======================
-func teleport_to(target_position: Vector2):
-	"""Teletransporta al jugador"""
-	global_position = target_position
-	velocity = Vector2.ZERO
-	_log_to_debug("Player teleported to %s" % str(target_position), "yellow")
-
-func reset_player():
-	"""Resetea el jugador a estado inicial"""
-	revive()
-	velocity = Vector2.ZERO
-	last_direction = Vector2.DOWN
-
-# =======================
-#  FUNCIONES DE DEBUG
-# =======================
-func debug_damage(amount: float = 25.0):
-	"""Debug: daña al jugador"""
-	take_damage(amount)
-
-func debug_heal(amount: float = 25.0):
-	"""Debug: cura al jugador"""
-	heal(amount)
-
-func debug_kill():
-	"""Debug: mata al jugador"""
-	take_damage(current_health)
-
-func debug_info():
-	"""Muestra información de debug del jugador"""
-	print("=== PLAYER DEBUG INFO ===")
-	print("Position: %s" % str(global_position))
-	print("Velocity: %s (speed: %.1f)" % [str(velocity), velocity.length()])
-	print("Health: %.1f/%.1f (%.1f%%)" % [current_health, max_health, get_health_percentage() * 100])
-	print("Alive: %s" % is_alive)
-	print("Invulnerable: %s" % is_invulnerable)
-	print("Last Direction: %s" % str(last_direction))
-	if animated_sprite:
-		print("Current Animation: %s" % animated_sprite.animation)
-	print("==========================")
-	
-	# También enviar al debug console
-	_log_to_debug("=== PLAYER DEBUG INFO ===", "cyan")
-	_log_to_debug("Position: %s" % str(global_position), "white")
-	_log_to_debug("Health: %.1f/%.1f" % [current_health, max_health], "green")
-	_log_to_debug("Velocity: %.1f" % velocity.length(), "white")
-
-func force_debug_init():
-	"""Fuerza inicialización de debug"""
-	print("Player: Force debug init called")
-	_log_to_debug("Player force debug initialized", "yellow")
-
-func get_movement_input() -> Vector2:
-	"""Obtiene el input de movimiento actual"""
-	var input_manager = get_node_or_null("/root/InputManager")
-	if input_manager and input_manager.has_method("get_movement_vector"):
-		return input_manager.get_movement_vector()
-	else:
-		return Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-
-# =======================
-#  FUNCIONES DE DEBUG PARA HUD
-# =======================
-func debug_test_hud():
-	"""Debug: Prueba el HUD con diferentes estados"""
-	print("Player: Testing HUD with damage...")
-	debug_damage(15.0)
-
-func debug_full_heal():
-	"""Debug: Cura completamente al jugador"""
-	heal(max_health)
-	print("Player: Debug full heal applied (Health: %.1f/%.1f)" % [current_health, max_health])
-
-func debug_set_low_health():
-	"""Debug: Establece salud baja para probar alertas del HUD"""
-	current_health = 15.0
-	health_changed.emit(current_health, max_health)
-	print("Player: Debug low health set (Health: %.1f/%.1f)" % [current_health, max_health])
+func get_speed() -> float:
+	"""Obtiene la velocidad actual"""
+	return speed

@@ -1,0 +1,65 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Godot
+      uses: firebelley/godot-action@v1.0.2
+      with:
+        godot-version: '4.4'
+        platform: 'linux'
+
+    - name: Make scripts executable
+      run: chmod +x tools/scripts/*.sh
+
+    - name: Check syntax
+      run: ./tools/scripts/check_syntax.sh
+
+    - name: Test build
+      run: ./tools/scripts/build.sh -t debug -p linux
+
+    - name: Clean project
+      run: ./tools/scripts/clean_project.sh
+
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: test
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        platform: [linux, windows, macos]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Godot
+      uses: firebelley/godot-action@v1.0.2
+      with:
+        godot-version: '4.4'
+        platform: ${{ matrix.platform }}
+
+    - name: Make scripts executable
+      run: chmod +x tools/scripts/*.sh
+      if: matrix.os != 'windows-latest'
+
+    - name: Build project
+      run: ./tools/scripts/build.sh -t release -p ${{ matrix.platform }}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mystic-dungeon-crawler-${{ matrix.platform }}
+        path: builds/release/

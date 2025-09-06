@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://moih6kjuhyf4"]
 
-[ext_resource type="Script" uid="uid://b8sg7722unv5r" path="res://game/ui/MainMenu.gd" id="1_main_menu"]
+[ext_resource type="Script" uid="uid://b8sg7722unv5r" path="res://game/scenes/menus/MainMenu.gd" id="1_main_menu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
 bg_color = Color(0.2, 0.35, 0.65, 0.9)

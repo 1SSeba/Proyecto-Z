@@ -1,62 +1,49 @@
-# 🎮 Topdown Roguelike - Arquitectura Modular Profesional
+# 🎮 Mystic Dungeon Crawler
 
-## 🚀 **Overview**
+[![Godot](https://img.shields.io/badge/Godot-4.4+-blue.svg)](https://godotengine.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-Un **roguelike profesional** construido con **Godot 4.4** que presenta una **arquitectura modular basada en componentes**, servicios centralizados y patrones de diseño escalables.
+Un **roguelike top-down profesional** construido con **Godot 4.4** que presenta una **arquitectura modular basada en componentes**, servicios centralizados y patrones de diseño escalables.
 
 ## ✨ **Características Principales**
 
 - 🧩 **Arquitectura de Componentes**: Sistema modular y reutilizable
 - ⚙️ **Servicios Centralizados**: Funcionalidades globales bien organizadas
 - 📡 **EventBus**: Comunicación desacoplada entre sistemas
-- �️ **Separación src/content**: Código vs recursos del juego
 - 🎯 **ServiceManager**: Coordinación profesional de servicios
-- 📚 **Documentación Completa**: Documentación organizada por categorías
+- 📚 **Documentación Completa**: Guías de desarrollo y arquitectura
 - 🧪 **Testing Integrado**: Pruebas y validación incorporadas
+- 🚀 **Listo para Colaboración**: Workflow profesional de desarrollo
 
----
+## 🏗️ **Arquitectura del Proyecto**
 
-## 🏗️ **Arquitectura Overview**
-
-### **📁 Nueva Estructura del Proyecto**
+### **📁 Estructura Actual**
 
 ```
-topdown-game/
-├── 📁 src/core/               # 🏗️ Arquitectura Base
-│   ├── components/            # 🧩 Sistema de Componentes
-│   │   ├── Component.gd       # 📄 Clase base
-│   │   ├── HealthComponent.gd # ❤️ Manejo de salud
-│   │   ├── MovementComponent.gd # 🏃 Movimiento
-│   │   └── MenuComponent.gd   # 📋 Lógica de menús
-│   │
-│   ├── services/              # ⚙️ Servicios Globales
-│   │   ├── ConfigService.gd   # ⚙️ Configuración
-│   │   ├── AudioService.gd    # 🎵 Gestión de audio
-│   │   └── InputService.gd    # 🎮 Input avanzado
-│   │
-│   ├── events/                # � Sistema de Eventos
-│   │   └── EventBus.gd        # 🚌 Bus centralizado
-│   │
-│   └── ServiceManager.gd      # 🎯 Coordinador central
-│
-├── 📁 content/                # 🎨 Contenido del Juego
-│   ├── scenes/                # � Escenas
-│   │   ├── Main.tscn          # 🚪 Escena principal
-│   │   ├── Menus/             # 📋 Interfaces
-│   │   └── Characters/        # 👤 Personajes
-│   │
-│   └── assets/                # 🎨 Recursos visuales/audio
-│
-├── 📁 docs/                   # � Documentación
-│   ├── architecture/          # 🏗️ Documentación técnica
-│   ├── development/           # 👨‍💻 Guías de desarrollo
-│   ├── user-guides/           # 👥 Guías de usuario
-│   └── api-reference/         # 📋 Referencia de API
-│
-└── 📁 builds/                 # 🏗️ Builds del proyecto
+mystic-dungeon-crawler/
+├── 📁 game/                    # 🎮 Código del Juego
+│   ├── core/                   # 🏗️ Arquitectura Base
+│   │   ├── components/         # 🧩 Sistema de Componentes
+│   │   ├── services/           # ⚙️ Servicios Globales
+│   │   ├── events/             # 📡 Sistema de Eventos
+│   │   └── systems/            # 🔧 Sistemas del Juego
+│   ├── entities/               # 👤 Entidades (Player, NPCs)
+│   ├── scenes/                 # 🎭 Escenas del Juego
+│   └── ui/                     # 🖥️ Interfaz de Usuario
+├── 📁 docs/                    # 📚 Documentación
+│   ├── architecture/           # 🏗️ Documentación Técnica
+│   ├── development/            # 👨‍💻 Guías de Desarrollo
+│   ├── user-guides/            # 👥 Guías de Usuario
+│   └── api-reference/          # 📋 Referencia de API
+├── 📁 tools/                   # 🛠️ Herramientas de Desarrollo
+│   ├── scripts/                # 📜 Scripts de Automatización
+│   └── utilities/              # 🔧 Utilidades
+├── 📁 builds/                  # 🏗️ Builds del Proyecto
+└── 📁 tests/                   # 🧪 Tests y Validaciones
 ```
 
-### **🎯 Nueva Arquitectura Core**
+### **🎯 Arquitectura Core**
 
 #### **Sistema de Componentes**
 - **Component**: Clase base para funcionalidades modulares
@@ -66,70 +53,68 @@ topdown-game/
 
 #### **Servicios Centralizados**
 - **ServiceManager**: Coordinador de todos los servicios
-- **ConfigService**: Configuración persistente
-- **AudioService**: Gestión de audio con pools
-- **InputService**: Input buffering y contextos
+- **ConfigService**: Configuración persistente con validación
+- **AudioService**: Gestión de audio con pools de reproductores
+- **InputService**: Input buffering y contextos avanzados
 
 #### **Comunicación**
 - **EventBus**: Sistema de eventos desacoplado
 - **Señales centralizadas**: Comunicación entre componentes
 - **API consistente**: Interfaces claras entre sistemas
 
-## 🚀 **Getting Started**
+## 🚀 **Inicio Rápido**
 
 ### **Requisitos**
 - **Godot Engine 4.4+** ([Descargar](https://godotengine.org/download))
 - **Git** para control de versiones
+- **Sistema operativo**: Windows, Linux, macOS
 
-### **Instalación Rápida**
+### **Instalación**
+
 ```bash
-# Clonar el repositorio
-git clone https://github.com/1SSeba/topdown-game.git
-cd topdown-game
+# 1. Clonar el repositorio
+git clone https://github.com/TU_USUARIO/mystic-dungeon-crawler.git
+cd mystic-dungeon-crawler
 
-# Abrir en Godot
+# 2. Abrir en Godot
 godot project.godot
 
-# Verificar que aparezca en consola:
+# 3. Verificar inicialización
+# Debería aparecer en consola:
 # "ServiceManager: All services initialized successfully"
 ```
 
-### **Tu Primer Componente**
-```gdscript
-# Crear una entidad con componentes
-extends CharacterBody2D
+### **Desarrollo Rápido**
 
-func _ready():
-    # Añadir componente de salud
-    var health = HealthComponent.new()
-    health.max_health = 100
-    add_child(health)
-    
-    # Añadir componente de movimiento
-    var movement = MovementComponent.new()
-    movement.speed = 150.0
-    add_child(movement)
-    
-    # Los componentes se inicializan automáticamente
-    print("Entidad creada con ", get_children().size(), " componentes")
+```bash
+# Script de desarrollo con hot-reload
+./tools/scripts/dev.sh
+
+# Verificar sintaxis
+./tools/scripts/check_syntax.sh
+
+# Build rápido para testing
+./tools/scripts/build.sh
 ```
 
-### **Usar Servicios**
-```gdscript
-# Configuración
-var config = ServiceManager.get_config_service()
-config.set_master_volume(0.8)
+## 🎮 **Características del Juego**
 
-# Audio
-var audio = ServiceManager.get_audio_service()
-audio.play_sfx(explosion_sound)
+### **🧩 Sistema de Componentes**
+- **Modularidad**: Cada componente tiene una responsabilidad específica
+- **Reutilización**: Los componentes se pueden usar en múltiples entidades
+- **Configuración**: Propiedades exportadas para fácil configuración
+- **Comunicación**: EventBus para comunicación desacoplada
 
-# Input
-var input_service = ServiceManager.get_input_service()
-input_service.set_input_context(InputService.InputContext.GAMEPLAY)
-```
+### **⚙️ Servicios Profesionales**
+- **ConfigService**: Configuración persistente automática con validación
+- **AudioService**: Gestión de audio con pools de reproductores
+- **InputService**: Input buffering y contextos de entrada
+- **ServiceManager**: Coordinación y lifecycle de servicios
 
----
+### **🏰 Generación Procedural**
+- **RoomsSystem**: Sistema de habitaciones y mazmorras
+- **RoomGenerator**: Generación de salas con diferentes tipos
+- **CorridorGenerator**: Conexión inteligente entre salas
 
 ## 📚 **Documentación**
 
@@ -148,7 +133,7 @@ input_service.set_input_context(InputService.InputContext.GAMEPLAY)
 ### **👥 [Guías de Usuario](docs/user-guides/)**
 - **[Installation](docs/user-guides/installation.md)** - Instalación completa
 - **[Game Controls](docs/user-guides/game-controls.md)** - Controles del juego
-- **[Settings Guide](docs/user-guides/settings-guide.md)** - Configuración
+- **[Settings Guide](docs/user-guides/settings-menu.md)** - Configuración
 - **[Troubleshooting](docs/user-guides/troubleshooting.md)** - Solución de problemas
 
 ### **📋 [API Reference](docs/api-reference/)**
@@ -157,53 +142,33 @@ input_service.set_input_context(InputService.InputContext.GAMEPLAY)
 - **[EventBus API](docs/api-reference/eventbus-api.md)** - Sistema de eventos
 - **[Utilities API](docs/api-reference/utilities-api.md)** - Utilidades
 
----
-
-## 🎮 **Características del Juego**
-
-### **🧩 Sistema de Componentes**
-- **Modularidad**: Cada componente tiene una responsabilidad específica
-- **Reutilización**: Los componentes se pueden usar en múltiples entidades
-- **Configuración**: Propiedades exportadas para fácil configuración
-- **Comunicación**: EventBus para comunicación desacoplada
-
-### **⚙️ Servicios Profesionales**
-- **ConfigService**: Configuración persistente automática
-- **AudioService**: Gestión de audio con pools de reproductores
-- **InputService**: Input buffering y contextos de entrada
-- **ServiceManager**: Coordinación y lifecycle de servicios
-
-### **🏰 Generación Procedural**
-- **RoomsSystem**: Sistema de habitaciones y mazmorras
-- **RoomGenerator**: Generación de salas con diferentes tipos
-- **CorridorGenerator**: Conexión inteligente entre salas
-
----
-
 ## 🧪 **Testing y Desarrollo**
 
 ### **Verificación de Arquitectura**
 ```bash
 # Verificar que los servicios funcionan
-godot --headless --script verify_services.gd
+godot --headless --script tools/scripts/verify_services.gd
 
 # Resultado esperado:
 # ✅ ServiceManager: Initialized
-# ✅ ConfigService: Ready  
+# ✅ ConfigService: Ready
 # ✅ AudioService: Ready
 # ✅ InputService: Ready
 ```
 
-### **Desarrollo con Hot-Reload**
+### **Debug Console (F3)**
+Consola interactiva con comandos de desarrollo:
 ```bash
-# Script de desarrollo (recompila automáticamente)
-./dev.sh
+# Comandos de estado
+help                    # Mostrar ayuda
+status                  # Estado de managers
+gamestate              # Estado actual del juego
 
-# Export rápido para testing
-godot --headless --export-debug Linux/X11 builds/debug/game_debug
+# Comandos de testing
+test_components        # Test de componentes
+test_services          # Test de servicios
+test_architecture      # Test de arquitectura
 ```
-
----
 
 ## 📊 **Especificaciones Técnicas**
 
@@ -215,7 +180,8 @@ godot --headless --export-debug Linux/X11 builds/debug/game_debug
 | **Configuración** | ConfigService persistente |
 | **Audio** | AudioService con pools |
 | **Input** | InputService con buffering |
-| **Estados** | StateMachine simplificada |
+| **Estados** | StateMachine profesional |
+| **Testing** | Framework integrado |
 
 ## 🤝 **Contribuir**
 
@@ -225,17 +191,32 @@ godot --headless --export-debug Linux/X11 builds/debug/game_debug
 1. **Fork** el repositorio
 2. **Leer** [Getting Started](docs/development/getting-started.md)
 3. **Seguir** [Coding Standards](docs/development/coding-standards.md)
-4. **Crear** feature branch con componentes/servicios
+4. **Crear** feature branch: `git checkout -b feature/mi-funcionalidad`
 5. **Probar** cambios con [Testing Guide](docs/development/testing-guide.md)
 6. **Submit** pull request
 
+### **Workflow de Desarrollo**
+```bash
+# 1. Crear rama para nueva funcionalidad
+git checkout -b feature/nueva-funcionalidad
+
+# 2. Desarrollar y probar
+./tools/scripts/check_syntax.sh
+./tools/scripts/test.sh
+
+# 3. Commit con convenciones
+git add .
+git commit -m "feat: añadir nueva funcionalidad X"
+
+# 4. Push y crear PR
+git push origin feature/nueva-funcionalidad
+```
+
 ### **Para Usuarios**
-- **Reportar bugs** en [GitHub Issues](https://github.com/1SSeba/topdown-game/issues)
+- **Reportar bugs** en [GitHub Issues](https://github.com/TU_USUARIO/mystic-dungeon-crawler/issues)
 - **Sugerir features** siguiendo la arquitectura modular
 - **Probar builds** de desarrollo y dar feedback
 - **Contribuir** a la documentación
-
----
 
 ## 💡 **Ejemplos de Uso**
 
@@ -249,26 +230,28 @@ func _ready():
     var health = HealthComponent.new()
     health.max_health = 75
     add_child(health)
-    
+
     var movement = MovementComponent.new()
     movement.speed = 80.0
     add_child(movement)
-    
+
     # Eventos
     EventBus.entity_spawned.emit(self)
 ```
 
-### **Nuevo Servicio**
+### **Usar Servicios**
 ```gdscript
-# MyCustomService.gd
-extends GameService
+# Configuración
+var config = ServiceManager.get_config_service()
+config.set_master_volume(0.8)
 
-func initialize() -> void:
-    print("MyCustomService initialized")
+# Audio
+var audio = ServiceManager.get_audio_service()
+audio.play_sfx("explosion")
 
-# En ServiceManager.gd
-func get_my_custom_service() -> MyCustomService:
-    return _my_custom_service
+# Input
+var input_service = ServiceManager.get_input_service()
+var movement = input_service.get_movement_vector()
 ```
 
 ### **Usar EventBus**
@@ -284,8 +267,6 @@ func _on_health_changed(entity: Node, health: int):
     print("Health changed: ", health)
 ```
 
----
-
 ## 🏆 **Estado del Proyecto**
 
 ### **✅ Implementado**
@@ -296,6 +277,7 @@ func _on_health_changed(entity: Node, health: int):
 - 🎮 **MainMenu** funcional con arquitectura limpia
 - 🔧 **ConfigService** con persistencia automática
 - 🎵 **AudioService** con pools de reproductores
+- 🛠️ **Herramientas de Desarrollo** integradas
 
 ### **🔄 En Desarrollo**
 - 🏰 **Sistema de Salas** mejorado con componentes
@@ -308,14 +290,12 @@ func _on_health_changed(entity: Node, health: int):
 - 🏪 **ShopComponent** para comercio
 - 🎨 **EffectsComponent** para partículas
 - 🌍 **WorldComponent** para generación
-
----
+- 🧪 **Testing Framework** completo
+- 🚀 **CI/CD Pipeline** automatizado
 
 ## 📜 **Licencia**
 
 Este proyecto está bajo la licencia especificada en [LICENSE](LICENSE).
-
----
 
 ## 👨‍💻 **Desarrollado por**
 
@@ -326,339 +306,13 @@ Este proyecto está bajo la licencia especificada en [LICENSE](LICENSE).
 
 ---
 
-*� Roguelike con arquitectura profesional y componentes modulares*  
-*📅 Actualizado: Septiembre 4, 2025*  
+*🎮 Roguelike con arquitectura profesional y componentes modulares*
+*📅 Actualizado: Diciembre 2024*
 *🚀 Listo para desarrollo colaborativo*
 
-## 📋 Descripción
-
-Este proyecto es un roguelike top-down que combina mecánicas clásicas del género con una arquitectura técnica robusta. El juego presenta generación procedural de mundos, sistema de runs, gestión avanzada de estado y herramientas de desarrollo integradas.
-
-## ✨ Características Principales
-
-### 🎯 Gameplay
-- **Sistema de Runs**: Completar niveles consecutivos con estadísticas persistentes
-- **Generación Procedural**: Mundos únicos generados con ruido FastNoiseLite
-- **Múltiples Biomas**: 6 biomas diferentes (Grass, Desert, Forest, Mountains, Water, Snow)
-- **Sistema de Chunks**: Carga dinámica de mundo para optimización
-- **Estadísticas Avanzadas**: Tracking de tiempos, rachas y progreso
-
-### 🏗️ Arquitectura Técnica
-- **StateMachine Profesional**: Gestión robusta de estados del juego
-- **Sistema de Managers**: Autoloads modulares para diferentes aspectos
-- **Event Bus**: Comunicación desacoplada entre sistemas
-- **Configuración Persistente**: Guardado automático de settings y progreso
-- **Debug Console**: Herramientas de desarrollo integradas
-
-### 🛠️ Sistemas Implementados
-- **Audio Manager**: Gestión de música y efectos de sonido
-- **Input Manager**: Manejo centralizado de controles
-- **Config Manager**: Persistencia de configuración y datos
-- **Debug Manager**: Herramientas de desarrollo y testing
-- **World Generator**: Generación procedural con biomas y recursos
-
-## 🚀 Instalación y Ejecución
-
-### Requisitos
-- Godot Engine 4.4+
-- Sistema operativo: Windows, Linux, macOS
-
-### Configuración Inicial
-```bash
-# Clonar el repositorio
-git clone https://github.com/1SSeba/topdown-game.git
-cd topdown-game
-
-# Abrir en Godot
-godot project.godot
-```
-
-### Ejecución Rápida
-```bash
-# Export debug (Linux)
-./quick_export.sh
-
-# Ejecutar directamente
-godot --main-pack builds/debug/game_debug
-```
-
-## 🎮 Controles
-
-| Acción | Tecla | Descripción |
-|--------|-------|-------------|
-| Movimiento | WASD / Flechas | Mover personaje |
-| Pausa | P / ESC | Pausar/Reanudar juego |
-| Debug Console | F3 | Abrir consola de desarrollo |
-| Configuración | ESC (en menú) | Abrir settings |
-
-## 🏗️ Arquitectura del Proyecto
-
-### 📁 Estructura de Directorios
-
-```
-topdown-game/
-├── 🎨 Assets/              # Recursos del juego
-│   ├── Audio/              # Música y sonidos
-│   ├── Characters/Player/  # Sprites del jugador
-│   ├── Maps/Texture/       # Texturas de mapas
-│   └── UI/                 # Elementos de interfaz
-│
-├── 🔄 Autoload/            # Sistemas globales (Singletons)
-│   ├── AudioManager.gd     # Gestión de audio
-│   ├── ConfigManager.gd    # Configuración persistente
-│   ├── GameStateManager.gd # Estados del juego
-│   ├── InputManager.gd     # Manejo de input
-│   ├── GameManager.gd      # Lógica general
-│   └── DebugManager.gd     # Herramientas de debug
-│
-├── 🏗️ Core/               # Sistemas centrales
-│   ├── StateMachine/       # Máquina de estados
-│   │   ├── StateMachine.gd # Motor principal
-│   │   ├── State.gd        # Clase base
-│   │   └── States/         # Estados específicos
-│   └── Events/
-│       └── EventBus.gd     # Sistema de eventos
-│
-├── 🎭 Scenes/              # Escenas del juego
-│   ├── Main.tscn           # Escena principal
-│   ├── Characters/Player/  # Jugador
-│   ├── Menus/              # Menús del juego
-│   ├── World/              # Sistema de mundo
-│   └── Debug/              # Herramientas debug
-│
-└── 📚 docs/                # Documentación
-    ├── PROJECT_STRUCTURE.md
-    ├── STATEMACHINE_USAGE.md
-    └── TROUBLESHOOTING.md
-```
-
-### 🔧 Managers y Sistemas
-
-#### GameStateManager
-- **Propósito**: Gestión central de estados del juego
-- **Estados**: Loading, MainMenu, Playing, Paused, RunComplete, RunFailed
-- **Características**: Tracking de runs, estadísticas persistentes, integración con StateMachine
-
-#### ConfigManager
-- **Propósito**: Gestión de configuración persistente
-- **Funciones**: Audio, video, controles, progreso del juego
-- **Persistencia**: Automática en `user://Data/config.cfg`
-
-#### AudioManager
-- **Propósito**: Gestión de audio del juego
-- **Características**: Música de fondo, efectos de sonido, control de volumen
-- **Integración**: Conectado con eventos de estado
-
-#### InputManager
-- **Propósito**: Manejo centralizado de input
-- **Características**: Mapeo configurable, eventos de input, contextos
-- **Flexibilidad**: Soporte para diferentes layouts de teclado
-
-#### WorldGenerator
-- **Propósito**: Generación procedural de mundos
-- **Características**: Múltiples capas de ruido, biomas, recursos, cuevas
-- **Optimización**: Sistema de chunks con carga dinámica
-
-## 🎯 Estados del Juego
-
-```mermaid
-graph TD
-    A[Loading] --> B[MainMenu]
-    B --> C[Playing]
-    C --> D[Paused]
-    D --> C
-    C --> E[RunComplete]
-    C --> F[RunFailed]
-    E --> B
-    F --> B
-    B --> G[Settings]
-    G --> B
-```
-
-### Descripción de Estados
-
-- **Loading**: Carga inicial de recursos y configuración
-- **MainMenu**: Menú principal con opciones del juego
-- **Playing**: Estado activo de gameplay durante una run
-- **Paused**: Pausa temporal del juego (mantiene estado)
-- **RunComplete**: Run completada exitosamente
-- **RunFailed**: Run fallida (muerte del jugador)
-- **Settings**: Configuración de audio, video y controles
-
-## 🛠️ Herramientas de Desarrollo
-
-### Debug Console (F3)
-Consola interactiva con comandos de desarrollo:
-
-```bash
-# Comandos de estado
-help                    # Mostrar ayuda
-status                  # Estado de managers
-gamestate              # Estado actual del juego
-
-# Comandos de runs
-start_run              # Iniciar nueva run
-complete_run           # Completar run actual
-fail_run               # Fallar run actual
-reset_stats            # Resetear estadísticas
-
-# Comandos de mundo
-WorldTester.help()              # Ayuda de generación
-WorldTester.test_basic_generation()  # Test básico
-WorldTester.generate_test_world()    # Mundo de prueba
-WorldTester.show_biome_info()        # Info de biomas
-```
-
-### Scripts de Desarrollo
-
-```bash
-# Verificar sintaxis
-./scripts/check_syntax.sh
-
-# Limpiar proyecto
-./scripts/clean_project.sh
-
-# Export rápido
-./quick_export.sh
-
-# Desarrollo con hot-reload
-./dev.sh
-```
-
-## 🎨 Generación de Mundo
-
-### Sistema de Biomas
-
-| Bioma | Color | Características |
-|-------|-------|----------------|
-| Grass | Verde | Bioma base, balanceado |
-| Desert | Amarillo | Seco, pocos recursos |
-| Forest | Verde Oscuro | Denso, alta cobertura |
-| Mountains | Gris/Marrón | Rocoso, elevado |
-| Water | Azul | Acuático, navegable |
-| Snow | Blanco | Frío, escaso |
-
-### Configuración de Generación
-
-```gdscript
-# Parámetros principales
-chunk_size = 64          # Tamaño de chunks
-render_distance = 3      # Distancia de renderizado
-noise_scale = 0.1        # Escala del ruido principal
-cave_threshold = 0.3     # Umbral para cuevas
-```
-
-## 📊 Estadísticas y Progreso
-
-### Tracking de Runs
-- **Tiempo Total**: Duración de cada run
-- **Mejor Tiempo**: Record personal persistente
-- **Rachas**: Runs consecutivas completadas
-- **Tasa de Éxito**: Porcentaje de runs completadas
-- **Estadísticas Globales**: Total de runs, tiempo jugado
-
-### Persistencia
-- Guardado automático en `user://Data/config.cfg`
-- Backup de seguridad en cambios importantes
-- Migración automática entre versiones
-
-## 🔧 Configuración Avanzada
-
-### Audio
-```gdscript
-# Buses de audio configurables
-master_volume: 0.8       # Volumen maestro
-music_volume: 0.7        # Música de fondo
-sfx_volume: 0.8          # Efectos de sonido
-```
-
-### Video
-```gdscript
-# Configuración de pantalla
-screen_mode: 0           # 0=Windowed, 1=Fullscreen, 2=Borderless
-vsync_enabled: true      # Sincronización vertical
-target_fps: 60           # FPS objetivo
-```
-
-### Gameplay
-```gdscript
-# Opciones de gameplay
-show_timer: true         # Mostrar timer de run
-show_fps: false          # Mostrar contador FPS
-particles_enabled: true  # Partículas activas
-screen_shake: true       # Efecto de screen shake
-```
-
-## 🚨 Solución de Problemas
-
-### Errores Comunes
-
-**Error: "Cannot start with unknown state"**
-```
-Solución: Verificar registro de estados en GameStateManager
-Archivo: GameStateManager.gd:_register_state_machine_states()
-```
-
-**Error: "TileSet not assigned"**
-```
-Solución: Crear TileSet manualmente en editor y asignar a TileMapLayer
-Ubicación: Scenes/World/world.tscn
-```
-
-**Error: "AudioManager not ready"**
-```
-Solución: Verificar orden de autoloads en project.godot
-Orden correcto: ConfigManager → InputManager → AudioManager
-```
-
-### Debug y Logging
-
-```bash
-# Verificar estado de managers
-DebugManager.cmd_managers()
-
-# Información completa del sistema
-GameStateManager.debug_info()
-
-# Test de acceso a managers
-ManagerUtils.debug_test_manager_access()
-```
-
-## 🎯 Roadmap y Próximas Características
-
-### Versión Actual (v1.0)
-- ✅ Sistema base de StateMachine
-- ✅ Managers fundamentales
-- ✅ Generación procedural básica
-- ✅ Sistema de runs y estadísticas
-
-### Próximas Versiones
-- 🔄 Sistema de inventario
-- 🔄 Múltiples tipos de enemigos
-- 🔄 Sistema de mejoras/upgrades
-- 🔄 Múltiples armas y habilidades
-- 🔄 Boss battles
-- 🔄 Achievements system
-
-## 📄 Licencia
-
-Este proyecto está bajo la licencia especificada en el archivo [LICENSE](LICENSE).
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Ver [CONTRIBUTING.md](CONTRIBUTING.md) para detalles sobre:
-- Estilo de código
-- Proceso de pull requests
-- Reporte de bugs
-- Sugerencias de características
-
-## 📞 Contacto
-
-- **Desarrollador**: 1SSeba
-- **Repository**: [topdown-game](https://github.com/1SSeba/topdown-game)
-- **Issues**: [GitHub Issues](https://github.com/1SSeba/topdown-game/issues)
-
----
-
-*Última actualización: Agosto 2025*
-*Desarrollado con ❤️ en Godot Engine*
+## 📞 **Contacto y Soporte**
+
+- **Repository**: [mystic-dungeon-crawler](https://github.com/TU_USUARIO/mystic-dungeon-crawler)
+- **Issues**: [GitHub Issues](https://github.com/TU_USUARIO/mystic-dungeon-crawler/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/TU_USUARIO/mystic-dungeon-crawler/discussions)
+- **Wiki**: [Project Wiki](https://github.com/TU_USUARIO/mystic-dungeon-crawler/wiki)
