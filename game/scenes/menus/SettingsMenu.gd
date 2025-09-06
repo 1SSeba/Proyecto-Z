@@ -5,10 +5,7 @@ signal back_pressed
 signal settings_applied
 signal settings_changed
 
-# ============================================================================
-#  NODE REFERENCES
-# ============================================================================
-
+# Node references
 @onready var settings_content: VBoxContainer = $MainContainer/ContentContainer/SettingsContainer/SettingsContent
 @onready var tab_container: VBoxContainer = $MainContainer/ContentContainer/TabContainer
 @onready var button_container: HBoxContainer = $MainContainer/ButtonContainer
@@ -29,9 +26,7 @@ signal settings_changed
 @onready var ok_button: Button = $MainContainer/ButtonContainer/OKButton
 @onready var cancel_button: Button = $MainContainer/ButtonContainer/CancelButton
 
-# ============================================================================
 #  CONFIGURATION DATA
-# ============================================================================
 
 var tabs_config: Dictionary = {
 	"audio": {"button": null, "panel": null},
@@ -61,9 +56,7 @@ var autosave_interval_options: Array[String] = [
 	"1 minute", "2 minutes", "5 minutes", "10 minutes", "15 minutes", "30 minutes"
 ]
 
-# ============================================================================
 #  STATE VARIABLES
-# ============================================================================
 
 var current_tab: String = "audio"
 var config_service: Node = null
@@ -71,9 +64,7 @@ var current_settings: Dictionary = {}
 var has_unsaved_changes: bool = false
 var is_initialized: bool = false
 
-# ============================================================================
 #  LIFECYCLE
-# ============================================================================
 
 func _ready():
 	await _initialize_settings()
@@ -83,9 +74,7 @@ func _input(event: InputEvent):
 		_cancel_pressed()
 		get_viewport().set_input_as_handled()
 
-# ============================================================================
 #  INITIALIZATION
-# ============================================================================
 
 func _initialize_settings():
 	print("SettingsMenu: Inicializando...")
@@ -232,9 +221,7 @@ func _wait_for_services():
 	if attempts > 30:
 		push_error("SettingsMenu: ServiceManager no encontrado")
 
-# ============================================================================
 #  TAB MANAGEMENT
-# ============================================================================
 
 func _switch_to_tab(tab_name: String):
 	current_tab = tab_name
@@ -253,9 +240,7 @@ func _switch_to_tab(tab_name: String):
 	apply_button.visible = (tab_name == "video")
 	print("SettingsMenu: Cambiado a tab: ", tab_name)
 
-# ============================================================================
 #  UI UPDATE FUNCTIONS
-# ============================================================================
 
 func _update_ui():
 	if not current_settings:
@@ -291,9 +276,7 @@ func _update_ui():
 	_update_checkbox("AccessibilitySettings/HighContrastContainer/HighContrastCheck", "accessibility", "high_contrast", false)
 	_update_slider("AccessibilitySettings/FontSizeContainer/FontSizeSlider", "accessibility", "font_size_scale", 1.0)
 
-# ============================================================================
 #  HELPER FUNCTIONS
-# ============================================================================
 
 func _update_slider(path: String, section: String, key: String, default_value: float):
 	var slider = settings_content.get_node_or_null(path)
@@ -327,9 +310,7 @@ func _update_option_button(path: String, section: String, key: String, default_v
 		var value = current_settings.get(section, {}).get(key, default_value)
 		option_button.selected = value
 
-# ============================================================================
 #  CONFIGURATION MANAGEMENT
-# ============================================================================
 
 func _load_settings():
 	if not config_service:
@@ -454,9 +435,7 @@ func _apply_video_settings():
 
 	print("SettingsMenu: Configuración de video aplicada - Resolución: ", resolution_options[video_settings.get("resolution", 2)], ", Modo: ", window_mode_options[window_mode_index])
 
-# ============================================================================
 #  BUTTON HANDLERS
-# ============================================================================
 
 func _apply_settings():
 	await _apply_video_settings()
@@ -482,9 +461,7 @@ func _show_unsaved_dialog():
 	print("SettingsMenu: Cambios no guardados detectados")
 	_close_settings()
 
-# ============================================================================
 #  EVENT HANDLERS
-# ============================================================================
 
 func _on_master_volume_changed(value: float):
 	_update_setting("audio", "master_volume", value)

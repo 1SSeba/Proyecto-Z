@@ -12,32 +12,32 @@ signal service_stopped
 # signal service_error(error: String) # TODO: Implementar cuando sea necesario
 
 func _ready():
-	"""Inicialización base del servicio"""
+	pass
 	print("BaseService: Service %s ready" % service_name)
 
 func start_service():
-	"""Inicia el servicio - debe ser implementado por las clases hijas"""
+	pass
 	print("BaseService: Starting service %s" % service_name)
 	is_initialized = true
 	service_started.emit()
 
 func stop_service():
-	"""Detiene el servicio - debe ser implementado por las clases hijas"""
+	pass
 	print("BaseService: Stopping service %s" % service_name)
 	is_initialized = false
 	service_stopped.emit()
 
 func restart_service():
-	"""Reinicia el servicio"""
+	pass
 	print("BaseService: Restarting service %s" % service_name)
 	stop_service()
 	await get_tree().process_frame
 	start_service()
 
 func get_service_name() -> String:
-	"""Obtiene el nombre del servicio"""
+	pass
 	return service_name
 
 func is_service_ready() -> bool:
-	"""Verifica si el servicio está listo"""
+	pass
 	return is_initialized

@@ -12,7 +12,7 @@ func enter(_previous_state: State = null) -> void:
 	_start_loading()
 
 func _start_loading():
-	"""Inicia el proceso de carga simplificado"""
+	
 	# Simular carga básica
 	await get_tree().create_timer(1.0).timeout
 	loading_progress = 1.0

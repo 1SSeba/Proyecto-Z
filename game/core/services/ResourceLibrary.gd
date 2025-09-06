@@ -1,19 +1,8 @@
 extends Node
-# ResourceLibrary.gd - Biblioteca centralizada de recursos del juego
 
-## Professional Resource Library
-## Centralized resource catalog with metadata, tags, and search capabilities
-## @author: Senior Developer (10+ years experience)
-
-# ============================================================================
-#  RESOURCE LIBRARY CONFIGURATION
-# ============================================================================
-
-# Service properties
 var service_name: String = "ResourceLibrary"
 var is_service_ready: bool = false
 
-# Resource categories
 enum ResourceCategory {
 	AUDIO,
 	TEXTURE,
@@ -61,9 +50,7 @@ var search_index: Dictionary = {}
 var category_index: Dictionary = {}
 var tag_index: Dictionary = {}
 
-# ============================================================================
 #  SERVICE LIFECYCLE
-# ============================================================================
 
 func _start():
 	service_name = "ResourceLibrary"
@@ -72,11 +59,9 @@ func _start():
 	print("ResourceLibrary: Initialized successfully")
 
 func start_service():
-	"""Public method to start the service"""
 	_start()
 
 func _initialize_library():
-	"""Initialize the resource library system"""
 	# Create resource directories if they don't exist
 	_create_library_directories()
 
@@ -89,13 +74,9 @@ func _initialize_library():
 	# Scan for new resources
 	_scan_for_resources()
 
-# ============================================================================
 #  RESOURCE REGISTRATION
-# ============================================================================
 
 func register_resource(resource_path: String, category: ResourceCategory, resource_type: ResourceType, tags: Array[String] = [], metadata: Dictionary = {}):
-	"""Register a new resource in the library"""
-
 	# Validate resource path
 	if not _validate_resource_path(resource_path):
 		print("ResourceLibrary: Invalid resource path: ", resource_path)
@@ -130,7 +111,6 @@ func register_resource(resource_path: String, category: ResourceCategory, resour
 	return true
 
 func unregister_resource(resource_path: String):
-	"""Remove a resource from the library"""
 	if resource_catalog.has(resource_path):
 		var entry = resource_catalog[resource_path]
 
@@ -150,16 +130,12 @@ func unregister_resource(resource_path: String):
 
 	return false
 
-# ============================================================================
 #  RESOURCE QUERIES
-# ============================================================================
 
 func get_resources_by_category(category: ResourceCategory) -> Array[String]:
-	"""Get all resources of a specific category"""
 	return category_index.get(category, [])
 
 func get_resources_by_type(resource_type: ResourceType) -> Array[String]:
-	"""Get all resources of a specific type"""
 	var resources: Array[String] = []
 
 	for path in resource_catalog.keys():
@@ -169,11 +145,9 @@ func get_resources_by_type(resource_type: ResourceType) -> Array[String]:
 	return resources
 
 func get_resources_by_tag(tag: String) -> Array[String]:
-	"""Get all resources with a specific tag"""
 	return tag_index.get(tag, [])
 
 func search_resources(query: String) -> Array[String]:
-	"""Search resources by query string"""
 	var results: Array[String] = []
 	var query_lower = query.to_lower()
 
@@ -197,25 +171,20 @@ func search_resources(query: String) -> Array[String]:
 	return results
 
 func get_resource_info(resource_path: String) -> Dictionary:
-	"""Get detailed information about a resource"""
 	if resource_catalog.has(resource_path):
 		return resource_catalog[resource_path].duplicate()
 	else:
 		return {}
 
 func get_resource_metadata(resource_path: String) -> Dictionary:
-	"""Get metadata for a specific resource"""
 	if resource_catalog.has(resource_path):
 		return resource_catalog[resource_path].metadata
 	else:
 		return {}
 
-# ============================================================================
 #  RESOURCE TAGS
-# ============================================================================
 
 func add_tag_to_resource(resource_path: String, tag: String):
-	"""Add a tag to a resource"""
 	if resource_catalog.has(resource_path):
 		var entry = resource_catalog[resource_path]
 		if tag not in entry.tags:
@@ -225,7 +194,6 @@ func add_tag_to_resource(resource_path: String, tag: String):
 			print("ResourceLibrary: Added tag '$tag' to resource: ", resource_path)
 
 func remove_tag_from_resource(resource_path: String, tag: String):
-	"""Remove a tag from a resource"""
 	if resource_catalog.has(resource_path):
 		var entry = resource_catalog[resource_path]
 		if tag in entry.tags:
@@ -235,7 +203,6 @@ func remove_tag_from_resource(resource_path: String, tag: String):
 			print("ResourceLibrary: Removed tag '$tag' from resource: ", resource_path)
 
 func get_all_tags() -> Array[String]:
-	"""Get all unique tags in the library"""
 	var tags: Array[String] = []
 
 	for path in resource_catalog.keys():
@@ -247,12 +214,9 @@ func get_all_tags() -> Array[String]:
 	tags.sort()
 	return tags
 
-# ============================================================================
 #  RESOURCE STATISTICS
-# ============================================================================
 
 func get_library_stats() -> Dictionary:
-	"""Get comprehensive library statistics"""
 	var stats = {
 		"total_resources": resource_catalog.size(),
 		"categories": {},
@@ -301,7 +265,6 @@ func get_library_stats() -> Dictionary:
 	return stats
 
 func get_category_stats(category: ResourceCategory) -> Dictionary:
-	"""Get statistics for a specific category"""
 	var resources = get_resources_by_category(category)
 	var stats = {
 		"count": resources.size(),
@@ -328,12 +291,9 @@ func get_category_stats(category: ResourceCategory) -> Dictionary:
 
 	return stats
 
-# ============================================================================
 #  RESOURCE DEPENDENCIES
-# ============================================================================
 
 func add_dependency(resource_path: String, dependency_path: String):
-	"""Add a dependency relationship between resources"""
 	if not resource_dependencies.has(resource_path):
 		resource_dependencies[resource_path] = []
 
@@ -342,17 +302,14 @@ func add_dependency(resource_path: String, dependency_path: String):
 		print("ResourceLibrary: Added dependency: ", resource_path, " -> ", dependency_path)
 
 func remove_dependency(resource_path: String, dependency_path: String):
-	"""Remove a dependency relationship"""
 	if resource_dependencies.has(resource_path):
 		resource_dependencies[resource_path].erase(dependency_path)
 		print("ResourceLibrary: Removed dependency: ", resource_path, " -> ", dependency_path)
 
 func get_dependencies(resource_path: String) -> Array[String]:
-	"""Get all dependencies for a resource"""
 	return resource_dependencies.get(resource_path, [])
 
 func get_dependents(resource_path: String) -> Array[String]:
-	"""Get all resources that depend on this resource"""
 	var dependents: Array[String] = []
 
 	for path in resource_dependencies.keys():
@@ -361,12 +318,9 @@ func get_dependents(resource_path: String) -> Array[String]:
 
 	return dependents
 
-# ============================================================================
 #  RESOURCE ACCESS TRACKING
-# ============================================================================
 
 func track_resource_access(resource_path: String):
-	"""Track when a resource is accessed"""
 	if resource_catalog.has(resource_path):
 		var entry = resource_catalog[resource_path]
 		entry.last_accessed = Time.get_ticks_msec()
@@ -374,7 +328,6 @@ func track_resource_access(resource_path: String):
 		_save_resource_catalog()
 
 func get_most_accessed_resources(limit: int = 10) -> Array[Dictionary]:
-	"""Get the most accessed resources"""
 	var access_data = []
 
 	for path in resource_catalog.keys():
@@ -388,12 +341,9 @@ func get_most_accessed_resources(limit: int = 10) -> Array[Dictionary]:
 	access_data.sort_custom(func(a, b): return a.access_count > b.access_count)
 	return access_data.slice(0, limit)
 
-# ============================================================================
 #  INTERNAL METHODS
-# ============================================================================
 
 func _create_library_directories():
-	"""Create necessary library directories"""
 	var directories = [
 		"user://resource_library",
 		"user://resource_library/catalog",
@@ -404,7 +354,6 @@ func _create_library_directories():
 		DirAccess.make_dir_recursive_absolute(dir_path)
 
 func _load_resource_catalog():
-	"""Load resource catalog from file"""
 	var catalog_file = "user://resource_library/catalog.json"
 
 	if FileAccess.file_exists(catalog_file):
@@ -421,7 +370,6 @@ func _load_resource_catalog():
 				print("ResourceLibrary: Loaded catalog with ", resource_catalog.size(), " resources")
 
 func _save_resource_catalog():
-	"""Save resource catalog to file"""
 	var catalog_file = "user://resource_library/catalog.json"
 
 	var file = FileAccess.open(catalog_file, FileAccess.WRITE)
@@ -431,7 +379,6 @@ func _save_resource_catalog():
 		file.close()
 
 func _build_search_indexes():
-	"""Build search indexes for efficient querying"""
 	# Clear existing indexes
 	category_index.clear()
 	tag_index.clear()
@@ -445,7 +392,6 @@ func _build_search_indexes():
 		_update_search_index(path, entry)
 
 func _update_category_index(resource_path: String, category: ResourceCategory):
-	"""Update category index"""
 	if not category_index.has(category):
 		category_index[category] = []
 
@@ -453,7 +399,6 @@ func _update_category_index(resource_path: String, category: ResourceCategory):
 		category_index[category].append(resource_path)
 
 func _update_tag_index(resource_path: String, tags: Array[String]):
-	"""Update tag index"""
 	for tag in tags:
 		if not tag_index.has(tag):
 			tag_index[tag] = []
@@ -462,7 +407,6 @@ func _update_tag_index(resource_path: String, tags: Array[String]):
 			tag_index[tag].append(resource_path)
 
 func _update_search_index(resource_path: String, entry: Dictionary):
-	"""Update search index"""
 	search_index[resource_path] = {
 		"path": resource_path,
 		"category": entry.category,
@@ -471,22 +415,18 @@ func _update_search_index(resource_path: String, entry: Dictionary):
 	}
 
 func _remove_from_category_index(resource_path: String, category: ResourceCategory):
-	"""Remove resource from category index"""
 	if category_index.has(category):
 		category_index[category].erase(resource_path)
 
 func _remove_from_tag_index(resource_path: String, tags: Array[String]):
-	"""Remove resource from tag index"""
 	for tag in tags:
 		if tag_index.has(tag):
 			tag_index[tag].erase(tag)
 
 func _remove_from_search_index(resource_path: String):
-	"""Remove resource from search index"""
 	search_index.erase(resource_path)
 
 func _scan_for_resources():
-	"""Scan project for resources and auto-register them"""
 	var resource_extensions = [".png", ".jpg", ".ogg", ".wav", ".tscn", ".tres", ".gd", ".cs", ".ttf", ".otf"]
 	var project_dir = "res://"
 
@@ -497,7 +437,6 @@ func _scan_for_resources():
 				_auto_register_resource(file_path)
 
 func _scan_directory_for_resources(dir_path: String, extensions: Array[String]) -> Array[String]:
-	"""Recursively scan directory for resource files"""
 	var files: Array[String] = []
 
 	var dir = DirAccess.open(dir_path)
@@ -524,7 +463,6 @@ func _scan_directory_for_resources(dir_path: String, extensions: Array[String]) 
 	return files
 
 func _auto_register_resource(resource_path: String):
-	"""Auto-register a resource based on its path and extension"""
 	var category = _guess_category_from_path(resource_path)
 	var type = _guess_type_from_extension(resource_path)
 	var tags = _guess_tags_from_path(resource_path)
@@ -532,7 +470,6 @@ func _auto_register_resource(resource_path: String):
 	register_resource(resource_path, category, type, tags)
 
 func _guess_category_from_path(resource_path: String) -> ResourceCategory:
-	"""Guess resource category from path"""
 	if "audio" in resource_path.to_lower():
 		return ResourceCategory.AUDIO
 	elif "character" in resource_path.to_lower():
@@ -547,7 +484,6 @@ func _guess_category_from_path(resource_path: String) -> ResourceCategory:
 		return ResourceCategory.OTHER
 
 func _guess_type_from_extension(resource_path: String) -> ResourceType:
-	"""Guess resource type from file extension"""
 	var ext = resource_path.get_extension().to_lower()
 
 	match ext:
@@ -571,7 +507,6 @@ func _guess_type_from_extension(resource_path: String) -> ResourceType:
 			return ResourceType.OTHER
 
 func _guess_tags_from_path(resource_path: String) -> Array[String]:
-	"""Guess tags from resource path"""
 	var tags: Array[String] = []
 	var path_lower = resource_path.to_lower()
 
@@ -592,11 +527,9 @@ func _guess_tags_from_path(resource_path: String) -> Array[String]:
 	return tags
 
 func _validate_resource_path(resource_path: String) -> bool:
-	"""Validate that a resource path exists and is accessible"""
 	return FileAccess.file_exists(resource_path)
 
 func _get_resource_size(resource_path: String) -> int:
-	"""Get resource size in bytes"""
 	var file = FileAccess.open(resource_path, FileAccess.READ)
 	if file:
 		var size = file.get_length()
@@ -605,7 +538,6 @@ func _get_resource_size(resource_path: String) -> int:
 	return 0
 
 func _calculate_resource_hash(resource_path: String) -> String:
-	"""Calculate hash for resource integrity checking"""
 	var file = FileAccess.open(resource_path, FileAccess.READ)
 	if file:
 		var content = file.get_as_text()
@@ -613,11 +545,8 @@ func _calculate_resource_hash(resource_path: String) -> String:
 		return content.hash()
 	return ""
 
-# ============================================================================
 #  CLEANUP
-# ============================================================================
 
 func _exit_tree():
-	"""Cleanup when service is destroyed"""
 	_save_resource_catalog()
 	print("ResourceLibrary: Cleanup complete")

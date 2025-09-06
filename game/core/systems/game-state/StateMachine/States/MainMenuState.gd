@@ -42,32 +42,20 @@ func _notify_menu_exited():
 
 
 func _setup_input_context():
-	"""Configure input context for the main menu.
-
 	Default no-op implementation provided so the analyzer and other code can call
 	this method without requiring a project-specific implementation.
-	"""
-	return
 
 
 func _notify_menu_entered():
-	"""Hook called immediately after entering the menu state.
-
 	Default implementation is a no-op; projects can extend this state to notify
 	other systems (EventBus, telemetry, etc.).
-	"""
-	return
 
 
 func _setup_menu_configuration():
-	"""Hook to configure menu options when entering the state.
-
 	No-op by default; override in subsclasses for custom menu configuration.
-	"""
-	return
 
 func _ensure_main_menu_scene():
-	"""Asegurar que la escena del menú principal esté cargada y activa"""
+	
 	var current_scene = get_tree().current_scene
 	
 	# Si ya estamos en MainMenu, usar la escena actual
@@ -88,7 +76,7 @@ func _ensure_main_menu_scene():
 		print("MainMenuState: ERROR - MainMenu scene not found at: " + main_menu_path)
 
 func _connect_menu_signals():
-	"""Conectar señales del menú principal"""
+	
 	if not main_menu_scene:
 		main_menu_scene = get_tree().current_scene
 	
@@ -108,7 +96,7 @@ func _connect_menu_signals():
 		print("MainMenuState: Connected to menu signals")
 
 func _disconnect_menu_signals():
-	"""Desconectar señales del menú principal"""
+	
 	if main_menu_scene and main_menu_scene.has_signal("start_game_requested"):
 		var cb_start = Callable(self, "_on_start_game_requested")
 		if main_menu_scene.is_connected("start_game_requested", cb_start):
@@ -126,7 +114,7 @@ func _disconnect_menu_signals():
 #  MANEJADORES DE SEÑALES DEL MENÚ
 # =======================
 func _on_start_game_requested():
-	"""Manejar solicitud de inicio de juego"""
+	
 	print("MainMenuState: Start game requested")
 	
 	# Transición a estado de carga
@@ -134,7 +122,7 @@ func _on_start_game_requested():
 		state_machine.change_state("LoadingState")
 
 func _on_settings_requested():
-	"""Manejar solicitud de settings"""
+	
 	print("MainMenuState: Settings requested")
 	
 	# Transición a estado de settings
@@ -142,7 +130,7 @@ func _on_settings_requested():
 		state_machine.change_state("SettingsState")
 
 func _on_quit_requested():
-	"""Manejar solicitud de salir"""
+	
 	print("MainMenuState: Quit requested")
 	
 	# Confirmar y salir
@@ -182,7 +170,7 @@ func handle_input(event: InputEvent) -> void:
 				_open_settings()
 
 func _start_game():
-	"""Inicia el juego usando GameStateManager"""
+	
 	if state_machine and state_machine.debug_mode:
 		print("🎮 Starting game via GameStateManager...")
 	
@@ -198,7 +186,7 @@ func _start_game():
 		transition_to("GameplayState", {"level": 1})
 
 func _open_settings():
-	"""Abre configuración"""
+	
 	if state_machine and state_machine.debug_mode:
 		print("⚙️ Opening settings...")
 	
@@ -224,7 +212,7 @@ func _open_settings():
 		transition_to("SettingsState")
 
 func _quit_game():
-	"""Cierra el juego"""
+	
 	if state_machine and state_machine.debug_mode:
 		print("👋 Quitting game...")
 	

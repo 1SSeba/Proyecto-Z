@@ -1,19 +1,8 @@
 extends Node
-# ResourceManager.gd - Gestión centralizada de recursos del juego
 
-## Professional Resource Manager
-## Centralized resource management with caching, validation, and optimization
-## @author: Senior Developer (10+ years experience)
-
-# ============================================================================
-#  RESOURCE CONFIGURATION
-# ============================================================================
-
-# Service properties
 var service_name: String = "ResourceManager"
 var is_service_ready: bool = false
 
-# Resource categories
 enum ResourceCategory {
 	AUDIO,
 	TEXTURE,
@@ -29,7 +18,7 @@ enum ResourceCategory {
 # Resource cache
 var resource_cache: Dictionary = {}
 var cache_size_limit: int = 100
-var cache_memory_limit: int = 50 * 1024 * 1024  # 50MB
+var cache_memory_limit: int = 50 * 1024 * 1024 # 50MB
 
 # Resource metadata
 var resource_metadata: Dictionary = {}
@@ -40,9 +29,7 @@ var loading_queue: Array[String] = []
 var currently_loading: Array[String] = []
 var max_concurrent_loads: int = 3
 
-# ============================================================================
 #  SERVICE LIFECYCLE
-# ============================================================================
 
 func _start():
 	service_name = "ResourceManager"
@@ -51,11 +38,9 @@ func _start():
 	print("ResourceManager: Initialized successfully")
 
 func start_service():
-	"""Public method to start the service"""
 	_start()
 
 func _initialize_resource_system():
-	"""Initialize the resource management system"""
 	# Create resource directories if they don't exist
 	_create_resource_directories()
 
@@ -65,13 +50,9 @@ func _initialize_resource_system():
 	# Preload critical resources
 	_preload_critical_resources()
 
-# ============================================================================
 #  RESOURCE LOADING
-# ============================================================================
 
 func load_resource(resource_path: String, category: ResourceCategory = ResourceCategory.OTHER) -> Resource:
-	"""Load a resource with caching and validation"""
-
 	# Check cache first
 	if resource_cache.has(resource_path):
 		_update_cache_access(resource_path)
@@ -97,8 +78,6 @@ func load_resource(resource_path: String, category: ResourceCategory = ResourceC
 	return resource
 
 func load_resource_async(resource_path: String, category: ResourceCategory = ResourceCategory.OTHER) -> Resource:
-	"""Load a resource asynchronously"""
-
 	# Add to loading queue
 	if resource_path not in loading_queue and resource_path not in currently_loading:
 		loading_queue.append(resource_path)
@@ -110,17 +89,12 @@ func load_resource_async(resource_path: String, category: ResourceCategory = Res
 	return resource_cache.get(resource_path, null)
 
 func preload_resources(resource_paths: Array[String], category: ResourceCategory = ResourceCategory.OTHER):
-	"""Preload multiple resources"""
 	for path in resource_paths:
 		load_resource_async(path, category)
 
-# ============================================================================
 #  RESOURCE CACHING
-# ============================================================================
 
 func _add_to_cache(resource_path: String, resource: Resource, category: ResourceCategory):
-	"""Add resource to cache with size management"""
-
 	# Check cache size limits
 	_manage_cache_size()
 
@@ -137,20 +111,16 @@ func _add_to_cache(resource_path: String, resource: Resource, category: Resource
 	}
 
 func _update_cache_access(resource_path: String):
-	"""Update cache access statistics"""
 	if resource_metadata.has(resource_path):
 		resource_metadata[resource_path]["access_count"] += 1
 		resource_metadata[resource_path]["last_access"] = Time.get_ticks_msec()
 
 func _manage_cache_size():
-	"""Manage cache size to stay within limits"""
-
 	# Check if we need to clear cache
 	if resource_cache.size() >= cache_size_limit:
 		_clear_least_used_resources()
 
 func _clear_least_used_resources():
-	"""Clear least used resources from cache"""
 	var resources_to_remove = []
 
 	# Sort by access count and last access time
@@ -182,13 +152,9 @@ func _clear_least_used_resources():
 		resource_metadata.erase(path)
 		print("ResourceManager: Removed from cache: ", path)
 
-# ============================================================================
 #  RESOURCE VALIDATION
-# ============================================================================
 
 func _validate_resource_path(resource_path: String) -> bool:
-	"""Validate that a resource path exists and is accessible"""
-
 	# Check if path exists
 	if not FileAccess.file_exists(resource_path):
 		return false
@@ -198,7 +164,6 @@ func _validate_resource_path(resource_path: String) -> bool:
 	return resource != null
 
 func validate_all_resources() -> Dictionary:
-	"""Validate all resources in the project"""
 	var validation_results = {
 		"valid": [],
 		"invalid": [],
@@ -222,7 +187,6 @@ func validate_all_resources() -> Dictionary:
 	return validation_results
 
 func _get_all_resource_files() -> Array[String]:
-	"""Get all resource files in the project"""
 	var resource_files: Array[String] = []
 
 	# Common resource extensions
@@ -235,7 +199,6 @@ func _get_all_resource_files() -> Array[String]:
 	return resource_files
 
 func _scan_directory_for_resources(dir_path: String, extensions: Array[String]) -> Array[String]:
-	"""Recursively scan directory for resource files"""
 	var files: Array[String] = []
 
 	var dir = DirAccess.open(dir_path)
@@ -263,12 +226,9 @@ func _scan_directory_for_resources(dir_path: String, extensions: Array[String]) 
 
 	return files
 
-# ============================================================================
 #  RESOURCE METADATA
-# ============================================================================
 
 func _load_resource_metadata():
-	"""Load resource metadata from file"""
 	var metadata_file = "user://resource_metadata.json"
 
 	if FileAccess.file_exists(metadata_file):
@@ -285,7 +245,6 @@ func _load_resource_metadata():
 				print("ResourceManager: Loaded metadata for ", resource_metadata.size(), " resources")
 
 func _save_resource_metadata():
-	"""Save resource metadata to file"""
 	var metadata_file = "user://resource_metadata.json"
 
 	var file = FileAccess.open(metadata_file, FileAccess.WRITE)
@@ -296,19 +255,15 @@ func _save_resource_metadata():
 		print("ResourceManager: Saved metadata for ", resource_metadata.size(), " resources")
 
 func _update_resource_metadata(resource_path: String, category: ResourceCategory):
-	"""Update metadata for a resource"""
 	if not resource_metadata.has(resource_path):
 		resource_metadata[resource_path] = {}
 
 	resource_metadata[resource_path]["category"] = category
 	resource_metadata[resource_path]["last_updated"] = Time.get_ticks_msec()
 
-# ============================================================================
 #  RESOURCE OPTIMIZATION
-# ============================================================================
 
 func optimize_resources():
-	"""Optimize all resources in the project"""
 	print("ResourceManager: Starting resource optimization...")
 
 	var optimized_count = 0
@@ -337,13 +292,11 @@ func optimize_resources():
 	print("  Size saved: ", _format_bytes(size_saved), " (", "%.1f" % percent_saved, "%)")
 
 func _optimize_resource_file(file_path: String) -> bool:
-	"""Optimize a single resource file"""
 	# This is a placeholder - actual optimization would depend on file type
 	# For now, just return true to indicate "optimization attempted"
 	return true
 
 func _get_file_size(file_path: String) -> int:
-	"""Get file size in bytes"""
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file:
 		var size = file.get_length()
@@ -352,7 +305,6 @@ func _get_file_size(file_path: String) -> int:
 	return 0
 
 func _format_bytes(bytes: int) -> String:
-	"""Format bytes into human readable string"""
 	var units = ["B", "KB", "MB", "GB"]
 	var unit_index = 0
 	var size = float(bytes)
@@ -363,12 +315,9 @@ func _format_bytes(bytes: int) -> String:
 
 	return "%.1f %s" % [size, units[unit_index]]
 
-# ============================================================================
 #  RESOURCE QUERIES
-# ============================================================================
 
 func get_resources_by_category(category: ResourceCategory) -> Array[String]:
-	"""Get all resources of a specific category"""
 	var resources: Array[String] = []
 
 	for path in resource_metadata.keys():
@@ -378,7 +327,6 @@ func get_resources_by_category(category: ResourceCategory) -> Array[String]:
 	return resources
 
 func get_resource_info(resource_path: String) -> Dictionary:
-	"""Get detailed information about a resource"""
 	var info = {
 		"path": resource_path,
 		"exists": FileAccess.file_exists(resource_path),
@@ -390,7 +338,6 @@ func get_resource_info(resource_path: String) -> Dictionary:
 	return info
 
 func get_cache_info() -> Dictionary:
-	"""Get information about the resource cache"""
 	var total_size = 0
 	for path in resource_metadata.keys():
 		total_size += resource_metadata[path].get("size", 0)
@@ -403,12 +350,9 @@ func get_cache_info() -> Dictionary:
 		"size_limit": cache_size_limit
 	}
 
-# ============================================================================
 #  INTERNAL METHODS
-# ============================================================================
 
 func _create_resource_directories():
-	"""Create necessary resource directories"""
 	var directories = [
 		"user://resources",
 		"user://resources/cache",
@@ -419,7 +363,6 @@ func _create_resource_directories():
 		DirAccess.make_dir_recursive_absolute(dir_path)
 
 func _preload_critical_resources():
-	"""Preload critical resources that are always needed"""
 	var critical_resources = [
 		"res://game/core/events/EventBus.gd",
 		"res://game/core/ServiceManager.gd"
@@ -429,17 +372,14 @@ func _preload_critical_resources():
 		load_resource_async(resource_path, ResourceCategory.SCRIPT)
 
 func _load_resource_from_disk(resource_path: String) -> Resource:
-	"""Load resource from disk"""
 	return load(resource_path)
 
 func _estimate_resource_size(resource: Resource) -> int:
-	"""Estimate resource size in memory"""
 	# This is a simplified estimation
 	# In practice, you'd need to implement proper size calculation
-	return 1024  # 1KB placeholder
+	return 1024 # 1KB placeholder
 
 func _process_loading_queue():
-	"""Process the loading queue"""
 	while loading_queue.size() > 0 and currently_loading.size() < max_concurrent_loads:
 		var resource_path = loading_queue.pop_front()
 		currently_loading.append(resource_path)
@@ -448,18 +388,14 @@ func _process_loading_queue():
 		_load_resource_async_internal(resource_path)
 
 func _load_resource_async_internal(resource_path: String):
-	"""Internal async loading method"""
 	# This would implement actual async loading
 	# For now, just load synchronously
 	var resource = load_resource(resource_path)
 	if resource:
 		currently_loading.erase(resource_path)
 
-# ============================================================================
 #  CLEANUP
-# ============================================================================
 
 func _exit_tree():
-	"""Cleanup when service is destroyed"""
 	_save_resource_metadata()
 	print("ResourceManager: Cleanup complete")

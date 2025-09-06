@@ -22,7 +22,7 @@ func enter(_previous_state: Node = null) -> void:
 	#     ServiceManager.get_input_service().set_context("UI_MENU")
 
 func _load_settings_scene():
-	"""Carga la escena de configuraciones"""
+	
 	settings_scene = load("res://game/scenes/menus/SettingsMenu.tscn")
 	
 	if settings_scene:
@@ -40,7 +40,7 @@ func _load_settings_scene():
 		transition_to(return_state)
 
 func _connect_settings_signals():
-	"""Conecta las señales del menú de configuraciones"""
+	
 	if settings_node:
 		# Buscar señales específicas del menú de settings
 		if settings_node.has_signal("settings_closed"):
@@ -49,11 +49,11 @@ func _connect_settings_signals():
 			settings_node.back_requested.connect(_on_back_requested)
 
 func _on_settings_closed():
-	"""Maneja el cierre de configuraciones"""
+	
 	transition_to(return_state)
 
 func _on_back_requested():
-	"""Maneja el botón de volver"""
+	
 	transition_to(return_state)
 
 func handle_input(event: InputEvent) -> void:
