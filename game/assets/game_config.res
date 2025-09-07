@@ -8,7 +8,7 @@ player_max_health = 100.0
 player_health_regen = 1.0
 
 # Game settings
-game_title = "Mystic Dungeon Crawler"
+game_title = "Proyecto-Z"
 game_version = "pre-alpha v0.0.1"
 max_fps = 60
 vsync_enabled = true

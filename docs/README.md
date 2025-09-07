@@ -1,131 +1,181 @@
-# 📚 Documentación del Proyecto Topdown Roguelike
+# Documentación del proyecto
 
-¡Bienvenido a la documentación completa del proyecto! Esta documentación está organizada por categorías para facilitar la navegación y encontrar rápidamente la información que necesitas.
+Esta documentación organiza la información del proyecto por áreas: arquitectura, desarrollo, guías para usuarios y referencia de API. Está dirigida tanto a desarrolladores como a colaboradores y usuarios interesados.
 
-## 🗂️ **Estructura de Documentación**
+Estructura de la documentación
 
-### 🏗️ **[Architecture](architecture/)** - Arquitectura Técnica
-Documentación sobre la arquitectura del proyecto, sistemas core y patrones de diseño.
+### Architecture (architecture/)
+Material técnico sobre la arquitectura del proyecto, sistemas principales y patrones de diseño.
 
-- **[Component Architecture](architecture/component-architecture.md)** - Sistema de componentes modular
-- **[Service Layer](architecture/service-layer.md)** - Capa de servicios y ServiceManager
-- **[Event System](architecture/event-system.md)** - EventBus y comunicación entre sistemas
-- **[Project Structure](architecture/project-structure.md)** - Organización del código y carpetas
+- Component Architecture: diseño del sistema de componentes (architecture/component-architecture.md).
+- Service Layer: descripción de la capa de servicios y el `ServiceManager` (architecture/service-layer.md).
+- Event System: diseño del `EventBus` y comunicación entre sistemas (architecture/event-system.md).
+- Project Structure: organización de carpetas y convenciones (architecture/project-structure.md).
 
-### 👨‍💻 **[Development](development/)** - Guías de Desarrollo
-Información para desarrolladores que trabajan en el proyecto.
+### Development (development/)
+Guías para desarrolladores.
 
-- **[Getting Started](development/getting-started.md)** - Configuración inicial y primer código
-- **[Component Development](development/component-development.md)** - Crear nuevos componentes
-- **[Service Development](development/service-development.md)** - Desarrollar servicios
-- **[Testing Guide](development/testing-guide.md)** - Pruebas y validación
-- **[Coding Standards](development/coding-standards.md)** - Estándares de código
 
-### 👥 **[User Guides](user-guides/)** - Guías de Usuario
-Documentación para usuarios finales y instalación.
+### User Guides (user-guides/)
+Guías orientadas al usuario final.
 
-- **[Installation](user-guides/installation.md)** - Instalación y configuración
-- **[Game Controls](user-guides/game-controls.md)** - Controles del juego
-- **[Settings Guide](user-guides/settings-guide.md)** - Configuración del juego
-- **[Troubleshooting](user-guides/troubleshooting.md)** - Solución de problemas
+- Installation: instrucciones de instalación y requisitos.
+ Crear su primer componente siguiendo `development/desarrollo-componentes.md`.
+- Settings Guide: opciones de configuración y explicaciones.
+- Troubleshooting: problemas comunes y soluciones.
 
-### 📋 **[API Reference](api-reference/)** - Referencia de API
-Documentación técnica de clases, métodos y APIs.
+### API Reference (api-reference/)
+Referencia técnica de clases, funciones y APIs.
 
-- **[Components API](api-reference/components-api.md)** - API de componentes
-- **[Services API](api-reference/services-api.md)** - API de servicios
-- **[EventBus API](api-reference/eventbus-api.md)** - API del sistema de eventos
-- **[Utilities API](api-reference/utilities-api.md)** - Utilidades y helpers
+- Components API: detalles técnicos de los componentes (api-reference/api-componentes.md).
+- Services API: referencia de servicios disponibles (api-reference/services-api.md).
+- EventBus API: eventos disponibles y uso (api-reference/eventbus-api.md).
+- Utilities API: utilidades y helpers.
 
----
+Inicio rápido
 
-## 🚀 **Inicio Rápido**
+Para desarrolladores:
 
-### **Para Desarrolladores**
-1. 📖 **[Getting Started](development/getting-started.md)** - Configuración inicial
-2. 🏗️ **[Component Architecture](architecture/component-architecture.md)** - Entender la arquitectura
-3. 🧩 **[Component Development](development/component-development.md)** - Crear tu primer componente
+1. Consulte `development/getting-started.md`.
+2. Revise `architecture/component-architecture.md` para comprender el patrón de componentes.
+3. Cree su primer componente siguiendo `development/desarrollo-componentes.md`.
 
-### **Para Usuarios**
-1. 💿 **[Installation](user-guides/installation.md)** - Instalar el juego
-2. 🎮 **[Game Controls](user-guides/game-controls.md)** - Aprender los controles
-3. ⚙️ **[Settings Guide](user-guides/settings-guide.md)** - Configurar el juego
+Para usuarios:
 
-### **Para Contribuidores**
-1. 📝 **[Coding Standards](development/coding-standards.md)** - Estándares de código
-2. 🧪 **[Testing Guide](development/testing-guide.md)** - Ejecutar pruebas
-3. 🐛 **[Troubleshooting](user-guides/troubleshooting.md)** - Resolver problemas
+1. Consulte `user-guides/installation.md` para la instalación.
+2. Revise `user-guides/game-controls.md` para los controles.
 
----
+Para colaboradores:
 
-## 🎯 **Navegación por Temas**
+1. Siga `development/coding-standards.md`.
+2. Ejecute las pruebas descritas en `development/testing-guide.md`.
 
-### **🧩 Sistema de Componentes**
-- [Component Architecture](architecture/component-architecture.md) - Diseño modular
-- [Component Development](development/component-development.md) - Desarrollo
-- [Components API](api-reference/components-api.md) - Referencia técnica
+Estado de la documentación
 
-### **⚙️ Servicios y Managers**
-- [Service Layer](architecture/service-layer.md) - Arquitectura de servicios
-- [Service Development](development/service-development.md) - Crear servicios
-- [Services API](api-reference/services-api.md) - API de servicios
-
-### **📡 Sistema de Eventos**
-- [Event System](architecture/event-system.md) - EventBus y comunicación
-- [EventBus API](api-reference/eventbus-api.md) - API del EventBus
-
-### **🎮 Desarrollo de Gameplay**
-- [Getting Started](development/getting-started.md) - Primer gameplay
-- [Testing Guide](development/testing-guide.md) - Validación
-- [Game Controls](user-guides/game-controls.md) - Controles
-
----
-
-## 📊 **Estado de Documentación**
-
-| Categoría | Estado | Completitud | Última Actualización |
+| Categoría | Estado | Completitud | Última actualización |
 |-----------|--------|-------------|---------------------|
-| **Architecture** | ✅ Completa | 100% | Sept 2025 |
-| **Development** | ✅ Completa | 100% | Sept 2025 |
-| **User Guides** | ✅ Completa | 100% | Sept 2025 |
-| **API Reference** | ✅ Completa | 100% | Sept 2025 |
+| Architecture | Completada | 100% | 2025-09-06 |
+| Development | Completada | 100% | 2025-09-06 |
+| User Guides | Completada | 100% | 2025-09-06 |
+| API Reference | Completada | 100% | 2025-09-06 |
 
----
+Consejos de navegación
 
-## 🔍 **Consejos de Navegación**
+- Utilice la búsqueda del editor para localizar contenidos.
+- Los enlaces en esta documentación son relativos al repositorio y deben abrirse desde su raíz.
+- Cada documento incluye un índice y ejemplos cuando procede.
 
-- **🔍 Búsqueda**: Usa `Ctrl+F` para buscar términos específicos
-- **🔗 Enlaces**: Los enlaces internos te llevan directamente a las secciones
-- **📋 Índices**: Cada documento tiene un índice al inicio
-- **💡 Ejemplos**: Busca bloques de código con ejemplos prácticos
-- **⚠️ Notas**: Presta atención a las cajas de advertencias y tips
+Mantenimiento
 
----
+<!--
+	docs/README.md — Índice principal de la documentación para Proyecto-Z
+	Generado a partir del contenido del repositorio: estructura de `docs/`, autoloads en `project.godot` y código bajo `game/`.
+	Formato: GitHub Flavored Markdown (GFM). Mantener formal y sin emojis.
+-->
 
-## 🛠️ **Mantenimiento**
+# Documentación — Proyecto-Z
 
-### **Convenciones**
-- **Formato**: Markdown (.md) con sintaxis estándar
-- **Idioma**: Español para documentación interna
-- **Estructura**: Headers jerárquicos (H1-H6)
-- **Enlaces**: Relativos dentro del proyecto
+Breve descripción
+------------------
+Esta carpeta contiene la documentación técnica y de usuario para Proyecto-Z. Los documentos están organizados por áreas: arquitectura, desarrollo, referencia de API y guías para usuarios.
 
-### **Contribuir a la Documentación**
-- Mantener la documentación actualizada con los cambios de código
-- Usar la plantilla estándar para nuevos documentos
-- Verificar enlaces rotos periódicamente
-- Incluir ejemplos de código cuando sea útil
+> Nota importante
+>
+> Esta documentación se genera y mantiene en base al código presente en `game/`. Antes de modificar rutas o nombres de singletons (autoloads), confirme los cambios en `project.godot`.
 
----
+Estado y cobertura
+-------------------
+| Área | Contenido | Notas |
+|------|-----------|-------|
+| Architecture | Diseño de sistemas, EventBus, ServiceManager y estructura de componentes | files: `architecture/` |
+| Development | Guías de desarrollo, pruebas y plantillas | files: `development/` |
+| API Reference | Referencias concisas de componentes y servicios | files: `api-reference/` |
+| User Guides | Instalación, controles y ajustes | files: `user-guides/` |
 
-## 💡 **Recursos Adicionales**
+Índice rápido
+------------
+- Architecture
+	- `architecture/component-architecture.md` — Patrón de componentes.
+	- `architecture/service-layer.md` — `ServiceManager` y servicios.
+	- `architecture/event-system.md` — `EventBus` y eventos.
+	- `architecture/project-structure.md` — Organización física de carpetas.
+- Development
+	- `development/getting-started.md` — Configuración del entorno.
+	- `development/desarrollo-componentes.md` — Plantilla y ejemplo para nuevos componentes.
+	- `development/service-development.md` — Cómo crear servicios.
+	- `development/testing-guide.md` — Ejecutar y escribir pruebas.
+- API Reference
+	- `api-reference/api-componentes.md`
+	- `api-reference/services-api.md`
+	- `api-reference/eventbus-api.md`
+- User Guides
+	- `user-guides/installation.md`
+	- `user-guides/game-controls.md`
+	- `user-guides/settings-guide.md`
 
-- **[Godot Documentation](https://docs.godotengine.org/)** - Documentación oficial de Godot
-- **[GDScript Style Guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html)** - Guía de estilo de GDScript
-- **[Component Entity System](https://en.wikipedia.org/wiki/Entity_component_system)** - Patrón ECS
+Captura rápida del proyecto (autoritativa)
+---------------------------------------
+Autoloads (según `project.godot`):
 
----
+```ini
+[autoload]
+EventBus="*res://game/core/events/EventBus.gd"
+ServiceManager="*res://game/core/ServiceManager.gd"
+GameStateManager="*res://game/systems/game-state/GameStateManager.gd"
+```
 
-**🎮 ¡Disfruta desarrollando con nuestra arquitectura modular!**
+Main scene (ejecución por defecto):
 
-*Documentación actualizada: Septiembre 4, 2025*
+```ini
+run/main_scene = "res://game/scenes/menus/MainMenu.tscn"
+```
+
+Convenciones documentales
+-------------------------
+- Rutas internas Godot: usar `res://game/...` como prefijo canónico.
+- Nombres de singletons/autoloads: `EventBus`, `ServiceManager`, `GameStateManager`.
+- Idioma: español (formal). Formato Markdown (GFM).
+
+Guía de uso rápido
+------------------
+Para empezar a trabajar en el proyecto (desarrollador):
+
+1. Abrir el proyecto en Godot 4.4+.
+2. Consultar `development/getting-started.md` para requisitos y configuraciones.
+3. Revisar `architecture/component-architecture.md` para entender el patrón de componentes.
+
+Para preparar documentación o contribuir:
+
+- Añadir archivos en `docs/` o editar los existentes.
+- Mantener enlaces relativos entre documentos.
+- Actualizar la sección "Estado y cobertura" si agrega o elimina documentos.
+
+<details>
+<summary>Guía breve para contribuciones (expandir)</summary>
+
+- Crear un branch con prefijo `docs/`.
+- Incluir en el PR la lista de archivos modificados y un comentario breve del alcance.
+- Actualizar `CHANGELOG.md` si el cambio afecta el uso del proyecto.
+- Ejecutar una comprobación de enlaces locales antes de abrir el PR.
+
+</details>
+
+Verificación y mantenimiento (tareas sugeridas)
+--------------------------------------------
+- [ ] Ejecutar búsqueda para reemplazos de nombres antiguos y rutas no canónicas.
+- [ ] Ejecutar verificación de enlaces internos en `docs/`.
+- [ ] Alinear ejemplos de código en la documentación con implementaciones reales bajo `game/`.
+
+> Aviso
+>
+> Use `res://game/...` como prefijo canónico en todos los documentos. Evite rutas absolutas de sistema.
+
+Contribuciones
+--------------
+Siga las reglas del repositorio: crear PRs hacia la rama principal, documentar cambios en `CHANGELOG.md` y mantener las convenciones definidas arriba.
+
+Recursos
+--------
+- Godot Engine: https://docs.godotengine.org/
+
+Última actualización: 2025-09-06

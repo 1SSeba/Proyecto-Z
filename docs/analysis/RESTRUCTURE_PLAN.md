@@ -124,9 +124,9 @@ mv game/scenes/Room/ game/scenes/environments/
 mkdir -p docs/analysis/
 
 # Mover archivos de análisis
-mv OPTIMIZATION_ANALYSIS.md docs/analysis/
-mv PROJECT_PREPARATION_SUMMARY.md docs/analysis/
-mv RESOURCE_OPTIMIZATION_REPORT.md docs/analysis/
+mv optimization-analysis.md docs/analysis/
+mv project-preparation-summary.md docs/analysis/
+mv resource-optimization-report.md docs/analysis/
 
 # Mover documentación de desarrollo
 mv DEVELOPMENT.md docs/development/

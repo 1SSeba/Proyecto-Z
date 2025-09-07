@@ -94,13 +94,13 @@ topdown-game/                          # 🎮 ROOT - Proyecto principal
 │   │
 │   ├── 📁 development/                 # 👨‍💻 Guías de desarrollo
 │   │   ├── getting-started.md          # 🚀 Primeros pasos
-│   │   └── component-development.md    # 🧩 Desarrollo de componentes
+│   │   └── desarrollo-componentes.md    # 🧩 Desarrollo de componentes
 │   │
 │   ├── 📁 user-guides/                 # 👥 Guías de usuario
 │   │   └── installation.md             # 💿 Instalación
 │   │
 │   └── 📁 api-reference/               # 📋 Referencia de API
-│       └── components-api.md           # 🧩 API de componentes
+│       └── api-componentes.md           # 🧩 API de componentes
 │
 ├── 📁 builds/                          # 🏗️ BUILDS DEL PROYECTO
 │   └── debug/                          # 🐛 Builds de debug
@@ -303,8 +303,8 @@ config/features=PackedStringArray("4.4")
 config/icon="res://icon.svg"
 
 [autoload]
-ServiceManager="*res://src/core/ServiceManager.gd"
-EventBus="*res://src/core/events/EventBus.gd"
+ServiceManager="*res://game/core/ServiceManager.gd"
+EventBus="*res://game/core/events/EventBus.gd"
 
 [input]
 # Mapeo de controles personalizados

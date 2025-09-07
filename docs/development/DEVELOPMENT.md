@@ -188,7 +188,7 @@ func _connect_to_manager():
     if not ManagerUtils.is_config_manager_available():
         print("ERROR: ConfigManager not available")
         return false
-    
+
     var config_manager = ManagerUtils.get_config_manager()
     # ... resto del código
 
@@ -258,11 +258,11 @@ func update(delta: float):
 # 2. Registrar en GameStateManager.gd
 func _register_state_machine_states():
     # ... estados existentes ...
-    
-    var MiNuevoStateClass = load("res://src/systems/StateMachine/States/MiNuevoState.gd")
+
+    var MiNuevoStateClass = load("res://game/systems/StateMachine/States/MiNuevoState.gd")
     var mi_nuevo_state = MiNuevoStateClass.new()
     mi_nuevo_state.name = "MiNuevoState"
-    
+
     state_machine.add_child(mi_nuevo_state)
     state_machine.add_state("MiNuevoState", mi_nuevo_state)
 ```
@@ -356,7 +356,7 @@ func _wait_for_dependencies():
 #### "TileSet not assigned"
 ```gdscript
 # Problema: TileMapLayer sin TileSet asignado
-# Solución: 
+# Solución:
 # 1. Crear TileSet manualmente en Godot Editor
 # 2. Asignar en Inspector del TileMapLayer
 # 3. O crear dinámicamente:

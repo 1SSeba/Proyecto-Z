@@ -1,102 +1,83 @@
 # 🧩 Desarrollo de Componentes
 
 ## 📋 **Índice**
-- [Conceptos Fundamentales](#conceptos-fundamentales)
-- [Crear Componentes Básicos](#crear-componentes-básicos)
-- [Componentes Avanzados](#componentes-avanzados)
-- [Integración con EventBus](#integración-con-eventbus)
-- [Testing de Componentes](#testing-de-componentes)
-- [Mejores Prácticas](#mejores-prácticas)
+````markdown
+# Desarrollo de Componentes
+
+> Nota
+>
+> Este documento explica cómo diseñar, implementar y probar componentes en Proyecto-Z. Mantenga la responsabilidad única y use `EventBus` para la comunicación.
+
+## Índice
+
+- Conceptos fundamentales
+- Crear componentes básicos
+- Componentes avanzados
+- Integración con EventBus
+- Testing de componentes
+- Mejores prácticas
 
 ---
 
-## 🎯 **Conceptos Fundamentales**
+## Conceptos fundamentales
 
-### **¿Qué es un Componente?**
-Un componente es una clase que encapsula una funcionalidad específica y puede ser reutilizada en múltiples entidades. Sigue el principio de **responsabilidad única**.
+### ¿Qué es un componente?
+Un componente encapsula una funcionalidad específica y se aplica a entidades. Debe seguir el principio de responsabilidad única.
 
-### **Características de Componentes**
-- ✅ **Independientes**: No dependen directamente de otros componentes
-- ✅ **Reutilizables**: Pueden usarse en múltiples entidades
-- ✅ **Configurables**: Usan @export para configuración
-- ✅ **Comunicativos**: Usan EventBus para comunicación
-- ✅ **Limpios**: Manejan su propia inicialización y limpieza
+### Características recomendadas
+
+- Independientes
+- Reutilizables
+- Configurables vía `@export`
+- Comunicativos mediante `EventBus`
+- Limpios en inicialización y limpieza
 
 ---
 
-## 🔨 **Crear Componentes Básicos**
+## Crear componentes básicos
 
-### **Plantilla Base**
+<details>
+<summary>Plantilla base (expandir)</summary>
+
 ```gdscript
-# /src/core/components/MyComponent.gd
+# /game/core/components/MyComponent.gd
 class_name MyComponent
 extends Component
 
-# Configuración exportada
 @export var property_example: int = 10
 @export var enabled: bool = true
 
-# Estado interno
 var internal_state: Dictionary = {}
 var entity: Node
 
 func initialize(entity_node: Node) -> void:
     entity = entity_node
-    
-    # Validación de entidad requerida
     if not entity:
         push_error("MyComponent requires a valid entity")
         return
-    
-    # Configuración inicial
     setup_component()
-    
-    # Conectar eventos si es necesario
     connect_events()
-    
-    print("MyComponent initialized for: ", entity.name)
 
 func cleanup() -> void:
-    # Desconectar eventos
     disconnect_events()
-    
-    # Limpiar estado
     internal_state.clear()
-    
-    print("MyComponent cleaned up")
 
-func setup_component() -> void:
-    # Configuración específica del componente
-    internal_state["initialized"] = true
-
-func connect_events() -> void:
-    # Conectar a eventos relevantes
-    # EventBus.some_event.connect(_on_some_event)
-    pass
-
-func disconnect_events() -> void:
-    # Desconectar eventos
-    # if EventBus.some_event.is_connected(_on_some_event):
-    #     EventBus.some_event.disconnect(_on_some_event)
-    pass
-
-# Funcionalidad específica del componente
 func do_component_action() -> void:
     if not enabled:
         return
-    
-    # Lógica del componente
     internal_state["action_count"] = internal_state.get("action_count", 0) + 1
-    
-    # Emitir evento
     EventBus.component_action.emit(entity, "my_component", "action_performed")
 ```
 
+</details>
+
 ---
 
-## 🚀 **Componentes Avanzados**
+## Componentes avanzados
 
-### **Componente con Timer**
+<details>
+<summary>TimedComponent — ejemplo con Timer</summary>
+
 ```gdscript
 class_name TimedComponent
 extends Component
@@ -108,13 +89,10 @@ var timer: Timer
 
 func initialize(entity_node: Node) -> void:
     entity = entity_node
-    
-    # Crear y configurar timer
     timer = Timer.new()
     timer.wait_time = interval
     timer.timeout.connect(_on_timer_timeout)
     add_child(timer)
-    
     if auto_start:
         timer.start()
 
@@ -122,58 +100,83 @@ func cleanup() -> void:
     if timer:
         timer.queue_free()
 
-func start_timer() -> void:
-    if timer:
-        timer.start()
-
-func stop_timer() -> void:
-    if timer:
-        timer.stop()
-
 func _on_timer_timeout() -> void:
-    # Lógica ejecutada cada intervalo
     EventBus.timed_action.emit(entity, interval)
 ```
 
-### **Componente con Estado**
+</details>
+
+---
+
+## Integración con EventBus
+
+> Aviso
+>
+> Documente las señales nuevas que añada al `EventBus` en `game/core/events/EventBus.gd` y mantenga nombres descriptivos.
+
+---
+
+## Testing de componentes
+
+<details>
+<summary>Ejemplo: test básico con Gut</summary>
+
 ```gdscript
-class_name StatefulComponent
-extends Component
+# /tests/components/TestMyComponent.gd
+extends GutTest
 
-enum State { IDLE, ACTIVE, COOLDOWN }
+func before_each():
+    # Crear entidad y añadir componente
+    pass
 
-@export var initial_state: State = State.IDLE
-@export var cooldown_time: float = 2.0
+func test_component_initialization():
+    # Aserciones de inicialización
+    pass
+```
 
-var current_state: State
+</details>
+
+---
+
+## Mejores prácticas
+
+- Diseñar componentes con responsabilidad única.
+- Validar entradas en `initialize()` y usar `push_error()` cuando sea necesario.
+- Limpiar conexiones en `cleanup()` o `_exit_tree()`.
+
+---
+
+**Última actualización: Septiembre 4, 2025**
+
+````
 var state_timer: Timer
 
 func initialize(entity_node: Node) -> void:
     entity = entity_node
     current_state = initial_state
-    
+
     # Timer para cambios de estado
     state_timer = Timer.new()
     state_timer.timeout.connect(_on_state_timer_timeout)
     add_child(state_timer)
-    
+
     # Conectar eventos
     EventBus.state_change_requested.connect(_on_state_change_requested)
 
 func change_state(new_state: State) -> void:
     if current_state == new_state:
         return
-    
+
     # Salir del estado actual
     exit_state(current_state)
-    
+
     # Cambiar estado
     var previous_state = current_state
     current_state = new_state
-    
+
     # Entrar al nuevo estado
     enter_state(current_state)
-    
+
     # Emitir evento
     EventBus.component_state_changed.emit(entity, previous_state, current_state)
 
@@ -227,14 +230,14 @@ var regen_timer: Timer
 func initialize(entity_node: Node) -> void:
     entity = entity_node
     current_resource = max_resource
-    
+
     # Timer para regeneración
     regen_timer = Timer.new()
     regen_timer.wait_time = regen_interval
     regen_timer.timeout.connect(_on_regen_timer_timeout)
     add_child(regen_timer)
     regen_timer.start()
-    
+
     # Eventos
     EventBus.resource_consume_requested.connect(_on_resource_consume_requested)
     EventBus.resource_add_requested.connect(_on_resource_add_requested)
@@ -243,18 +246,18 @@ func consume_resource(amount: int) -> bool:
     if current_resource >= amount:
         current_resource -= amount
         EventBus.resource_changed.emit(entity, resource_name, current_resource, max_resource)
-        
+
         if current_resource <= 0:
             EventBus.resource_depleted.emit(entity, resource_name)
-        
+
         return true
-    
+
     return false
 
 func add_resource(amount: int) -> void:
     var old_resource = current_resource
     current_resource = min(max_resource, current_resource + amount)
-    
+
     if current_resource != old_resource:
         EventBus.resource_changed.emit(entity, resource_name, current_resource, max_resource)
 
@@ -340,7 +343,7 @@ func before_each():
     # Crear entidad de prueba
     test_entity = Node2D.new()
     add_child(test_entity)
-    
+
     # Crear componente
     component = MyComponent.new()
     test_entity.add_child(component)
@@ -361,7 +364,7 @@ func test_component_action():
     var initial_count = component.internal_state.get("action_count", 0)
     component.do_component_action()
     var final_count = component.internal_state.get("action_count", 0)
-    
+
     assert_eq(final_count, initial_count + 1)
 
 func test_event_emission():
@@ -382,7 +385,7 @@ func before_each():
     mock_entity = Node2D.new()
     mock_entity.add_to_group("test_entity")
     add_child(mock_entity)
-    
+
     health_component = HealthComponent.new()
     health_component.max_health = 100
     mock_entity.add_child(health_component)
@@ -390,11 +393,11 @@ func before_each():
 func test_damage_calculation():
     # Estado inicial
     assert_eq(health_component.current_health, 100)
-    
+
     # Aplicar daño
     health_component.take_damage(25)
     assert_eq(health_component.current_health, 75)
-    
+
     # Verificar evento
     watch_signals(EventBus)
     health_component.take_damage(10)
@@ -406,10 +409,10 @@ func test_damage_calculation():
 
 func test_death_condition():
     watch_signals(EventBus)
-    
+
     # Daño letal
     health_component.take_damage(150)
-    
+
     # Verificar estado
     assert_eq(health_component.current_health, 0)
     assert_signal_emitted(EventBus, "entity_died")
@@ -454,11 +457,11 @@ func initialize(entity_node: Node) -> void:
     if not entity_node:
         push_error("Entity cannot be null")
         return
-    
+
     if not entity_node.has_method("get_groups"):
         push_error("Entity must be a Node with groups support")
         return
-    
+
     entity = entity_node
     setup_component()
 
@@ -489,7 +492,7 @@ var has_error: bool = false  # Estados conflictivos
 ### **5. Documentación Clara**
 ```gdscript
 ## Un componente que maneja la salud de una entidad
-## 
+##
 ## Características:
 ## - Salud máxima configurable
 ## - Regeneración automática opcional

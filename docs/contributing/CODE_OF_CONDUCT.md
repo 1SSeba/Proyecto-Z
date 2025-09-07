@@ -1,4 +1,4 @@
-# 📜 Código de Conducta - Mystic Dungeon Crawler
+# Código de Conducta - Proyecto-Z
 
 ## Nuestro Compromiso
 
@@ -79,4 +79,4 @@ Para reportar violaciones de este código de conducta o para cualquier pregunta 
 
 ---
 
-*Este documento es parte integral de la comunidad Mystic Dungeon Crawler y se aplica a todos los participantes del proyecto.*
+*Este documento es parte integral de la comunidad Proyecto-Z y se aplica a todos los participantes del proyecto.*

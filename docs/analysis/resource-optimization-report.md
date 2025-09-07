@@ -1,0 +1,3 @@
+Contenido del informe de optimización de recursos (preservado)
+
+... (preservando contenido) ...

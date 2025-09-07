@@ -1,39 +1,49 @@
-# 💿 Instalación y Configuración
+````markdown
+# Instalación y configuración
 
-## 📋 **Índice**
-- [Requisitos del Sistema](#requisitos-del-sistema)
-- [Instalación Básica](#instalación-básica)
-- [Configuración Inicial](#configuración-inicial)
-- [Verificación de Instalación](#verificación-de-instalación)
-- [Configuración Avanzada](#configuración-avanzada)
-- [Solución de Problemas](#solución-de-problemas)
+> Nota
+>
+> Este documento cubre instalación de usuarios y pasos para desarrolladores. Use Godot 4.4+ para el flujo de desarrollo.
 
----
+## Índice
 
-## 💻 **Requisitos del Sistema**
-
-### **Mínimos**
-- **SO**: Windows 10/11, Linux (Ubuntu 18.04+), macOS 10.14+
-- **RAM**: 4 GB
-- **Almacenamiento**: 500 MB libres
-- **GPU**: OpenGL 3.3 / DirectX 11 compatible
-
-### **Recomendados**
-- **SO**: Windows 11, Linux (Ubuntu 22.04+), macOS 12+
-- **RAM**: 8 GB o más
-- **Almacenamiento**: 2 GB libres (para desarrollo)
-- **GPU**: Dedicada con OpenGL 4.5+ / DirectX 12
-
-### **Para Desarrollo**
-- **Godot Engine**: 4.4 o superior
-- **Git**: Para control de versiones
-- **Editor de Código**: VS Code recomendado
+- Requisitos del sistema
+- Instalación básica
+- Configuración inicial
+- Verificación de instalación
+- Configuración avanzada
+- Solución de problemas
 
 ---
 
-## 🚀 **Instalación Básica**
+## Requisitos del sistema
 
-### **Opción 1: Descarga Directa (Usuarios)**
+### Mínimos
+
+- SO: Windows 10/11, Linux (Ubuntu 18.04+), macOS 10.14+
+- RAM: 4 GB
+- Almacenamiento: 500 MB libres
+- GPU: OpenGL 3.3 / DirectX 11 compatible
+
+### Recomendados
+
+- SO: Windows 11, Linux (Ubuntu 22.04+), macOS 12+
+- RAM: 8 GB o más
+- Almacenamiento: 2 GB libres (para desarrollo)
+- GPU: Dedicada con OpenGL 4.5+ / DirectX 12
+
+### Para desarrollo
+
+- Godot Engine 4.4+
+- Git
+- Editor de código (VS Code recomendado)
+
+---
+
+## Instalación básica
+
+### Opción 1: Descarga directa (usuarios)
+
 ```bash
 # Descargar release desde GitHub
 wget https://github.com/1SSeba/topdown-game/releases/latest/download/topdown-game.zip
@@ -45,67 +55,47 @@ cd topdown-game
 # Ejecutar (Linux)
 chmod +x topdown-game
 ./topdown-game
-
-# Ejecutar (Windows)
-# Doble click en topdown-game.exe
 ```
 
-### **Opción 2: Compilar desde Código (Desarrolladores)**
+### Opción 2: Compilar desde código (desarrolladores)
+
 ```bash
-# Clonar repositorio
 git clone https://github.com/1SSeba/topdown-game.git
 cd topdown-game
-
-# Instalar Godot Engine 4.4+
-# Desde: https://godotengine.org/download
-
-# Abrir proyecto
 godot project.godot
-
-# O ejecutar directamente
-godot --main-pack . --headless
 ```
 
-### **Opción 3: Instalación Automática (Linux)**
-```bash
-# Script de instalación automática
-curl -sSL https://raw.githubusercontent.com/1SSeba/topdown-game/master/install.sh | bash
+### Opción 3: Instalación automática (Linux)
 
-# O manualmente:
-./install.sh
+```bash
+curl -sSL https://raw.githubusercontent.com/1SSeba/topdown-game/master/install.sh | bash
 ```
 
 ---
 
-## ⚙️ **Configuración Inicial**
+## Configuración inicial
 
-### **Primera Ejecución**
-Al ejecutar el juego por primera vez:
+### Primera ejecución
 
-1. **Se creará automáticamente**:
-   - Carpeta de configuración: `~/.local/share/godot/app_userdata/topdown-game/`
-   - Archivo de config: `config.cfg`
-   - Carpeta de saves: `saves/`
+Al ejecutar el juego por primera vez se crearán las carpetas de configuración y guardado en el directorio de usuario.
 
-2. **Configuración predeterminada**:
-   ```ini
-   [audio]
-   master_volume=1.0
-   music_volume=0.8
-   sfx_volume=1.0
-   
-   [video]
-   fullscreen=false
-   vsync_enabled=true
-   target_fps=60
-   
-   [input]
-   mouse_sensitivity=1.0
-   keyboard_layout="QWERTY"
-   ```
+```ini
+[audio]
+master_volume=1.0
+music_volume=0.8
+sfx_volume=1.0
 
-### **Configuración Manual**
-Puedes editar manualmente el archivo de configuración:
+[video]
+fullscreen=false
+vsync_enabled=true
+target_fps=60
+
+[input]
+mouse_sensitivity=1.0
+keyboard_layout="QWERTY"
+```
+
+### Configuración manual
 
 ```bash
 # Linux/macOS
@@ -117,67 +107,61 @@ notepad %APPDATA%\Godot\app_userdata\topdown-game\config.cfg
 
 ---
 
-## ✅ **Verificación de Instalación**
+## Verificación de instalación
 
-### **Test Básico**
+<details>
+<summary>Comprobaciones básicas</summary>
+
 ```bash
 # Verificar que el juego se ejecuta
 ./topdown-game --version
 
-# Debería mostrar:
-# Topdown Roguelike v1.0.0
-# Godot Engine 4.4.x
-# Component Architecture Ready
-```
-
-### **Test de Funcionalidades**
-1. **Menú Principal**: Debería aparecer sin errores
-2. **Audio**: Música de fondo debe reproducirse
-3. **Input**: Controles deben responder
-4. **Configuración**: Settings deben guardar cambios
-
-### **Logs de Diagnóstico**
-```bash
-# Ejecutar con logs detallados
+# Verificar logs
 ./topdown-game --verbose
-
-# Verificar logs en:
-# Linux: ~/.local/share/godot/app_userdata/topdown-game/logs/
-# Windows: %APPDATA%\Godot\app_userdata\topdown-game\logs\
+tail -f ~/.local/share/godot/app_userdata/topdown-game/logs/latest.log
 ```
+
+</details>
 
 ---
 
-## 🔧 **Configuración Avanzada**
+## Configuración avanzada
 
-### **Configuración de Video**
+<details>
+<summary>Opciones de video y audio (expandir)</summary>
+
 ```ini
 [video]
-# Modo de pantalla: 0=Ventana, 1=Pantalla completa, 2=Sin bordes
 screen_mode=0
-
-# Resolución personalizada
 screen_width=1920
 screen_height=1080
-
-# Escalado de UI
 ui_scale=1.0
+render_quality="High"
+msaa_quality=2
 
-# Calidad de renderizado
-render_quality="High"  # Low, Medium, High, Ultra
-
-# Anti-aliasing
-msaa_quality=2  # 0=Disabled, 1=2x, 2=4x, 3=8x
-```
-
-### **Configuración de Audio**
-```ini
 [audio]
-# Volúmenes (0.0 a 1.0)
 master_volume=1.0
 music_volume=0.8
 sfx_volume=1.0
-voice_volume=1.0
+audio_buffer_size=1024
+```
+
+</details>
+
+---
+
+## Solución de problemas
+
+- Verificar dependencias y permisos antes de ejecutar.
+- Consultar logs en `~/.local/share/godot/app_userdata/topdown-game/logs/`.
+
+> Aviso
+>
+> Si cambia rutas de archivos o nombres de singletons, actualice también la documentación y `project.godot`.
+
+**Última actualización: Septiembre 4, 2025**
+
+````
 
 # Dispositivo de audio (vacío = predeterminado)
 audio_device=""
@@ -319,7 +303,7 @@ rm -rf ~/.local/share/godot/app_userdata/topdown-game/
 ### **Recursos de Ayuda**
 - 📚 **[Troubleshooting Guide](troubleshooting.md)** - Solución de problemas específicos
 - 🎮 **[Game Controls](game-controls.md)** - Guía de controles
-- ⚙️ **[Settings Guide](settings-guide.md)** - Configuración detallada
+- ⚙️ **[Settings Guide](settings-menu.md)** - Configuración detallada
 
 ### **Reportar Problemas**
 1. **GitHub Issues**: [Reportar Bug](https://github.com/1SSeba/topdown-game/issues)

@@ -1,0 +1,3 @@
+Contenido del resumen de preparación del proyecto (preservado)
+
+... (preservando contenido) ...

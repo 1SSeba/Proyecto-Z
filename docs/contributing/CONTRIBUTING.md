@@ -1,6 +1,6 @@
-# 🤝 Guía de Contribución - Mystic Dungeon Crawler
+# Guía de Contribución - Proyecto-Z
 
-¡Gracias por tu interés en contribuir a **Mystic Dungeon Crawler**! Esta guía te ayudará a entender cómo contribuir de manera efectiva al proyecto.
+Gracias por tu interés en contribuir a **Proyecto-Z**. Esta guía explica cómo contribuir de manera efectiva al proyecto.
 
 ## 📋 **Tabla de Contenidos**
 
@@ -71,11 +71,11 @@
 ```bash
 # 1. Fork del repositorio en GitHub
 # 2. Clonar tu fork
-git clone https://github.com/TU_USUARIO/mystic-dungeon-crawler.git
-cd mystic-dungeon-crawler
+git clone https://github.com/1SSeba/Proyecto-Z.git
+cd Proyecto-Z
 
 # 3. Agregar upstream remote
-git remote add upstream https://github.com/ORIGINAL_USUARIO/mystic-dungeon-crawler.git
+git remote add upstream https://github.com/1SSeba/Proyecto-Z.git
 
 # 4. Crear rama de desarrollo
 git checkout -b develop

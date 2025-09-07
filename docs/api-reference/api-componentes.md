@@ -1,16 +1,6 @@
-# 📋 API Reference - Componentes
+# Components API — Proyecto-Z
 
 Clase base para todos los componentes del sistema. Proporciona la interfaz común y funcionalidades básicas.
-
-### **Descripción**
-Maneja la lógica de menús con auto-detección de botones y navegación por teclado.
-
-
-<!-- components-api.md
-   Minimal API reference for components in Proyecto-Z.
--->
-
-# Components API — Proyecto-Z
 
 Paths
 - Base component: `res://game/core/components/Component.gd`
@@ -28,51 +18,49 @@ Common methods
 - cleanup() -> void — teardown resources and disconnect signals.
 - is_component() -> bool — helper to validate a node is a component.
 
-````markdown
-# Components API — Proyecto-Z
+Components API — Resumen
 
 > Nota
 >
 > Esta referencia es un resumen generado a partir del estado actual del repositorio. Si algún script no existe en `res://game/core/components/`, los apartados describen convenciones a implementar.
 
-## Rutas principales
+Rutas principales
 
 - `res://game/core/components/Component.gd` — clase base.
 - `res://game/core/components/HealthComponent.gd` — (convención: si existe).
 - `res://game/core/components/MovementComponent.gd` — (convención: si existe).
 
-## Contrato de uso (resumen)
+Contrato de uso (resumen)
 
 - Inputs: nodo entidad (owner), propiedades exportadas (`@export`).
 - Outputs: emisiones via `EventBus` (ej.: `health_changed`, `entity_moved`).
 - Errores: usar `push_error()` o retornar `false` en usos inválidos.
 
-## Métodos comunes
+Métodos comunes
 
 - `initialize(entity: Node) -> void` — adjunta/configura el componente para la entidad.
 - `cleanup() -> void` — libera recursos y desconecta señales.
 - `is_component() -> bool` — valida si un nodo es un componente.
 
-## Componentes típicos
+Componentes típicos
 
-### HealthComponent
+HealthComponent
 
 - Propiedades: `@export var max_health: int`, `@export var auto_regen: bool`.
 - Métodos: `take_damage(amount)`, `heal(amount)`, `revive()`.
 - Eventos: emite `EventBus.health_changed`, `EventBus.entity_died`.
 
-### MovementComponent
+MovementComponent
 
 - Propiedades: `@export var speed: float`, `@export var acceleration: float`.
 - Métodos: `move_towards(direction: Vector2)`, `stop_movement()`.
 - Eventos: emite `EventBus.entity_moved`, `EventBus.movement_started`.
 
-## Utilidades
+Utilidades
 
 - `ComponentUtils.get_component(entity, "TypeName")` — retorna la instancia o `null`.
 
-<details>
-<summary>Ejemplo de uso (expandir)</summary>
+Ejemplo de uso
 
 ```gdscript
 var hc = HealthComponent.new()
@@ -83,18 +71,22 @@ hc.initialize(self)
 EventBus.health_changed.connect(_on_health_changed)
 
 func _on_health_changed(entity, hp):
-    if entity == self:
-        print("HP:", hp)
+	if entity == self:
+		print("HP:", hp)
 ```
-
-</details>
 
 ---
 
-> Aviso
->
-> Mantenga esta referencia alineada con los scripts reales bajo `res://game/core/components/`. Si realize cambios en los nombres de clases o rutas, actualice este documento.
+Aviso
 
-*Última actualización: 2025-09-06*
+Mantenga esta referencia alineada con los scripts reales bajo `res://game/core/components/`. Si realize cambios en los nombres de clases o rutas, actualice este documento.
 
-````
+Última actualización: 2025-09-06
+
+---
+
+Contenido original:
+
+```
+<!-- Referencia de componentes: mantener alineada con res://game/core/components/ -->
+```

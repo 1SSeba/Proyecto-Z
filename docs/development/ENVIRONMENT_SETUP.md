@@ -1,4 +1,4 @@
-# ⚙️ Configuración de Entorno de Desarrollo - Mystic Dungeon Crawler
+# Configuración de Entorno de Desarrollo - Proyecto-Z
 
 Esta guía te ayudará a configurar tu entorno de desarrollo para contribuir al proyecto.
 
@@ -404,8 +404,8 @@ git push origin feature/mi-primera-contribucion
 ## 📚 **Recursos Adicionales**
 
 ### **Documentación**
-- **[Getting Started](../docs/development/getting-started.md)**
-- **[Contributing Guide](../CONTRIBUTING.md)**
+- **[Getting Started](getting-started.md)**
+- **[Contributing Guide](../contributing/CONTRIBUTING.md)**
 - **[Architecture Docs](../docs/architecture/)**
 
 ### **Enlaces Útiles**

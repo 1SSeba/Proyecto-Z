@@ -157,4 +157,4 @@ func load_game_settings():
 
 ---
 
-*Creado para Mystic Dungeon Crawler - Pre-alpha v0.0.1*
+*Creado para Proyecto-Z - Pre-alpha v0.0.1*

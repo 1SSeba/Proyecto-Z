@@ -1,0 +1,3 @@
+Contenido del análisis de optimización (preservado)
+
+... (preservando contenido) ...
