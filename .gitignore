@@ -253,6 +253,10 @@ site/
 !CHANGELOG.md
 !CONTRIBUTING.md
 !DEVELOPMENT.md
+#
+# CI and GitHub workflows - keep these in the repository (don't ignore .github)
+!/.github/
+!/.github/**
 
 # Keep build directory structure
 !builds/README.md
