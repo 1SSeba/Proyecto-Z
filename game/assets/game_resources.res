@@ -22,3 +22,4 @@ map_textures = SubResource("Resource_2")
 game_config = SubResource("Resource_3")
 game_colors = SubResource("Resource_4")
 audio_resources = SubResource("Resource_5")
+

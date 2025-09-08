@@ -46,3 +46,4 @@ tileset_stone = SubResource("Texture2D_8")
 tileset_wall = SubResource("Texture2D_9")
 plant_with_shadow = SubResource("Texture2D_10")
 props_with_shadow = SubResource("Texture2D_11")
+

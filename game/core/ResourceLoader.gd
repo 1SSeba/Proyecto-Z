@@ -62,3 +62,4 @@ func get_player_max_health() -> float:
 
 func get_ui_color(color_name: String) -> Color:
 	return get_color(color_name)
+

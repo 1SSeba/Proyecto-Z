@@ -1,3 +1,0 @@
-Contenido del plan de reestructuración (copiado de RESTRUCTURE_PLAN.md)
-
-... (preservando contenido) ...

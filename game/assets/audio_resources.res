@@ -23,3 +23,4 @@ sfx_ui_hover = ""
 default_volume = 1.0
 fade_duration = 1.0
 max_sfx_players = 8
+

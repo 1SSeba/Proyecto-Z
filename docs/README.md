@@ -1,181 +1,147 @@
-# Documentación del proyecto
+# 📚 Documentación - RougeLike Base
 
-Esta documentación organiza la información del proyecto por áreas: arquitectura, desarrollo, guías para usuarios y referencia de API. Está dirigida tanto a desarrolladores como a colaboradores y usuarios interesados.
+![Version](https://img.shields.io/badge/version-pre--alpha__v0.0.1-orange)
+![Godot](https://img.shields.io/badge/Godot-4.4-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Documentation](https://img.shields.io/badge/docs-complete-brightgreen)
 
-Estructura de la documentación
+Bienvenido a la documentación completa de **RougeLike Base**, un proyecto de videojuego top-down desarrollado en Godot 4.4 con una arquitectura modular profesional.
 
-### Architecture (architecture/)
-Material técnico sobre la arquitectura del proyecto, sistemas principales y patrones de diseño.
+## 🎯 Visión General
 
-- Component Architecture: diseño del sistema de componentes (architecture/component-architecture.md).
-- Service Layer: descripción de la capa de servicios y el `ServiceManager` (architecture/service-layer.md).
-- Event System: diseño del `EventBus` y comunicación entre sistemas (architecture/event-system.md).
-- Project Structure: organización de carpetas y convenciones (architecture/project-structure.md).
+**RougeLike Base** es una base técnica sólida para el desarrollo de juegos roguelike que implementa:
 
-### Development (development/)
-Guías para desarrolladores.
+- **🏗️ Arquitectura Modular**: Sistema de componentes reutilizables
+- **⚙️ Servicios Centralizados**: ServiceManager para audio, input, configuración
+- **📡 Sistema de Eventos**: EventBus para comunicación desacoplada
+- **🎮 Control de Estados**: GameStateManager para flujo del juego
+- **🎨 Recursos Organizados**: Sistema optimizado de assets .res
 
+## 📖 Navegación de la Documentación
 
-### User Guides (user-guides/)
-Guías orientadas al usuario final.
+### 🚀 **Para Comenzar**
+- **[Guía de Inicio Rápido](user-guides/quick-start.md)** - Primeros pasos para nuevos desarrolladores
 
-- Installation: instrucciones de instalación y requisitos.
- Crear su primer componente siguiendo `development/desarrollo-componentes.md`.
-- Settings Guide: opciones de configuración y explicaciones.
-- Troubleshooting: problemas comunes y soluciones.
+### 🏗️ **Arquitectura y Diseño**
+- **[Arquitectura General](architecture/README.md)** - Vista general del sistema
+- **[Sistema de State Machine](architecture/state-machine.md)** - Gestión de estados del juego
+- **[Sistema de Componentes](architecture/components-system.md)** - Arquitectura modular de componentes
+- **[Sistema de Recursos (.res)](architecture/resources-system.md)** - Gestión optimizada de datos
 
-### API Reference (api-reference/)
-Referencia técnica de clases, funciones y APIs.
+### 👨‍💻 **Desarrollo**
+- **[Configuración de Desarrollo](development/setup.md)** - Environment de desarrollo
+- **[Estándares de Código](development/coding-standards.md)** - Convenciones y mejores prácticas
+- **[Flujo de Contribución](development/contributing.md)** - Cómo contribuir al proyecto
+- **[Testing y QA](development/testing.md)** - Pruebas y calidad de código
+- **[Tools de Desarrollo](development/tools.md)** - Herramientas y scripts disponibles
 
-- Components API: detalles técnicos de los componentes (api-reference/api-componentes.md).
-- Services API: referencia de servicios disponibles (api-reference/services-api.md).
-- EventBus API: eventos disponibles y uso (api-reference/eventbus-api.md).
-- Utilities API: utilidades y helpers.
+## 🎯 Estructura de la Documentación
 
-Inicio rápido
-
-Para desarrolladores:
-
-1. Consulte `development/getting-started.md`.
-2. Revise `architecture/component-architecture.md` para comprender el patrón de componentes.
-3. Cree su primer componente siguiendo `development/desarrollo-componentes.md`.
-
-Para usuarios:
-
-1. Consulte `user-guides/installation.md` para la instalación.
-2. Revise `user-guides/game-controls.md` para los controles.
-
-Para colaboradores:
-
-1. Siga `development/coding-standards.md`.
-2. Ejecute las pruebas descritas en `development/testing-guide.md`.
-
-Estado de la documentación
-
-| Categoría | Estado | Completitud | Última actualización |
-|-----------|--------|-------------|---------------------|
-| Architecture | Completada | 100% | 2025-09-06 |
-| Development | Completada | 100% | 2025-09-06 |
-| User Guides | Completada | 100% | 2025-09-06 |
-| API Reference | Completada | 100% | 2025-09-06 |
-
-Consejos de navegación
-
-- Utilice la búsqueda del editor para localizar contenidos.
-- Los enlaces en esta documentación son relativos al repositorio y deben abrirse desde su raíz.
-- Cada documento incluye un índice y ejemplos cuando procede.
-
-Mantenimiento
-
-<!--
-	docs/README.md — Índice principal de la documentación para Proyecto-Z
-	Generado a partir del contenido del repositorio: estructura de `docs/`, autoloads en `project.godot` y código bajo `game/`.
-	Formato: GitHub Flavored Markdown (GFM). Mantener formal y sin emojis.
--->
-
-# Documentación — Proyecto-Z
-
-Breve descripción
-------------------
-Esta carpeta contiene la documentación técnica y de usuario para Proyecto-Z. Los documentos están organizados por áreas: arquitectura, desarrollo, referencia de API y guías para usuarios.
-
-> Nota importante
->
-> Esta documentación se genera y mantiene en base al código presente en `game/`. Antes de modificar rutas o nombres de singletons (autoloads), confirme los cambios en `project.godot`.
-
-Estado y cobertura
--------------------
-| Área | Contenido | Notas |
-|------|-----------|-------|
-| Architecture | Diseño de sistemas, EventBus, ServiceManager y estructura de componentes | files: `architecture/` |
-| Development | Guías de desarrollo, pruebas y plantillas | files: `development/` |
-| API Reference | Referencias concisas de componentes y servicios | files: `api-reference/` |
-| User Guides | Instalación, controles y ajustes | files: `user-guides/` |
-
-Índice rápido
-------------
-- Architecture
-	- `architecture/component-architecture.md` — Patrón de componentes.
-	- `architecture/service-layer.md` — `ServiceManager` y servicios.
-	- `architecture/event-system.md` — `EventBus` y eventos.
-	- `architecture/project-structure.md` — Organización física de carpetas.
-- Development
-	- `development/getting-started.md` — Configuración del entorno.
-	- `development/desarrollo-componentes.md` — Plantilla y ejemplo para nuevos componentes.
-	- `development/service-development.md` — Cómo crear servicios.
-	- `development/testing-guide.md` — Ejecutar y escribir pruebas.
-- API Reference
-	- `api-reference/api-componentes.md`
-	- `api-reference/services-api.md`
-	- `api-reference/eventbus-api.md`
-- User Guides
-	- `user-guides/installation.md`
-	- `user-guides/game-controls.md`
-	- `user-guides/settings-guide.md`
-
-Captura rápida del proyecto (autoritativa)
----------------------------------------
-Autoloads (según `project.godot`):
-
-```ini
-[autoload]
-EventBus="*res://game/core/events/EventBus.gd"
-ServiceManager="*res://game/core/ServiceManager.gd"
-GameStateManager="*res://game/systems/game-state/GameStateManager.gd"
+```
+docs/
+├── README.md                          # Este archivo - índice principal
+├── QUICK_REFERENCE.md                 # Referencia rápida de APIs
+├── SCRIPT_DOCUMENTATION.md            # Documentación de scripts
+├── USAGE_GUIDE.md                     # Guía general de uso
+│
+├── 🏗️ architecture/                   # Arquitectura y patrones
+│   ├── overview.md                    # Vista general del sistema
+│   ├── component-system.md            # Sistema de componentes
+│   ├── service-layer.md               # Capa de servicios
+│   ├── event-system.md                # Sistema de eventos
+│   ├── state-management.md            # Gestión de estados
+│   └── project-structure.md           # Estructura del proyecto
+│
+├── 👨‍💻 development/                    # Guías de desarrollo
+│   ├── setup.md                       # Configuración de desarrollo
+│   ├── coding-standards.md            # Estándares de código
+│   ├── contributing.md                # Cómo contribuir
+│   ├── testing.md                     # Testing y QA
+│   └── tools.md                       # Herramientas de desarrollo
+│
+├── 📚 api-reference/                   # Referencia de APIs
+│   ├── service-manager.md             # ServiceManager API
+│   ├── event-bus.md                   # EventBus API
+│   ├── components.md                  # Componentes disponibles
+│   ├── player.md                      # Player API
+│   └── config-service.md              # ConfigService API
+│
+├── 🎓 tutorials/                       # Tutoriales paso a paso
+│   ├── creating-components.md         # Crear componentes
+│   ├── adding-services.md             # Agregar servicios
+│   ├── using-events.md                # Usar eventos
+│   ├── managing-assets.md             # Gestión de assets
+│   └── creating-scenes.md             # Crear escenas
+│
+├── 🔧 troubleshooting/                 # Solución de problemas
+│   ├── common-issues.md               # Problemas comunes
+│   ├── faq.md                         # Preguntas frecuentes
+│   ├── debugging.md                   # Debug y profiling
+│   └── error-handling.md              # Gestión de errores
+│
+└── 🎮 user-guides/                     # Guías para usuarios
+    ├── installation.md                # Instalación y setup
+    ├── quick-start.md                 # Inicio rápido
+    ├── controls.md                    # Controles del juego
+    ├── settings-menu.md               # Menú de configuraciones
+    └── gameplay.md                    # Gameplay básico
 ```
 
-Main scene (ejecución por defecto):
+## 🚀 Inicio Rápido
 
-```ini
-run/main_scene = "res://game/scenes/menus/MainMenu.tscn"
-```
+### Para Desarrolladores
+1. **[Configurar el entorno](development/setup.md)** de desarrollo
+2. **[Leer estándares](development/coding-standards.md)** de código
+3. **[Explorar la arquitectura](architecture/overview.md)** del proyecto
+4. **[Seguir tutoriales](tutorials/creating-components.md)** prácticos
 
-Convenciones documentales
--------------------------
-- Rutas internas Godot: usar `res://game/...` como prefijo canónico.
-- Nombres de singletons/autoloads: `EventBus`, `ServiceManager`, `GameStateManager`.
-- Idioma: español (formal). Formato Markdown (GFM).
+### Para Usuarios
+1. **[Instalar el juego](user-guides/installation.md)**
+2. **[Aprender controles](user-guides/controls.md)**
+3. **[Configurar settings](user-guides/settings-menu.md)**
+4. **[Comenzar a jugar](user-guides/gameplay.md)**
 
-Guía de uso rápido
-------------------
-Para empezar a trabajar en el proyecto (desarrollador):
+## 🔍 Buscar en la Documentación
 
-1. Abrir el proyecto en Godot 4.4+.
-2. Consultar `development/getting-started.md` para requisitos y configuraciones.
-3. Revisar `architecture/component-architecture.md` para entender el patrón de componentes.
+| Necesitas... | Ve a... |
+|--------------|---------|
+| **Instalar el proyecto** | [Installation Guide](user-guides/installation.md) |
+| **Entender la arquitectura** | [Architecture Overview](architecture/overview.md) |
+| **Agregar funcionalidad** | [Development Guides](development/) |
+| **Usar una API específica** | [API Reference](api-reference/) |
+| **Resolver un problema** | [Troubleshooting](troubleshooting/) |
+| **Aprender con ejemplos** | [Tutorials](tutorials/) |
 
-Para preparar documentación o contribuir:
+## 🎯 Versiones de la Documentación
 
-- Añadir archivos en `docs/` o editar los existentes.
-- Mantener enlaces relativos entre documentos.
-- Actualizar la sección "Estado y cobertura" si agrega o elimina documentos.
+| Versión del Proyecto | Documentación | Estado |
+|---------------------|---------------|--------|
+| **pre-alpha v0.0.1** | Esta versión | ✅ Actual |
+| **v0.1.0** (planeada) | En desarrollo | 🔄 Pendiente |
 
-<details>
-<summary>Guía breve para contribuciones (expandir)</summary>
+## 📞 Soporte y Comunidad
 
-- Crear un branch con prefijo `docs/`.
-- Incluir en el PR la lista de archivos modificados y un comentario breve del alcance.
-- Actualizar `CHANGELOG.md` si el cambio afecta el uso del proyecto.
-- Ejecutar una comprobación de enlaces locales antes de abrir el PR.
+- **🐛 Reportar Issues**: [GitHub Issues](https://github.com/1SSeba/Proyecto-Z/issues)
+- **💬 Discusiones**: [GitHub Discussions](https://github.com/1SSeba/Proyecto-Z/discussions)
+- **📧 Contacto**: Ver información en el README principal del proyecto
 
-</details>
+## 🤝 Contribuir a la Documentación
 
-Verificación y mantenimiento (tareas sugeridas)
---------------------------------------------
-- [ ] Ejecutar búsqueda para reemplazos de nombres antiguos y rutas no canónicas.
-- [ ] Ejecutar verificación de enlaces internos en `docs/`.
-- [ ] Alinear ejemplos de código en la documentación con implementaciones reales bajo `game/`.
+¿Encontraste un error o quieres mejorar la documentación?
 
-> Aviso
->
-> Use `res://game/...` como prefijo canónico en todos los documentos. Evite rutas absolutas de sistema.
+1. **Fork** el repositorio
+2. **Edita** los archivos en `docs/`
+3. **Sigue** los [estándares de documentación](development/coding-standards.md#documentation)
+4. **Envía** un Pull Request
 
-Contribuciones
---------------
-Siga las reglas del repositorio: crear PRs hacia la rama principal, documentar cambios en `CHANGELOG.md` y mantener las convenciones definidas arriba.
+## 📄 Licencia
 
-Recursos
---------
-- Godot Engine: https://docs.godotengine.org/
+Esta documentación está bajo la misma licencia **MIT** que el proyecto.
 
-Última actualización: 2025-09-06
+---
+
+**🎮 ¡Explora la documentación y comienza a desarrollar con RougeLike Base!**
+
+*Última actualización: Septiembre 7, 2025*
+*Versión de la documentación: 1.0*
+*Proyecto versión: pre-alpha v0.0.1*

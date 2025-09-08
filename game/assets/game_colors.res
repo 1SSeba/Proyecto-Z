@@ -24,3 +24,4 @@ enemy_color = Color(1.0, 0.2, 0.2, 1.0)
 item_color = Color(1.0, 1.0, 0.0, 1.0)
 wall_color = Color(0.5, 0.5, 0.5, 1.0)
 floor_color = Color(0.3, 0.3, 0.3, 1.0)
+

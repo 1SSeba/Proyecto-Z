@@ -28,3 +28,4 @@ window_resizable = true
 debug_mode = true
 show_fps = true
 show_debug_info = true
+
