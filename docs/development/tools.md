@@ -288,6 +288,20 @@ func _on_command_submitted(text: String):
     input_line.clear()
 ```
 
+### DebugService (nuevo)
+
+El `DebugService` es un servicio simple cargado por `ServiceManager` que expone helpers para logging y utilidades asíncronas.
+
+Ejemplo de uso:
+
+```gdscript
+# Obtener el servicio desde cualquier script
+var dbg = ServiceManager.get_service("DebugService")
+dbg.info("Juego inicializado")
+await dbg.wait_frames(2)
+dbg.print_after_frames("Mensaje después de 2 frames", 2)
+```
+
 ### Performance Profiler
 
 ```gdscript

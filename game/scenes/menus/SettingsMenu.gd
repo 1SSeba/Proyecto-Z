@@ -115,66 +115,101 @@ func _connect_simple_events():
 	gameplay_tab.pressed.connect(_switch_to_tab.bind("gameplay"))
 	accessibility_tab.pressed.connect(_switch_to_tab.bind("accessibility"))
 
-	apply_button.pressed.connect(func(): await _apply_settings())
-	ok_button.pressed.connect(func(): await _ok_pressed())
-	cancel_button.pressed.connect(_cancel_pressed)
+	# Connect top-level buttons (guard so we don't connect multiple times)
+	var apply_callable = Callable(self, "_on_apply_button_pressed")
+	if not apply_button.pressed.is_connected(apply_callable):
+		apply_button.pressed.connect(apply_callable)
+
+	var ok_callable = Callable(self, "_on_ok_button_pressed")
+	if not ok_button.pressed.is_connected(ok_callable):
+		ok_button.pressed.connect(ok_callable)
+
+	var cancel_callable = Callable(self, "_on_cancel_button_pressed")
+	if not cancel_button.pressed.is_connected(cancel_callable):
+		cancel_button.pressed.connect(cancel_callable)
 
 	# Connect audio controls
 	var master_slider = settings_content.get_node_or_null("AudioSettings/MasterVolumeContainer/MasterVolumeSlider")
 	if master_slider:
-		master_slider.value_changed.connect(_on_master_volume_changed)
+		var master_callable = Callable(self, "_on_master_volume_changed")
+		if not master_slider.value_changed.is_connected(master_callable):
+			master_slider.value_changed.connect(master_callable)
 
 	var music_slider = settings_content.get_node_or_null("AudioSettings/MusicVolumeContainer/MusicVolumeSlider")
 	if music_slider:
-		music_slider.value_changed.connect(_on_music_volume_changed)
+		var music_callable = Callable(self, "_on_music_volume_changed")
+		if not music_slider.value_changed.is_connected(music_callable):
+			music_slider.value_changed.connect(music_callable)
 
 	var sfx_slider = settings_content.get_node_or_null("AudioSettings/SFXVolumeContainer/SFXVolumeSlider")
 	if sfx_slider:
-		sfx_slider.value_changed.connect(_on_sfx_volume_changed)
+		var sfx_callable = Callable(self, "_on_sfx_volume_changed")
+		if not sfx_slider.value_changed.is_connected(sfx_callable):
+			sfx_slider.value_changed.connect(sfx_callable)
 
 	var spatial_audio_check = settings_content.get_node_or_null("AudioSettings/SpatialAudioContainer/SpatialAudioCheck")
 	if spatial_audio_check:
-		spatial_audio_check.toggled.connect(_on_spatial_audio_toggled)
+		var spatial_callable = Callable(self, "_on_spatial_audio_toggled")
+		if not spatial_audio_check.toggled.is_connected(spatial_callable):
+			spatial_audio_check.toggled.connect(spatial_callable)
 
 	# Connect video controls
 	var vsync_check = settings_content.get_node_or_null("VideoSettings/VsyncContainer/VsyncCheck")
 	if vsync_check:
-		vsync_check.toggled.connect(_on_vsync_toggled)
+		var vsync_callable = Callable(self, "_on_vsync_toggled")
+		if not vsync_check.toggled.is_connected(vsync_callable):
+			vsync_check.toggled.connect(vsync_callable)
 
 	# Connect controls
 	var mouse_sens_slider = settings_content.get_node_or_null("ControlsSettings/MouseSensitivityContainer/MouseSensitivitySlider")
 	if mouse_sens_slider:
-		mouse_sens_slider.value_changed.connect(_on_mouse_sensitivity_changed)
+		var mouse_sens_callable = Callable(self, "_on_mouse_sensitivity_changed")
+		if not mouse_sens_slider.value_changed.is_connected(mouse_sens_callable):
+			mouse_sens_slider.value_changed.connect(mouse_sens_callable)
 
 	var mouse_invert_check = settings_content.get_node_or_null("ControlsSettings/MouseInvertContainer/MouseInvertXCheck")
 	if mouse_invert_check:
-		mouse_invert_check.toggled.connect(_on_mouse_invert_x_toggled)
+		var mouse_invert_callable = Callable(self, "_on_mouse_invert_x_toggled")
+		if not mouse_invert_check.toggled.is_connected(mouse_invert_callable):
+			mouse_invert_check.toggled.connect(mouse_invert_callable)
 
 	var gamepad_vibration_check = settings_content.get_node_or_null("ControlsSettings/GamepadVibrationContainer/GamepadVibrationCheck")
 	if gamepad_vibration_check:
-		gamepad_vibration_check.toggled.connect(_on_gamepad_vibration_toggled)
+		var gamepad_vibration_callable = Callable(self, "_on_gamepad_vibration_toggled")
+		if not gamepad_vibration_check.toggled.is_connected(gamepad_vibration_callable):
+			gamepad_vibration_check.toggled.connect(gamepad_vibration_callable)
 
 	# Connect gameplay controls
 	var auto_save_check = settings_content.get_node_or_null("GameplaySettings/AutoSaveContainer/AutoSaveCheck")
 	if auto_save_check:
-		auto_save_check.toggled.connect(_on_auto_save_toggled)
+		var auto_save_callable = Callable(self, "_on_auto_save_toggled")
+		if not auto_save_check.toggled.is_connected(auto_save_callable):
+			auto_save_check.toggled.connect(auto_save_callable)
 
 	var tutorial_hints_check = settings_content.get_node_or_null("GameplaySettings/TutorialHintsContainer/TutorialHintsCheck")
 	if tutorial_hints_check:
-		tutorial_hints_check.toggled.connect(_on_tutorial_hints_toggled)
+		var tutorial_hints_callable = Callable(self, "_on_tutorial_hints_toggled")
+		if not tutorial_hints_check.toggled.is_connected(tutorial_hints_callable):
+			tutorial_hints_check.toggled.connect(tutorial_hints_callable)
 
 	# Connect accessibility controls
 	var large_font_check = settings_content.get_node_or_null("AccessibilitySettings/LargeFontContainer/LargeFontCheck")
 	if large_font_check:
-		large_font_check.toggled.connect(_on_large_font_toggled)
+		var large_font_callable = Callable(self, "_on_large_font_toggled")
+		if not large_font_check.toggled.is_connected(large_font_callable):
+			large_font_check.toggled.connect(large_font_callable)
 
 	var high_contrast_check = settings_content.get_node_or_null("AccessibilitySettings/HighContrastContainer/HighContrastCheck")
 	if high_contrast_check:
-		high_contrast_check.toggled.connect(_on_high_contrast_toggled)
+		var high_contrast_callable = Callable(self, "_on_high_contrast_toggled")
+		if not high_contrast_check.toggled.is_connected(high_contrast_callable):
+			high_contrast_check.toggled.connect(high_contrast_callable)
 
 	var font_size_slider = settings_content.get_node_or_null("AccessibilitySettings/FontSizeContainer/FontSizeSlider")
 	if font_size_slider:
-		font_size_slider.value_changed.connect(_on_font_size_scale_changed)
+		var font_size_callable = Callable(self, "_on_font_size_scale_changed")
+		if not font_size_slider.value_changed.is_connected(font_size_callable):
+			font_size_slider.value_changed.connect(font_size_callable)
 
 func _setup_option_buttons():
 	var resolution_button = settings_content.get_node_or_null("VideoSettings/ResolutionContainer/ResolutionOption")
@@ -310,6 +345,18 @@ func _update_option_button(path: String, section: String, key: String, default_v
 		var value = current_settings.get(section, {}).get(key, default_value)
 		option_button.selected = value
 
+func _normalize_loaded_volume(value) -> float:
+	# Accept either 0..1 or 0..100; return 0..1
+	if typeof(value) in [TYPE_INT, TYPE_FLOAT]:
+		var v = float(value)
+		if v > 1.0:
+			v = clamp(v / 100.0, 0.0, 1.0)
+		if v > 1.0:
+			# assume percent
+			return clamp(v / 100.0, 0.0, 1.0)
+		return clamp(v, 0.0, 1.0)
+	return 1.0
+
 #  CONFIGURATION MANAGEMENT
 
 func _load_settings():
@@ -318,9 +365,10 @@ func _load_settings():
 
 	current_settings = {
 		"audio": {
-			"master_volume": config_service.get_setting("audio", "master_volume", 80.0),
-			"music_volume": config_service.get_setting("audio", "music_volume", 80.0),
-			"sfx_volume": config_service.get_setting("audio", "sfx_volume", 90.0),
+			# Normalize volumes: config may store 0..100 (percent) or 0..1 (fraction).
+			"master_volume": _normalize_loaded_volume(config_service.get_setting("audio", "master_volume", 80.0)),
+			"music_volume": _normalize_loaded_volume(config_service.get_setting("audio", "music_volume", 80.0)),
+			"sfx_volume": _normalize_loaded_volume(config_service.get_setting("audio", "sfx_volume", 90.0)),
 			"spatial_audio": config_service.get_setting("audio", "spatial_audio", true)
 		},
 		"video": {
@@ -356,7 +404,11 @@ func _save_settings():
 	for section_name in current_settings.keys():
 		var section_data = current_settings[section_name]
 		for key in section_data.keys():
-			config_service.set_value(section_name, key, section_data[key])
+			# If saving audio volumes, store as 0..100 percent to keep compatibility
+			if section_name == "audio" and key.ends_with("_volume"):
+				config_service.set_value(section_name, key, int(section_data[key] * 100))
+			else:
+				config_service.set_value(section_name, key, section_data[key])
 
 	config_service.save_config()
 	has_unsaved_changes = false
@@ -453,6 +505,15 @@ func _cancel_pressed():
 	else:
 		_close_settings()
 
+func _on_apply_button_pressed() -> void:
+	await _apply_settings()
+
+func _on_ok_button_pressed() -> void:
+	await _ok_pressed()
+
+func _on_cancel_button_pressed() -> void:
+	_cancel_pressed()
+
 func _close_settings():
 	settings_closed.emit()
 	queue_free()
@@ -464,13 +525,38 @@ func _show_unsaved_dialog():
 #  EVENT HANDLERS
 
 func _on_master_volume_changed(value: float):
-	_update_setting("audio", "master_volume", value)
+	# Slider provides 0..1; ensure stored and applied as fraction
+	var v = float(value)
+	if v > 1.0:
+		v = clamp(v / 100.0, 0.0, 1.0)
+	_update_setting("audio", "master_volume", v)
+	_apply_audio_volume_now("master_volume", v)
 
 func _on_music_volume_changed(value: float):
-	_update_setting("audio", "music_volume", value)
+	var v = float(value)
+	if v > 1.0:
+		v = clamp(v / 100.0, 0.0, 1.0)
+	_update_setting("audio", "music_volume", v)
+	_apply_audio_volume_now("music_volume", v)
 
 func _on_sfx_volume_changed(value: float):
-	_update_setting("audio", "sfx_volume", value)
+	var v = float(value)
+	_update_setting("audio", "sfx_volume", v)
+	_apply_audio_volume_now("sfx_volume", v)
+
+func _apply_audio_volume_now(key: String, value: float):
+	# Attempt to apply immediately via AudioService if available
+	var audio_service = null
+	if ServiceManager:
+		audio_service = ServiceManager.get_audio_service()
+	if audio_service:
+		match key:
+			"master_volume":
+				audio_service.set_master_volume(value)
+			"music_volume":
+				audio_service.set_music_volume(value)
+			"sfx_volume":
+				audio_service.set_sfx_volume(value)
 
 func _on_spatial_audio_toggled(button_pressed: bool):
 	_update_setting("audio", "spatial_audio", button_pressed)

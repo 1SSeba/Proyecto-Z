@@ -77,7 +77,7 @@ func load_resource(resource_path: String, category: ResourceCategory = ResourceC
 
 	return resource
 
-func load_resource_async(resource_path: String, category: ResourceCategory = ResourceCategory.OTHER) -> Resource:
+func load_resource_async(resource_path: String, _category: ResourceCategory = ResourceCategory.OTHER) -> Resource:
 	# Add to loading queue
 	if resource_path not in loading_queue and resource_path not in currently_loading:
 		loading_queue.append(resource_path)
@@ -141,7 +141,7 @@ func _clear_least_used_resources():
 	)
 
 	# Remove least used resources (up to 25% of cache)
-	var remove_count = max(1, resource_cache.size() / 4)
+	var remove_count = max(1, int(resource_cache.size() / 4.0))
 	for i in range(min(remove_count, sorted_resources.size())):
 		var resource_info = sorted_resources[i]
 		resources_to_remove.append(resource_info.path)
@@ -291,7 +291,7 @@ func optimize_resources():
 	print("  Files optimized: ", optimized_count, "/", resource_files.size())
 	print("  Size saved: ", _format_bytes(size_saved), " (", "%.1f" % percent_saved, "%)")
 
-func _optimize_resource_file(file_path: String) -> bool:
+func _optimize_resource_file(_file_path: String) -> bool:
 	# This is a placeholder - actual optimization would depend on file type
 	# For now, just return true to indicate "optimization attempted"
 	return true
@@ -374,7 +374,7 @@ func _preload_critical_resources():
 func _load_resource_from_disk(resource_path: String) -> Resource:
 	return load(resource_path)
 
-func _estimate_resource_size(resource: Resource) -> int:
+func _estimate_resource_size(_resource: Resource) -> int:
 	# This is a simplified estimation
 	# In practice, you'd need to implement proper size calculation
 	return 1024 # 1KB placeholder

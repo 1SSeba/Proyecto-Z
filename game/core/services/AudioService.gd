@@ -1,226 +1,308 @@
 extends Node
 
-var service_name: String = "AudioService"
-var is_service_ready: bool = false
+@export var service_name: String = ""
 
-@export_group("Audio Settings")
-@export var master_volume: float = 1.0: set = set_master_volume
-@export var music_volume: float = 0.8: set = set_music_volume
-@export var sfx_volume: float = 1.0: set = set_sfx_volume
+# AudioService: centraliza control de volúmenes y opciones de audio para el juego.
+# API esperada por SettingsMenu.gd:
+# - set_master_volume(value: float)
+# - set_music_volume(value: float)
+# - set_sfx_volume(value: float)
+# - get_master_volume() -> float, etc.
+# - apply_volume_now(key, value)
+# - apply_all_settings()
+const BUS_MASTER_NAME := "Master"
+const BUS_MUSIC_NAME := "Music"
+const BUS_SFX_NAME := "SFX"
 
-@export_group("Advanced Audio Settings")
-@export var spatial_audio_enabled: bool = true
-@export var audio_quality: int = 1
-@export var current_audio_device: String = "Default"
+signal volume_changed(section: String, key: String, value)
+signal settings_applied()
 
-@export_group("Audio Resources")
-@export var audio_library: Dictionary = {}
+var master_volume: float = 1.0 # 0..1
+var music_volume: float = 1.0
+var sfx_volume: float = 1.0
+var spatial_audio_enabled: bool = false
+var config_service: Node = null
 
-var music_player: AudioStreamPlayer
-var sfx_players: Array[AudioStreamPlayer] = []
-var current_music_track: String = ""
+# Editable bus names (can be changed at runtime or in editor)
+@export var bus_master_name: String = BUS_MASTER_NAME
+@export var bus_music_name: String = BUS_MUSIC_NAME
+@export var bus_sfx_name: String = BUS_SFX_NAME
 
-const MAX_SFX_PLAYERS = 8
+# Internal: cached bus indices for faster access
+var _bus_index_cache: Dictionary = {}
 
-func _start():
-	service_name = "AudioService"
-	_setup_audio_players()
-	_connect_event_bus()
-	is_service_ready = true
-	print("AudioService: Initialized successfully")
+# For smooth transitions (optional)
+var _ramp_targets: Dictionary = {}
+var _ramp_speeds: Dictionary = {}
 
-func start_service():
-	_start()
-
-func _setup_audio_players():
-	music_player = AudioStreamPlayer.new()
-	music_player.name = "MusicPlayer"
-	music_player.bus = "Music"
-	add_child(music_player)
-
-	# SFX players pool
-	for i in MAX_SFX_PLAYERS:
-		var sfx_player = AudioStreamPlayer.new()
-		sfx_player.name = "SFXPlayer_%d" % i
-		sfx_player.bus = "SFX"
-		add_child(sfx_player)
-		sfx_players.append(sfx_player)
-
-func _connect_event_bus():
-	pass
-	if EventBus:
-		EventBus.audio_play_sfx.connect(_on_play_sfx)
-		EventBus.audio_play_music.connect(_on_play_music)
-		# EventBus.audio_stop_music.connect(_on_stop_music)  # Signal commented out
-
-#  MUSIC MANAGEMENT
-
-func play_music(track_name: String, fade_in: bool = true):
-	pass
-	if track_name == current_music_track and music_player.playing:
-		return
-
-	var audio_stream = _get_audio_resource(track_name)
-	if not audio_stream:
-		print("AudioService: Music track not found: ", track_name)
-		return
-
-	if fade_in and music_player.playing:
-		await _fade_out_music()
-
-	music_player.stream = audio_stream
-	music_player.play()
-	current_music_track = track_name
-
-	if fade_in:
-		_fade_in_music()
-
-func stop_music(fade_out: bool = true):
-	pass
-	if fade_out:
-		await _fade_out_music()
+# Debug helper: usa DebugService si está cargado, si no hace print directo
+func _dbg(level: String, message: String) -> void:
+	var dbg = null
+	if ServiceManager:
+		dbg = ServiceManager.get_service("DebugService")
+	if dbg and dbg.has_method(level):
+		dbg.call(level, message)
 	else:
-		music_player.stop()
+		# fallback
+		print("[AudioService][%s] %s" % [level, message])
 
-	current_music_track = ""
+func _ready():
+	if AudioServer.get_bus_count() == 0:
+		push_warning("AudioService: No audio buses detected in project. Buses will be refreshed later.")
+	else:
+		_dbg("info", "Detected %d audio buses" % AudioServer.get_bus_count())
+	_refresh_bus_cache()
+	# Try to load persisted settings first (ConfigService expected to be ready before AudioService)
+	var loaded = _load_from_config()
+	if not loaded:
+		_sync_from_server()
+	# Apply current values to audio buses
+	apply_all_settings(0.0)
+	set_process(true)
+	_dbg("info", "AudioService ready: master=%.2f music=%.2f sfx=%.2f" % [master_volume, music_volume, sfx_volume])
 
-func _fade_in_music():
-	pass
-	music_player.volume_db = -60.0
-	var tween = create_tween()
-	tween.tween_property(music_player, "volume_db", 0.0, 1.0)
+func _refresh_bus_cache() -> void:
+	_bus_index_cache.clear()
+	for i in range(AudioServer.get_bus_count()):
+		var busname = AudioServer.get_bus_name(i)
+		_bus_index_cache[busname] = i
+	_dbg("info", "Refreshed audio bus cache: %d entries" % _bus_index_cache.size())
 
-func _fade_out_music():
-	pass
-	var tween = create_tween()
-	tween.tween_property(music_player, "volume_db", -60.0, 1.0)
-	await tween.finished
+func _sync_from_server() -> void:
+	var idx = _find_bus_index(bus_master_name)
+	if idx >= 0:
+		master_volume = _db_to_linear(AudioServer.get_bus_volume_db(idx))
+	idx = _find_bus_index(bus_music_name)
+	if idx >= 0:
+		music_volume = _db_to_linear(AudioServer.get_bus_volume_db(idx))
 
-#  SFX MANAGEMENT
+	idx = _find_bus_index(bus_sfx_name)
+	if idx >= 0:
+		sfx_volume = _db_to_linear(AudioServer.get_bus_volume_db(idx))
+	_dbg("info", "Synced volumes from AudioServer: master=%.2f music=%.2f sfx=%.2f" % [master_volume, music_volume, sfx_volume])
 
-func play_sfx(sound_name: String, volume_db: float = 0.0):
-	pass
-	var audio_stream = _get_audio_resource(sound_name)
-	if not audio_stream:
-		print("AudioService: SFX not found: ", sound_name)
+func _load_from_config() -> bool:
+	# Attempts to read audio settings from ConfigService (volumes stored as 0..100 in config)
+	if ServiceManager:
+		config_service = ServiceManager.get_config_service()
+	if not config_service:
+		return false
+
+	var any_loaded = false
+	var mv = config_service.get_audio_setting("master_volume", null)
+	if mv != null:
+		master_volume = _normalize_loaded_volume(mv)
+		any_loaded = true
+
+	var mu = config_service.get_audio_setting("music_volume", null)
+	if mu != null:
+		music_volume = _normalize_loaded_volume(mu)
+		any_loaded = true
+
+	var sv = config_service.get_audio_setting("sfx_volume", null)
+	if sv != null:
+		sfx_volume = _normalize_loaded_volume(sv)
+		any_loaded = true
+
+	var spa = config_service.get_audio_setting("spatial_audio", null)
+	if spa != null:
+		spatial_audio_enabled = bool(spa)
+		any_loaded = true
+
+	return any_loaded
+
+func _find_bus_index(bus_name: String) -> int:
+	if _bus_index_cache.has(bus_name):
+		return int(_bus_index_cache[bus_name])
+	# attempt exact match
+	for i in range(AudioServer.get_bus_count()):
+		if AudioServer.get_bus_name(i) == bus_name:
+			_bus_index_cache[bus_name] = i
+			return i
+	# fallback: case-insensitive
+	var lower = bus_name.to_lower()
+	for i in range(AudioServer.get_bus_count()):
+		if AudioServer.get_bus_name(i).to_lower() == lower:
+			_bus_index_cache[bus_name] = i
+			return i
+	return -1
+
+func _linear_to_db(linear: float) -> float:
+	# Convert 0..1 linear volume to decibels for AudioServer.
+	linear = clamp(float(linear), 0.0, 1.0)
+	if linear <= 0.0:
+		return -80.0 # treat as muted (safe finite dB)
+	# log10 not available; use natural log / ln(10)
+	return 20.0 * (log(linear) / log(10.0))
+
+func _db_to_linear(db: float) -> float:
+	var linear = pow(10.0, float(db) / 20.0)
+	return clamp(linear, 0.0, 1.0)
+
+# Ramping helper: call every frame to approach targets smoothly
+func _process(delta: float) -> void:
+	if _ramp_targets.size() == 0:
+		return
+	var to_remove := []
+	for key in _ramp_targets.keys():
+		var target = float(_ramp_targets[key])
+		var speed = float(_ramp_speeds.get(key, 1.0))
+		var current = _get_volume_by_key(key)
+		if current == null:
+			to_remove.append(key)
+			continue
+		# compute lerp factor based on speed and delta (speed indicates seconds to reach)
+		var t = 0.0
+		if speed > 0.0:
+			t = min(1.0, delta / speed)
+		var next_val = lerp(current, target, t)
+		_set_volume_by_key_immediate(key, next_val)
+		if abs(next_val - target) < 0.001:
+			_set_volume_by_key_immediate(key, target)
+			to_remove.append(key)
+	for k in to_remove:
+		_ramp_targets.erase(k)
+		_ramp_speeds.erase(k)
+
+func _get_volume_by_key(key: String):
+	if key == "master_volume":
+		return master_volume
+	elif key == "music_volume":
+		return music_volume
+	elif key == "sfx_volume":
+		return sfx_volume
+	else:
+		return null
+
+func _set_volume_by_key_immediate(key: String, value: float) -> void:
+	var v = clamp(float(value), 0.0, 1.0)
+	if key == "master_volume":
+		master_volume = v
+		_apply_bus_volume(bus_master_name, v)
+	elif key == "music_volume":
+		music_volume = v
+		_apply_bus_volume(bus_music_name, v)
+	elif key == "sfx_volume":
+		sfx_volume = v
+		_apply_bus_volume(bus_sfx_name, v)
+	else:
+		push_warning("AudioService: Unknown volume key in _set_volume_by_key_immediate: %s" % key)
+		_dbg("warn", "Unknown volume key in _set_volume_by_key_immediate: %s" % key)
+	emit_signal("volume_changed", "audio", key, v)
+	_dbg("info", "Volume changed: %s -> %.2f" % [key, v])
+
+# Public API with optional transition (seconds)
+func set_master_volume(value: float, transition_seconds: float = 0.0) -> void:
+	if transition_seconds > 0.0:
+		_ramp_targets["master_volume"] = clamp(value, 0.0, 1.0)
+		_ramp_speeds["master_volume"] = transition_seconds
+	else:
+		_set_volume_by_key_immediate("master_volume", value)
+
+func set_music_volume(value: float, transition_seconds: float = 0.0) -> void:
+	if transition_seconds > 0.0:
+		_ramp_targets["music_volume"] = clamp(value, 0.0, 1.0)
+		_ramp_speeds["music_volume"] = transition_seconds
+	else:
+		_set_volume_by_key_immediate("music_volume", value)
+
+func set_sfx_volume(value: float, transition_seconds: float = 0.0) -> void:
+	if transition_seconds > 0.0:
+		_ramp_targets["sfx_volume"] = clamp(value, 0.0, 1.0)
+		_ramp_speeds["sfx_volume"] = transition_seconds
+	else:
+		_set_volume_by_key_immediate("sfx_volume", value)
+
+func get_master_volume() -> float:
+	return master_volume
+
+func get_music_volume() -> float:
+	return music_volume
+
+func get_sfx_volume() -> float:
+	return sfx_volume
+
+func set_spatial_audio_enabled(enabled: bool) -> void:
+	spatial_audio_enabled = bool(enabled)
+	# Hook for future implementation: could toggle audio effects or bus routing
+
+func apply_all_settings(transition_seconds: float = 0.0) -> void:
+	set_master_volume(master_volume, transition_seconds)
+	set_music_volume(music_volume, transition_seconds)
+	set_sfx_volume(sfx_volume, transition_seconds)
+	emit_signal("settings_applied")
+
+func save_to_config() -> void:
+	if not config_service and ServiceManager:
+		config_service = ServiceManager.get_config_service()
+	if not config_service:
+		push_warning("AudioService: No ConfigService available to save settings")
 		return
 
-	var available_player = _get_available_sfx_player()
-	if available_player:
-		available_player.stream = audio_stream
-		available_player.volume_db = volume_db
-		available_player.play()
+	# ConfigService expects volumes in 0..100
+	config_service.set_audio_setting("master_volume", master_volume * 100.0)
+	config_service.set_audio_setting("music_volume", music_volume * 100.0)
+	config_service.set_audio_setting("sfx_volume", sfx_volume * 100.0)
+	config_service.set_audio_setting("spatial_audio", spatial_audio_enabled)
+	# Persist
+	if config_service.has_method("save_settings"):
+		config_service.save_settings()
+	elif config_service.has_method("save_config"):
+		config_service.save_config()
+	_dbg("info", "Saved audio settings to ConfigService")
 
-func _get_available_sfx_player() -> AudioStreamPlayer:
-	pass
-	for player in sfx_players:
-		if not player.playing:
-			return player
+func _apply_bus_volume(bus_name: String, linear_value: float) -> void:
+	var idx = _find_bus_index(bus_name)
+	if idx < 0:
+		# If bus not found, fallback to master or print info
+		if bus_name != BUS_MASTER_NAME:
+			var master_idx = _find_bus_index(BUS_MASTER_NAME)
+			if master_idx >= 0:
+				AudioServer.set_bus_volume_db(master_idx, _linear_to_db(master_volume))
+			else:
+				push_warning("AudioService: No suitable bus found to apply volume for '%s'" % bus_name)
+				_dbg("warn", "No suitable bus found to apply volume for '%s'" % bus_name)
+		else:
+			push_warning("AudioService: Master bus not found; cannot apply volume")
+			_dbg("warn", "Master bus not found; cannot apply volume")
+		return
 
-	# If all players are busy, use the first one
-	return sfx_players[0] if sfx_players.size() > 0 else null
+	var db = _linear_to_db(linear_value)
+	AudioServer.set_bus_volume_db(idx, db)
+	_dbg("info", "Applied volume to bus '%s' (idx %d): linear=%.2f db=%.2f" % [bus_name, idx, linear_value, db])
 
-#  RESOURCE MANAGEMENT
+func apply_volume_now(key: String, value) -> void:
+	# Called by SettingsMenu._apply_audio_volume_now(key, value)
+	if key == "master_volume":
+		set_master_volume(float(value))
+		_dbg("info", "apply_volume_now master_volume = %.2f" % float(value))
+		return
+	if key == "music_volume":
+		set_music_volume(float(value))
+		_dbg("info", "apply_volume_now music_volume = %.2f" % float(value))
+		return
+	if key == "sfx_volume":
+		set_sfx_volume(float(value))
+		_dbg("info", "apply_volume_now sfx_volume = %.2f" % float(value))
+		return
+	push_warning("AudioService: Unknown volume key: %s" % str(key))
+	_dbg("warn", "apply_volume_now received unknown key: %s" % str(key))
 
-func register_audio(audio_name: String, resource_path: String):
-	pass
-	var audio_resource = load(resource_path)
-	if audio_resource:
-		audio_library[audio_name] = audio_resource
-		print("AudioService: Registered audio: ", audio_name)
-	else:
-		print("AudioService: Failed to load audio: ", resource_path)
-
-func _get_audio_resource(audio_name: String) -> AudioStream:
-	pass
-	return audio_library.get(audio_name, null)
-
-#  VOLUME CONTROL
-
-func set_master_volume(value: float):
-	master_volume = clamp(value, 0.0, 1.0)
-	_update_audio_volumes()
-
-func set_music_volume(value: float):
-	music_volume = clamp(value, 0.0, 1.0)
-	_update_audio_volumes()
-
-func set_sfx_volume(value: float):
-	sfx_volume = clamp(value, 0.0, 1.0)
-	_update_audio_volumes()
-
-func _update_audio_volumes():
-	pass
-	var master_db = linear_to_db(master_volume)
-	var music_db = linear_to_db(music_volume * master_volume)
-	var sfx_db = linear_to_db(sfx_volume * master_volume)
-
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), master_db)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), music_db)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), sfx_db)
-
-#  EVENT HANDLERS
-
-func _on_play_sfx(sound_name: String):
-	pass
-	play_sfx(sound_name)
-
-func _on_play_music(track_name: String):
-	pass
-	play_music(track_name)
-
-func _on_stop_music():
-	pass
-	stop_music()
-
-#  ADVANCED AUDIO SETTINGS
-
-func set_spatial_audio(enabled: bool):
-	pass
-	spatial_audio_enabled = enabled
-	# Apply spatial audio settings to existing players
-	for player in sfx_players:
-		# This would configure 3D audio if using AudioStreamPlayer3D
-		pass
-	print("AudioService: Spatial audio ", "enabled" if enabled else "disabled")
-
-func set_audio_quality(quality_index: int):
-	pass
-	audio_quality = quality_index
-	match quality_index:
-		0:
-			print("AudioService: Audio quality set to Low")
-		1:
-			print("AudioService: Audio quality set to Medium")
-		2:
-			print("AudioService: Audio quality set to High")
-
-func set_audio_device(device_name: String):
-	pass
-	current_audio_device = device_name
-	print("AudioService: Audio device set to: ", device_name)
-	# Note: Godot doesn't have direct API for changing audio devices during runtime
-	# This would typically require engine restart or platform-specific code
-
-func get_available_audio_devices() -> Array[String]:
-	pass
-	# This is a simplified implementation
-	# In a real scenario, you'd query the system for available devices
-	return ["Default Device", "Speakers", "Headphones", "USB Audio"]
-
-#  SERVICE INFO
-
-func get_audio_status() -> Dictionary:
-	pass
+func to_dict() -> Dictionary:
 	return {
-		"current_music": current_music_track,
-		"music_playing": music_player.playing if music_player else false,
-		"master_volume": master_volume,
-		"music_volume": music_volume,
-		"sfx_volume": sfx_volume,
-		"spatial_audio": spatial_audio_enabled,
-		"audio_quality": audio_quality,
-		"audio_device": current_audio_device,
-		"registered_sounds": audio_library.size(),
-		"available_devices": get_available_audio_devices()
+		"audio": {
+			"master_volume": master_volume,
+			"music_volume": music_volume,
+			"sfx_volume": sfx_volume,
+			"spatial_audio": spatial_audio_enabled
+		}
 	}
+
+func _normalize_loaded_volume(value) -> float:
+	# Accept either 0..1 or 0..100; return 0..1
+	if typeof(value) in [TYPE_INT, TYPE_FLOAT]:
+		var v = float(value)
+		if v > 1.0:
+			v = clamp(v / 100.0, 0.0, 1.0)
+		return clamp(v, 0.0, 1.0)
+	return 1.0

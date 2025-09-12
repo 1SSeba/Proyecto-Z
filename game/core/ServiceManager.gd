@@ -14,6 +14,7 @@ func _initialize_services():
 	service_load_order = [
 		"ConfigService",
 		"InputService",
+		"DebugService",
 		"AudioService",
 		"TransitionService"
 	]
@@ -37,7 +38,6 @@ func _load_service(service_name: String):
 		print("ServiceManager: Failed to create %s" % service_name)
 
 func _create_service(service_name: String) -> Node:
-	
 	match service_name:
 		"ConfigService":
 			var script = load("res://game/core/services/ConfigService.gd")
@@ -48,6 +48,11 @@ func _create_service(service_name: String) -> Node:
 			var script = load("res://game/core/services/InputService.gd")
 			var service = script.new()
 			service.service_name = "InputService"
+			return service
+		"DebugService":
+			var script = load("res://game/core/services/DebugService.gd")
+			var service = script.new()
+			service.service_name = "DebugService"
 			return service
 		"AudioService":
 			var script = load("res://game/core/services/AudioService.gd")
@@ -66,15 +71,12 @@ func _create_service(service_name: String) -> Node:
 #  SERVICE ACCESS
 
 func get_service(service_name: String) -> Node:
-	
 	return services.get(service_name, null)
 
 func has_service(service_name: String) -> bool:
-	
 	return services.has(service_name)
 
 func is_service_ready(service_name: String) -> bool:
-	
 	var service = get_service(service_name)
 	if not service:
 		return false
@@ -85,7 +87,6 @@ func is_service_ready(service_name: String) -> bool:
 	return true
 
 func are_services_ready() -> bool:
-	
 	if not is_manager_ready:
 		return false
 
@@ -98,14 +99,12 @@ func are_services_ready() -> bool:
 #  SERVICE MANAGEMENT
 
 func restart_service(service_name: String):
-	
 	var service = get_service(service_name)
 	if service and service.has_method("stop_service"):
 		service.stop_service()
 		await service.start_service()
 
 func stop_all_services():
-	
 	for service in services.values():
 		if service.has_method("stop_service"):
 			service.stop_service()
@@ -113,7 +112,6 @@ func stop_all_services():
 #  STATUS AND DEBUGGING
 
 func get_all_services_status() -> Dictionary:
-	
 	var status = {}
 
 	for service_name in services.keys():
@@ -129,7 +127,6 @@ func get_all_services_status() -> Dictionary:
 	return status
 
 func print_services_status():
-	
 	print("=== SERVICE MANAGER STATUS ===")
 	print("Manager Ready: %s" % is_manager_ready)
 	print("Services Loaded: %d" % services.size())
@@ -144,19 +141,15 @@ func print_services_status():
 #  CONVENIENCE METHODS
 
 func get_config_service():
-	
 	return get_service("ConfigService")
 
 func get_input_service():
-	
 	return get_service("InputService")
 
 func get_audio_service():
-	
 	return get_service("AudioService")
 
 func get_transition_service():
-	
 	return get_service("TransitionService")
 
 #  CLEANUP
