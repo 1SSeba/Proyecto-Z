@@ -116,7 +116,13 @@ func unregister_resource(resource_path: String):
 
 		# Remove from indexes
 		_remove_from_category_index(resource_path, entry.category)
-		_remove_from_tag_index(resource_path, entry.tags)
+
+		# Convert generic Array to Array[String] for type safety
+		var tags_array: Array[String] = []
+		for tag in entry.tags:
+			tags_array.append(str(tag))
+
+		_remove_from_tag_index(resource_path, tags_array)
 		_remove_from_search_index(resource_path)
 
 		# Remove from catalog
@@ -133,7 +139,11 @@ func unregister_resource(resource_path: String):
 #  RESOURCE QUERIES
 
 func get_resources_by_category(category: ResourceCategory) -> Array[String]:
-	return category_index.get(category, [])
+	var resources: Array[String] = []
+	var raw_array = category_index.get(category, [])
+	for item in raw_array:
+		resources.append(str(item))
+	return resources
 
 func get_resources_by_type(resource_type: ResourceType) -> Array[String]:
 	var resources: Array[String] = []
@@ -145,7 +155,11 @@ func get_resources_by_type(resource_type: ResourceType) -> Array[String]:
 	return resources
 
 func get_resources_by_tag(tag: String) -> Array[String]:
-	return tag_index.get(tag, [])
+	var resources: Array[String] = []
+	var raw_array = tag_index.get(tag, [])
+	for item in raw_array:
+		resources.append(str(item))
+	return resources
 
 func search_resources(query: String) -> Array[String]:
 	var results: Array[String] = []
@@ -189,7 +203,13 @@ func add_tag_to_resource(resource_path: String, tag: String):
 		var entry = resource_catalog[resource_path]
 		if tag not in entry.tags:
 			entry.tags.append(tag)
-			_update_tag_index(resource_path, entry.tags)
+
+			# Convert to Array[String] for type safety
+			var tags_array: Array[String] = []
+			for t in entry.tags:
+				tags_array.append(str(t))
+
+			_update_tag_index(resource_path, tags_array)
 			_save_resource_catalog()
 			print("ResourceLibrary: Added tag '$tag' to resource: ", resource_path)
 
@@ -198,7 +218,13 @@ func remove_tag_from_resource(resource_path: String, tag: String):
 		var entry = resource_catalog[resource_path]
 		if tag in entry.tags:
 			entry.tags.erase(tag)
-			_update_tag_index(resource_path, entry.tags)
+
+			# Convert to Array[String] for type safety
+			var tags_array: Array[String] = []
+			for t in entry.tags:
+				tags_array.append(str(t))
+
+			_update_tag_index(resource_path, tags_array)
 			_save_resource_catalog()
 			print("ResourceLibrary: Removed tag '$tag' from resource: ", resource_path)
 
@@ -388,7 +414,13 @@ func _build_search_indexes():
 	for path in resource_catalog.keys():
 		var entry = resource_catalog[path]
 		_update_category_index(path, entry.category)
-		_update_tag_index(path, entry.tags)
+
+		# Convert generic Array to Array[String] for type safety
+		var tags_array: Array[String] = []
+		for tag in entry.tags:
+			tags_array.append(str(tag))
+
+		_update_tag_index(path, tags_array)
 		_update_search_index(path, entry)
 
 func _update_category_index(resource_path: String, category: ResourceCategory):
@@ -421,7 +453,7 @@ func _remove_from_category_index(resource_path: String, category: ResourceCatego
 func _remove_from_tag_index(resource_path: String, tags: Array[String]):
 	for tag in tags:
 		if tag_index.has(tag):
-			tag_index[tag].erase(tag)
+			tag_index[tag].erase(resource_path)
 
 func _remove_from_search_index(resource_path: String):
 	search_index.erase(resource_path)
@@ -540,9 +572,16 @@ func _get_resource_size(resource_path: String) -> int:
 func _calculate_resource_hash(resource_path: String) -> String:
 	var file = FileAccess.open(resource_path, FileAccess.READ)
 	if file:
-		var content = file.get_as_text()
-		file.close()
-		return content.hash()
+		# Para archivos binarios, usar el tamaño y la fecha como hash simple
+		var extension = resource_path.get_extension().to_lower()
+		if extension in ["png", "jpg", "jpeg", "ogg", "wav"]:
+			var size = file.get_length()
+			file.close()
+			return str(size.hash())
+		else:
+			var content = file.get_as_text()
+			file.close()
+			return str(content.hash())
 	return ""
 
 #  CLEANUP

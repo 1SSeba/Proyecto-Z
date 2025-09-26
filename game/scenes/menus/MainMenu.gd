@@ -104,9 +104,14 @@ func _on_start_button_activated():
 	if EventBus:
 		EventBus.emit_event("game_start_requested")
 
-	# Direct scene transition to Main.tscn
+	# Use GameFlowController for scene transition
 	print("MainMenu: Transitioning to Main scene...")
-	get_tree().change_scene_to_file("res://game/scenes/gameplay/Main.tscn")
+	var game_flow = ServiceManager.get_game_flow_controller() if ServiceManager else null
+	if game_flow:
+		game_flow.start_game()
+	else:
+		# Fallback to direct scene change
+		get_tree().change_scene_to_file("res://game/scenes/gameplay/Main.tscn")
 
 func _on_settings_button_activated():
 	pass

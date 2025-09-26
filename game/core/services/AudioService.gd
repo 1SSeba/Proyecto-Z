@@ -1,6 +1,4 @@
-extends Node
-
-@export var service_name: String = ""
+extends "res://game/core/services/BaseService.gd"
 
 # AudioService: centraliza control de volúmenes y opciones de audio para el juego.
 # API esperada por SettingsMenu.gd:
@@ -43,7 +41,6 @@ func _dbg(level: String, message: String) -> void:
 	if dbg and dbg.has_method(level):
 		dbg.call(level, message)
 	else:
-		# fallback
 		print("[AudioService][%s] %s" % [level, message])
 
 func _ready():
@@ -89,20 +86,6 @@ func _load_from_config() -> bool:
 		return false
 
 	var any_loaded = false
-	var mv = config_service.get_audio_setting("master_volume", null)
-	if mv != null:
-		master_volume = _normalize_loaded_volume(mv)
-		any_loaded = true
-
-	var mu = config_service.get_audio_setting("music_volume", null)
-	if mu != null:
-		music_volume = _normalize_loaded_volume(mu)
-		any_loaded = true
-
-	var sv = config_service.get_audio_setting("sfx_volume", null)
-	if sv != null:
-		sfx_volume = _normalize_loaded_volume(sv)
-		any_loaded = true
 
 	var spa = config_service.get_audio_setting("spatial_audio", null)
 	if spa != null:
@@ -265,6 +248,7 @@ func _apply_bus_volume(bus_name: String, linear_value: float) -> void:
 		else:
 			push_warning("AudioService: Master bus not found; cannot apply volume")
 			_dbg("warn", "Master bus not found; cannot apply volume")
+
 		return
 
 	var db = _linear_to_db(linear_value)
@@ -276,14 +260,17 @@ func apply_volume_now(key: String, value) -> void:
 	if key == "master_volume":
 		set_master_volume(float(value))
 		_dbg("info", "apply_volume_now master_volume = %.2f" % float(value))
+
 		return
 	if key == "music_volume":
 		set_music_volume(float(value))
 		_dbg("info", "apply_volume_now music_volume = %.2f" % float(value))
+
 		return
 	if key == "sfx_volume":
 		set_sfx_volume(float(value))
 		_dbg("info", "apply_volume_now sfx_volume = %.2f" % float(value))
+
 		return
 	push_warning("AudioService: Unknown volume key: %s" % str(key))
 	_dbg("warn", "apply_volume_now received unknown key: %s" % str(key))

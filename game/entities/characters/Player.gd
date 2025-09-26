@@ -20,7 +20,7 @@ var last_direction: Vector2 = Vector2.DOWN
 var is_alive: bool = true
 var is_initialized: bool = false
 
-var resource_loader: Node
+var resource_library: Node
 var player_sprites: Resource
 
 # Inicialización
@@ -39,12 +39,18 @@ func _ready():
 	print("Player: Initialized with resources")
 
 func _load_resources():
-	resource_loader = get_node("/root/ResourceLoader")
-	if not resource_loader:
-		resource_loader = preload("res://game/core/ResourceLoader.gd").new()
-		get_tree().root.add_child(resource_loader)
+	if ServiceManager and ServiceManager.has_service("ResourceLibrary"):
+		resource_library = ServiceManager.get_service("ResourceLibrary")
 
-	player_sprites = resource_loader.player_sprites
+		# Buscar recursos de sprites del jugador
+		var sprite_resources = resource_library.get_resources_by_tag("player")
+		if sprite_resources.size() > 0:
+			player_sprites = load(sprite_resources[0])
+		else:
+			print("Player: Warning - No player sprite resources found in ResourceLibrary")
+	else:
+		print("Player: Warning - ResourceLibrary service not available")
+
 	print("Player: Resources loaded")
 
 func _wait_for_managers():
@@ -52,9 +58,9 @@ func _wait_for_managers():
 	var wait_count = 0
 
 	while wait_count < max_wait:
-		if GameStateManager and ServiceManager:
+		if ServiceManager and ServiceManager.get_game_flow_controller():
 			break
-			await get_tree().process_frame
+		await get_tree().process_frame
 		wait_count += 1
 
 # Física y movimiento
@@ -62,7 +68,8 @@ func _physics_process(delta):
 	if not is_initialized or not is_alive:
 		return
 
-	if GameStateManager and not GameStateManager.is_playing():
+	var game_flow = ServiceManager.get_game_flow_controller() if ServiceManager else null
+	if game_flow and not game_flow.is_playing():
 		return
 
 	_handle_movement(delta)
@@ -145,8 +152,9 @@ func die():
 	print("Player: Died")
 
 	# Cambiar estado del juego
-	if GameStateManager:
-		GameStateManager.on_player_died()
+	var game_flow = ServiceManager.get_game_flow_controller() if ServiceManager else null
+	if game_flow:
+		game_flow.on_player_died()
 
 func revive():
 	if is_alive:
@@ -165,7 +173,8 @@ func _make_invulnerable():
 
 # Debug y testing
 func _handle_debug_input():
-	if not GameStateManager or not GameStateManager.is_playing():
+	var game_flow = ServiceManager.get_game_flow_controller() if ServiceManager else null
+	if not game_flow or not game_flow.is_playing():
 		return
 
 	if Input.is_action_just_pressed("ui_accept"):

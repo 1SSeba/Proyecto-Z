@@ -16,22 +16,35 @@ func _ready():
 	_connect_to_player()
 
 func _load_resources():
-	var resource_loader = get_node("/root/ResourceLoader")
-	if not resource_loader:
-		resource_loader = preload("res://game/core/ResourceLoader.gd").new()
-		get_tree().root.add_child(resource_loader)
-
+	# Wait for ServiceManager to be ready
+	await _wait_for_service_manager()
 	_apply_game_colors()
 
+func _wait_for_service_manager():
+	var max_wait = 100
+	var wait_count = 0
+
+	while wait_count < max_wait:
+		if ServiceManager and ServiceManager.has_service("ResourceLibrary"):
+			break
+		await get_tree().process_frame
+		wait_count += 1
+
 func _apply_game_colors():
-	var resource_loader = get_node("/root/ResourceLoader")
-	if not resource_loader:
+	if not ServiceManager or not ServiceManager.has_service("ResourceLibrary"):
+		print("GameHUD: ResourceLibrary service not available")
 		return
 
-	var bg_color = resource_loader.get_ui_color("ui_background")
-	var panel_color = resource_loader.get_ui_color("ui_panel")
+	var resource_library = ServiceManager.get_service("ResourceLibrary")
 
-	# TODO: Apply colors to panels
+	# Search for UI color resources
+	var ui_resources = resource_library.get_resources_by_category(resource_library.ResourceCategory.UI)
+
+	if ui_resources.size() > 0:
+		print("GameHUD: Found %d UI resources" % ui_resources.size())
+		# TODO: Apply colors to panels when UI resources are properly defined
+	else:
+		print("GameHUD: No UI color resources found in ResourceLibrary")
 
 func _setup_movement_keys():
 	var keys = [

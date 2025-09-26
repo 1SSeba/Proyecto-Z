@@ -13,10 +13,13 @@ func _ready():
 func _initialize_services():
 	service_load_order = [
 		"ConfigService",
+		"ResourceLibrary",
 		"InputService",
 		"DebugService",
 		"AudioService",
-		"TransitionService"
+		"TransitionService",
+		"GameFlowController",
+		"SceneController"
 	]
 
 	for service_name in service_load_order:
@@ -44,6 +47,11 @@ func _create_service(service_name: String) -> Node:
 			var service = script.new()
 			service.service_name = "ConfigService"
 			return service
+		"ResourceLibrary":
+			var script = load("res://game/core/services/ResourceLibrary.gd")
+			var service = script.new()
+			service.service_name = "ResourceLibrary"
+			return service
 		"InputService":
 			var script = load("res://game/core/services/InputService.gd")
 			var service = script.new()
@@ -63,6 +71,16 @@ func _create_service(service_name: String) -> Node:
 			var script = load("res://game/ui/components/TransitionManager.gd")
 			var service = script.new()
 			service.service_name = "TransitionService"
+			return service
+		"GameFlowController":
+			var script = load("res://game/core/systems/GameFlowController.gd")
+			var service = script.new()
+			service.name = "GameFlowController"
+			return service
+		"SceneController":
+			var script = load("res://game/core/systems/SceneController.gd")
+			var service = script.new()
+			service.name = "SceneController"
 			return service
 		_:
 			print("ServiceManager: Unknown service: %s" % service_name)
@@ -151,6 +169,15 @@ func get_audio_service():
 
 func get_transition_service():
 	return get_service("TransitionService")
+
+func get_resource_library():
+	return get_service("ResourceLibrary")
+
+func get_game_flow_controller():
+	return get_service("GameFlowController")
+
+func get_scene_controller():
+	return get_service("SceneController")
 
 #  CLEANUP
 
