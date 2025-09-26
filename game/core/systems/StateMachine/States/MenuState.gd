@@ -1,4 +1,4 @@
-extends "res://game/core/systems/game-state/StateMachine/State.gd"
+extends "res://game/core/systems/StateMachine/State.gd"
 # MenuState.gd - Estado genérico para menús (principal, configuración, etc.)
 
 var menu_scene: PackedScene
@@ -6,7 +6,7 @@ var menu_node: Node
 var menu_type: String = "MainMenu" # Puede ser "MainMenu", "Settings", etc.
 var return_state: String = ""
 
-func enter(_previous_state: Node = null) -> void:
+func enter(_previous_state: GameState = null) -> void:
 	print("🟦 Entering MenuState: %s" % menu_type)
 	var data = state_machine.get_transition_data()
 	if "menu_type" in data:

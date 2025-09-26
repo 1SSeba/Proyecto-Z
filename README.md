@@ -1,291 +1,163 @@
-# 🎮 RougeLike Base - Juego Top-Down con Arquitectura Modular
+# Proyecto-Z
 
-![Version](https://img.shields.io/badge/version-pre--alpha__v0.0.1-orange)
-![Godot](https://img.shields.io/badge/Godot-4.4-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+Un proyecto de juego tipo RougeLike desarrollado en Godot 4.5.
 
-## 📖 Descripción
+## Descripción
 
-**RougeLike Base** es un proyecto de juego top-down desarrollado en Godot 4.4 que implementa una arquitectura modular robusta y escalable. El proyecto está diseñado como una base sólida para el desarrollo de juegos roguelike con un sistema de componentes reutilizables, gestión de servicios centralizados y un bus de eventos desacoplado.
+Este es un juego base que incluye un sistema completo de estados, gestión de servicios, componentes modulares y una arquitectura escalable para proyectos de juegos.
 
-### 🎯 Características Principales
+## Características Principales
 
-- **🏗️ Arquitectura Modular**: Sistema de componentes reutilizables basado en composición
-- **⚙️ Gestión de Servicios**: ServiceManager centralizado para audio, input, configuración y más
-- **📡 Sistema de Eventos**: EventBus global para comunicación desacoplada
-- **🎮 Control de Estados**: GameStateManager para transiciones fluidas entre estados del juego
-- **🎨 Assets Organizados**: Sistema de recursos optimizado con carga dinámica
-- **🔧 Herramientas de Desarrollo**: Tasks automatizados para build, testing y deployment
+- **Sistema de Estados Completo**: StateMachine profesional con estados Loading, MainMenu, Playing, Paused, RunComplete, RunFailed
+- **Gestión de Servicios**: AudioService, ConfigService, DebugService, InputService, ResourceLibrary
+- **Componentes Modulares**: HealthComponent, MovementComponent, MenuComponent
+- **Sistema de Eventos**: EventBus centralizado para comunicación entre sistemas
+- **Arquitectura Escalable**: Diseño modular que facilita la expansión del proyecto
 
-## 🚀 Instalación Rápida
+## Estructura del Proyecto
 
-### Prerrequisitos
-- **Godot 4.4** o superior
-- **Git** para control de versiones
-- **Sistema Operativo**: Linux, Windows, macOS
-
-### Pasos de Instalación
-
-1. **Clonar el repositorio**
-   ```bash
-   git clone https://github.com/1SSeba/Proyecto-Z.git
-   cd topdown-game
-   ```
-
-2. **Abrir en Godot**
-   - Abrir Godot 4.4
-   - Hacer clic en "Import"
-   - Seleccionar `project.godot`
-   - Hacer clic en "Import & Edit"
-
-3. **Verificar configuración**
-   ```bash
-   # Opcional: Verificar sintaxis de scripts
-   ./scripts/check_syntax.sh
-   ```
-
-4. **Ejecutar el juego**
-   - Presionar `F5` en Godot
-   - O usar la task: `Run Game - Graphic Mode`
-
-## 🎮 Controles
-
-| Acción | Teclado | Gamepad |
-|--------|---------|---------|
-| **Movimiento** | WASD / Flechas | Stick Izquierdo |
-| **Interactuar** | E / Espacio | Botón A |
-| **Cancelar** | Escape | Botón B |
-| **Debug Damage** | Enter | - |
-| **Debug Heal** | F2 | - |
-| **Debug Kill** | F3 | - |
-
-## 🏗️ Arquitectura del Proyecto
-
-### 📁 Estructura de Directorios
-
-```
-topdown-game/
-├── 🎮 game/                          # Código del juego
-│   ├── 🏗️ core/                      # Arquitectura base
-│   │   ├── 🧩 components/             # Sistema de componentes
-│   │   ├── ⚙️ services/               # Servicios globales
-│   │   ├── 📡 events/                 # Sistema de eventos
-│   │   └── 🔄 systems/                # Sistemas del juego
-│   ├── 🎭 entities/                   # Entidades del juego
-│   ├── 🎬 scenes/                     # Escenas principales
-│   ├── 🎨 assets/                     # Recursos del juego
-│   └── 🖥️ ui/                         # Interfaces de usuario
-├── 📋 config/                         # Configuración del proyecto
-├── 📚 docs/                           # Documentación
-└── 🔧 scripts/                        # Herramientas de desarrollo
+```text
+game/
+├── assets/          # Recursos del juego (audio, texturas, etc.)
+├── core/           # Sistemas centrales
+│   ├── components/ # Componentes reutilizables
+│   ├── events/     # Sistema de eventos
+│   ├── services/   # Servicios del juego
+│   └── systems/    # Sistemas principales (StateMachine, SceneController)
+├── entities/       # Entidades del juego (Player, Room)
+├── scenes/         # Escenas del juego
+│   ├── menus/      # Menús del juego
+│   ├── gameplay/   # Escenas de gameplay
+│   └── hud/        # Interfaz de usuario
+└── ui/             # Componentes de UI
 ```
 
-### 🧩 Sistema de Componentes
+## Instalación
 
-El proyecto utiliza un **patrón de componentes** donde cada funcionalidad está encapsulada en módulos independientes:
+1. Clona el repositorio
+2. Abre el proyecto en Godot 4.5
+3. Ejecuta la escena principal
 
-```gdscript
-# Ejemplo: Crear una entidad Player
-extends CharacterBody2D
+## Uso
 
-func _ready():
-    # Añadir componentes necesarios
-    var health_comp = HealthComponent.new()
-    health_comp.max_health = 100
-    add_child(health_comp)
+### Sistema de Estados
 
-    var movement_comp = MovementComponent.new()
-    movement_comp.speed = 150.0
-    add_child(movement_comp)
-```
+El juego utiliza un StateMachine robusto que maneja los diferentes estados:
 
-**Componentes Disponibles:**
-- `HealthComponent` - Gestión de vida y daño
-- `MovementComponent` - Control de movimiento
-- `MenuComponent` - Lógica de interfaces
-- `Component` (base) - Clase base para componentes personalizados
+- **LoadingState**: Estado de carga inicial
+- **MenuState**: Estados de menús (principal, configuración)
+- **PlayingState**: Estado de juego activo
+- **PausedState**: Estado de pausa
 
-### ⚙️ Gestión de Servicios
+### Servicios Disponibles
 
-El `ServiceManager` centraliza todos los servicios globales:
+- **AudioService**: Gestión de audio y música
+- **ConfigService**: Configuración del juego
+- **DebugService**: Herramientas de debug
+- **InputService**: Gestión de entrada del usuario
+- **ResourceLibrary**: Carga y gestión de recursos
 
-```gdscript
-# Acceso a servicios
-var audio_service = ServiceManager.get_audio_service()
-var input_service = ServiceManager.get_input_service()
-var config_service = ServiceManager.get_config_service()
+### Componentes
 
-# Verificar disponibilidad
-if ServiceManager.are_services_ready():
-    # Todos los servicios están listos
-```
+- **HealthComponent**: Gestión de vida de entidades
+- **MovementComponent**: Manejo de movimiento
+- **MenuComponent**: Funcionalidad de menús
 
-**Servicios Disponibles:**
-- `ConfigService` - Configuración global
-- `AudioService` - Gestión de audio
-- `InputService` - Gestión de input
-- `TransitionService` - Transiciones de UI
+## Arquitectura
 
-### 📡 Sistema de Eventos
+### Core Systems
 
-Comunicación desacoplada mediante `EventBus`:
+#### ServiceManager
 
-```gdscript
-# Emitir eventos
-EventBus.audio_play_sfx.emit("sword_hit", 0.8)
-EventBus.player_died.emit()
-EventBus.room_entered.emit("room_001")
+Gestiona todos los servicios del juego de forma centralizada.
 
-# Escuchar eventos
-EventBus.player_died.connect(_on_player_died)
-EventBus.health_changed.connect(_on_health_changed)
-```
+#### EventBus
 
-## 🔧 Herramientas de Desarrollo
+Sistema de eventos global para comunicación desacoplada.
 
-### Tasks Disponibles
+#### StateMachine
 
-| Task | Descripción |
-|------|-------------|
-| `Quick Export Debug` | Exporta build de debug para Linux |
-| `Run Game - Graphic Mode` | Ejecuta el juego en modo gráfico |
-| `Test Game - Simple Settings` | Prueba rápida con configuración básica |
+Máquina de estados flexible y extensible.
 
-### Scripts de Desarrollo
+### Game Flow
+
+#### GameStateManager
+
+Controla el flujo principal del juego.
+
+#### SceneController
+
+Gestiona la carga y transición entre escenas.
+
+### UI Systems
+
+#### BackgroundManager
+
+Gestiona fondos dinámicos de menús.
+
+#### TransitionManager
+
+Maneja transiciones visuales entre escenas.
+
+## Desarrollo
+
+Para contribuir al proyecto:
+
+1. Fork el repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## Tasks Disponibles
+
+### Quick Export Debug
 
 ```bash
-# Verificar sintaxis de todos los scripts
-./scripts/check_syntax.sh
-
-# Limpiar archivos temporales
-./scripts/clean_project.sh
-
-# Export rápido para testing
-./scripts/quick_export.sh
+godot --headless --export-debug "Linux/X11" builds/debug/game_debug
 ```
 
-## 📚 Documentación
+### Run Game - Graphic Mode
 
-### 🎯 **Documentación Basada en Código Real**
+```bash
+godot --resolution 1280x720
+```
 
-- **[📖 Análisis de Código Real](docs/REAL_CODE_ANALYSIS.md)** - Documentación detallada de todos los scripts implementados
-- **[🛠️ Guía Práctica](docs/PRACTICAL_GUIDE.md)** - Cómo usar los sistemas existentes con ejemplos reales
-- **[📋 Documentación Completa](docs/README_DOCS.md)** - Índice de toda la documentación del proyecto
+### Test Game - Simple Settings
 
-### 📁 **Documentación Adicional**
+```bash
+godot --resolution 1280x720
+```
 
-- **[🏗️ Arquitectura de Componentes](docs/architecture/component-architecture.md)** - Guía detallada del sistema de componentes
-- **[⚙️ Sistema de Servicios](docs/architecture/service-layer.md)** - ServiceManager y servicios disponibles
-- **[📡 Sistema de Eventos](docs/architecture/event-system.md)** - EventBus y patrones de comunicación
-- **[📂 Estructura del Proyecto](docs/architecture/project-structure.md)** - Organización de archivos y directorios
-- **[🛠️ Guía de Desarrollo](docs/development/DEVELOPMENT.md)** - Setup y mejores prácticas
-- **[🎨 Gestión de Recursos](game/assets/README_RESOURCES.md)** - Documentación de assets y recursos
+## Licencia
 
-## 🎯 Características Implementadas
+Este proyecto está bajo la licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
-### ✅ Core Systems
-- [x] Sistema de componentes modular
-- [x] ServiceManager con dependency injection
-- [x] EventBus para comunicación desacoplada
-- [x] GameStateManager para control de estados
-- [x] Sistema de configuración persistente
+## Estado del Proyecto
 
-### ✅ Gameplay
-- [x] Personaje jugador con animaciones
-- [x] Sistema de movimiento fluido
-- [x] Sistema de salud y daño
-- [x] Controles configurables (WASD/Flechas)
-- [x] Debug tools integradas
+**Versión**: pre-alpha_V0.0.1
 
-### ✅ UI/UX
-- [x] Menú principal
-- [x] Menú de configuraciones
-- [x] Transiciones suaves
-- [x] Gestión de temas y estilos
+**Características Implementadas**:
 
-### ✅ Technical
-- [x] Autoloads optimizados
-- [x] Error handling robusto
-- [x] Sistema de logging
-- [x] Tools de desarrollo integradas
+- Sistema de estados base
+- Servicios principales
+- Componentes básicos
+- UI y menús base
 
-## 🔮 Roadmap
+**En Desarrollo**:
 
-### v0.1.0 - Sistema de Combate
-- [ ] Sistema de armas básico
-- [ ] Enemigos con IA simple
-- [ ] Efectos visuales de combate
-- [ ] Sistema de colisiones de combate
+- Mecánicas de gameplay
+- Sistema de inventario
+- Sistema de combate
+- Generación procedural
 
-### v0.2.0 - Mundo Procedural
-- [ ] Generación de habitaciones
-- [ ] Sistema de conectores/puertas
-- [ ] Spawn points para enemigos
-- [ ] Objetivos por habitación
+**Planificado**:
 
-### v0.3.0 - Inventario y Items
-- [ ] Sistema de inventario
-- [ ] Items equipables
-- [ ] Drop system
-- [ ] Estadísticas de items
-
-### v0.4.0 - Progresión
-- [ ] Sistema de experiencia
-- [ ] Skill tree básico
-- [ ] Unlockables
-- [ ] Achievement system
-
-## 🤝 Contribuir al Proyecto
-
-### Setup para Desarrolladores
-
-1. **Fork del repositorio**
-2. **Clonar tu fork**
-   ```bash
-   git clone https://github.com/tu-usuario/Proyecto-Z.git
-   cd topdown-game
-   ```
-3. **Crear branch para feature**
-   ```bash
-   git checkout -b feature/mi-nueva-feature
-   ```
-4. **Verificar código antes de commit**
-   ```bash
-   ./scripts/check_syntax.sh
-   ```
-
-### Estándares de Código
-
-- **Nomenclatura**: PascalCase para clases, snake_case para variables
-- **Documentación**: Todos los métodos públicos deben estar documentados
-- **Testing**: Incluir tests para nuevas funcionalidades
-- **Commits**: Usar conventional commits (feat:, fix:, docs:, etc.)
-
-### Arquitectura de Contribuciones
-
-- **Core Components** → Cambios requieren review extenso
-- **Game Systems** → Nuevos sistemas welcome
-- **UI/UX** → Mejoras de usabilidad prioritarias
-- **Documentation** → Siempre bienvenida
-
-## 📄 Licencia
-
-Este proyecto está bajo la **Licencia MIT**. Ver [LICENSE](LICENSE) para más detalles.
-
-## 🙏 Agradecimientos
-
-- **Godot Community** por el excelente motor de juego
-- **Contributors** que han aportado al proyecto
-- **1SSeba** por la arquitectura base y visión del proyecto
-
-## 📞 Contacto
-
-- **Repositorio**: [GitHub](https://github.com/1SSeba/Proyecto-Z)
-- **Issues**: [GitHub Issues](https://github.com/1SSeba/Proyecto-Z/issues)
-- **Discusiones**: [GitHub Discussions](https://github.com/1SSeba/Proyecto-Z/discussions)
+- Multijugador
+- Sistema de logros
+- Personalización de personajes
+- Más tipos de enemigos
 
 ---
 
-**🚀 ¡Comienza a desarrollar tu roguelike con una base sólida y profesional!**
-
-*Última actualización: Septiembre 6, 2025*
+Desarrollado con ❤️ en Godot 4.5

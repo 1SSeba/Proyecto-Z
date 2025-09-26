@@ -1,10 +1,10 @@
-extends "res://game/core/systems/game-state/StateMachine/State.gd"
-class_name LoadingState
+extends "res://game/core/systems/StateMachine/State.gd"
+class_name GameLoadingState
 # Estado de carga inicial del juego - simplificado
 
 var loading_progress: float = 0.0
 
-func enter(_previous_state: State = null) -> void:
+func enter(_previous_state: GameState = null) -> void:
 	if state_machine and state_machine.debug_mode:
 		print("🔄 Entering LoadingState")
 
