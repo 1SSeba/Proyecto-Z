@@ -186,10 +186,22 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 focus_neighbor_top = NodePath("../QuitButton")
-focus_neighbor_bottom = NodePath("../SettingsButton")
-focus_next = NodePath("../SettingsButton")
+focus_neighbor_bottom = NodePath("../MultiplayerButton")
+focus_next = NodePath("../MultiplayerButton")
 focus_previous = NodePath("../QuitButton")
 text = "▶ START GAME"
+
+[node name="MultiplayerButton" type="Button" parent="MenuPanel/ContentContainer/MenuSection/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+focus_neighbor_top = NodePath("../StartButton")
+focus_neighbor_bottom = NodePath("../SettingsButton")
+focus_next = NodePath("../SettingsButton")
+focus_previous = NodePath("../StartButton")
+text = "MULTIPLAYER"
 
 [node name="SettingsButton" type="Button" parent="MenuPanel/ContentContainer/MenuSection/ButtonContainer"]
 unique_name_in_owner = true
@@ -197,10 +209,10 @@ custom_minimum_size = Vector2(280, 56)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-focus_neighbor_top = NodePath("../StartButton")
+focus_neighbor_top = NodePath("../MultiplayerButton")
 focus_neighbor_bottom = NodePath("../QuitButton")
 focus_next = NodePath("../QuitButton")
-focus_previous = NodePath("../StartButton")
+focus_previous = NodePath("../MultiplayerButton")
 text = "⚙ SETTINGS"
 
 [node name="QuitButton" type="Button" parent="MenuPanel/ContentContainer/MenuSection/ButtonContainer"]
@@ -250,5 +262,6 @@ text = "Made with ❤️ by Indie Studio"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="MenuPanel/ContentContainer/MenuSection/ButtonContainer/StartButton" to="." method="_on_start_button_activated"]
+[connection signal="pressed" from="MenuPanel/ContentContainer/MenuSection/ButtonContainer/MultiplayerButton" to="." method="_on_lobby_button_activated"]
 [connection signal="pressed" from="MenuPanel/ContentContainer/MenuSection/ButtonContainer/SettingsButton" to="." method="_on_settings_button_activated"]
 [connection signal="pressed" from="MenuPanel/ContentContainer/MenuSection/ButtonContainer/QuitButton" to="." method="_on_quit_button_activated"]

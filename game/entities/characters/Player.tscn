@@ -1,14 +1,14 @@
 [gd_scene load_steps=76 format=3 uid="uid://dnoayasg0nmts"]
 
 [ext_resource type="Script" uid="uid://duwbr5ictc7gf" path="res://game/entities/characters/Player.gd" id="1_7vix2"]
-[ext_resource type="Texture2D" uid="uid://bu2geurch2vi8" path="res://game/assets/Characters/Player/Idle/idle_down.png" id="1_uapsp"]
-[ext_resource type="Texture2D" uid="uid://c8xi0osqhqs6j" path="res://game/assets/Characters/Player/Idle/idle_left.png" id="2_7vix2"]
-[ext_resource type="Texture2D" uid="uid://dfrw4namuvy43" path="res://game/assets/Characters/Player/Idle/idle_right.png" id="3_gu5w3"]
-[ext_resource type="Texture2D" uid="uid://3w6ywpv41x01" path="res://game/assets/Characters/Player/Idle/idle_up.png" id="4_ov5rv"]
-[ext_resource type="Texture2D" uid="uid://dukxg5fxjxwow" path="res://game/assets/Characters/Player/Run/run_down.png" id="6_p3isv"]
-[ext_resource type="Texture2D" uid="uid://cv0raakki72rq" path="res://game/assets/Characters/Player/Run/run_left.png" id="6_xst4l"]
-[ext_resource type="Texture2D" uid="uid://c6pjq4v7a7mnt" path="res://game/assets/Characters/Player/Run/run_right.png" id="7_p3isv"]
-[ext_resource type="Texture2D" uid="uid://t4y1k45tio55" path="res://game/assets/Characters/Player/Run/run_up.png" id="8_m81am"]
+[ext_resource type="Texture2D" uid="uid://bu2geurch2vi8" path="res://game/assets/characters/Player/Idle/idle_down.png" id="1_uapsp"]
+[ext_resource type="Texture2D" uid="uid://c8xi0osqhqs6j" path="res://game/assets/characters/Player/Idle/idle_left.png" id="2_7vix2"]
+[ext_resource type="Texture2D" uid="uid://dfrw4namuvy43" path="res://game/assets/characters/Player/Idle/idle_right.png" id="3_gu5w3"]
+[ext_resource type="Texture2D" uid="uid://3w6ywpv41x01" path="res://game/assets/characters/Player/Idle/idle_up.png" id="4_ov5rv"]
+[ext_resource type="Texture2D" uid="uid://dukxg5fxjxwow" path="res://game/assets/characters/Player/Run/run_down.png" id="6_p3isv"]
+[ext_resource type="Texture2D" uid="uid://cv0raakki72rq" path="res://game/assets/characters/Player/Run/run_left.png" id="6_xst4l"]
+[ext_resource type="Texture2D" uid="uid://c6pjq4v7a7mnt" path="res://game/assets/characters/Player/Run/run_right.png" id="7_p3isv"]
+[ext_resource type="Texture2D" uid="uid://t4y1k45tio55" path="res://game/assets/characters/Player/Run/run_up.png" id="8_m81am"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xst4l"]
 atlas = ExtResource("1_uapsp")

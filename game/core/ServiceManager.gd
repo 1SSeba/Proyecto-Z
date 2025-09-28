@@ -1,90 +1,119 @@
 extends Node
 
+const SERVICE_DEFINITIONS: Array[Dictionary] = [
+	{
+		"name": "DebugService",
+		"path": "res://game/core/services/DebugService.gd",
+		"priority": - 100
+	},
+	{
+		"name": "ConfigService",
+		"path": "res://game/core/services/ConfigService.gd",
+		"priority": - 50
+	},
+	{
+		"name": "ResourceLibrary",
+		"path": "res://game/core/services/ResourceLibrary.gd",
+		"priority": - 40
+	},
+	{
+		"name": "InputService",
+		"path": "res://game/core/services/InputService.gd",
+		"priority": - 30
+	},
+	{
+		"name": "AudioService",
+		"path": "res://game/core/services/AudioService.gd",
+		"priority": - 20
+	},
+	{
+		"name": "TransitionService",
+		"path": "res://game/ui/components/TransitionManager.gd",
+		"priority": - 10
+	},
+	{
+		"name": "GameFlowController",
+		"path": "res://game/core/systems/GameFlowController.gd"
+	}
+]
+
 var services: Dictionary = {}
 var service_load_order: Array[String] = []
 var is_manager_ready: bool = false
+var _logger: Node = null
+
+signal services_initialized
 
 func _ready():
-	print("ServiceManager: Starting service initialization...")
+	_log_info("ServiceManager: Starting service initialization...")
 	await _initialize_services()
 	is_manager_ready = true
-	print("ServiceManager: All services initialized successfully")
+	_log_info("ServiceManager: All services initialized successfully")
 
 func _initialize_services():
-	service_load_order = [
-		"ConfigService",
-		"ResourceLibrary",
-		"InputService",
-		"DebugService",
-		"AudioService",
-		"TransitionService",
-		"GameFlowController",
-		"SceneController"
-	]
+	var ordered_definitions := SERVICE_DEFINITIONS.duplicate()
+	ordered_definitions.sort_custom(Callable(self, "_compare_services"))
 
-	for service_name in service_load_order:
-		await _load_service(service_name)
+	service_load_order.clear()
 
-func _load_service(service_name: String):
-	print("ServiceManager: Loading %s..." % service_name)
+	for definition in ordered_definitions:
+		var service_name: String = String(definition.get("name", ""))
+		var loaded := await _load_service(definition)
+		if loaded:
+			service_load_order.append(service_name)
 
-	var service_node = _create_service(service_name)
-	if service_node:
-		services[service_name] = service_node
-		add_child(service_node)
+	services_initialized.emit()
 
-		if service_node.has_method("start_service"):
-			await service_node.start_service()
+func _compare_services(a: Dictionary, b: Dictionary) -> bool:
+	var priority_a: int = int(a.get("priority", 0))
+	var priority_b: int = int(b.get("priority", 0))
+	if priority_a == priority_b:
+		return String(a.get("name", "")) < String(b.get("name", ""))
+	return priority_a < priority_b
 
-		print("ServiceManager: %s loaded successfully" % service_name)
+func _load_service(definition: Dictionary) -> bool:
+	var service_name: String = String(definition.get("name", ""))
+	_log_info("Loading %s..." % service_name)
+
+	var service_node = _create_service(definition)
+	if not service_node:
+		_log_error("Failed to create %s" % service_name)
+		return false
+
+	services[service_name] = service_node
+	add_child(service_node)
+
+	if service_node.has_method("start_service"):
+		await service_node.start_service()
+
+	if service_name == "DebugService":
+		_logger = service_node
+
+	_log_info("%s loaded successfully" % service_name)
+	return true
+
+func _create_service(definition: Dictionary) -> Node:
+	var service_name: String = String(definition.get("name", ""))
+	if not definition.has("path"):
+		_log_error("Service definition for %s is missing path" % service_name)
+		return null
+
+	var script: Script = load(definition.get("path", ""))
+	if not script:
+		_log_error("Unable to load script for service %s from %s" % [service_name, definition.get("path", "")])
+		return null
+
+	var instance = script.new()
+
+	if instance is Node:
+		if "service_name" in instance:
+			instance.service_name = service_name
+		instance.name = service_name
 	else:
-		print("ServiceManager: Failed to create %s" % service_name)
+		_log_error("Service %s does not extend Node" % service_name)
+		return null
 
-func _create_service(service_name: String) -> Node:
-	match service_name:
-		"ConfigService":
-			var script = load("res://game/core/services/ConfigService.gd")
-			var service = script.new()
-			service.service_name = "ConfigService"
-			return service
-		"ResourceLibrary":
-			var script = load("res://game/core/services/ResourceLibrary.gd")
-			var service = script.new()
-			service.service_name = "ResourceLibrary"
-			return service
-		"InputService":
-			var script = load("res://game/core/services/InputService.gd")
-			var service = script.new()
-			service.service_name = "InputService"
-			return service
-		"DebugService":
-			var script = load("res://game/core/services/DebugService.gd")
-			var service = script.new()
-			service.service_name = "DebugService"
-			return service
-		"AudioService":
-			var script = load("res://game/core/services/AudioService.gd")
-			var service = script.new()
-			service.service_name = "AudioService"
-			return service
-		"TransitionService":
-			var script = load("res://game/ui/components/TransitionManager.gd")
-			var service = script.new()
-			service.service_name = "TransitionService"
-			return service
-		"GameFlowController":
-			var script = load("res://game/core/systems/GameFlowController.gd")
-			var service = script.new()
-			service.name = "GameFlowController"
-			return service
-		"SceneController":
-			var script = load("res://game/core/systems/SceneController.gd")
-			var service = script.new()
-			service.name = "SceneController"
-			return service
-		_:
-			print("ServiceManager: Unknown service: %s" % service_name)
-			return null
+	return instance
 
 #  SERVICE ACCESS
 
@@ -145,16 +174,15 @@ func get_all_services_status() -> Dictionary:
 	return status
 
 func print_services_status():
-	print("=== SERVICE MANAGER STATUS ===")
-	print("Manager Ready: %s" % is_manager_ready)
-	print("Services Loaded: %d" % services.size())
-	print("")
+	_log_info("=== SERVICE MANAGER STATUS ===")
+	_log_info("Manager Ready: %s" % is_manager_ready)
+	_log_info("Services Loaded: %d" % services.size())
 
 	for service_name in service_load_order:
 		var ready_status = "READY" if is_service_ready(service_name) else "NOT READY"
-		print("%s: %s" % [service_name, ready_status])
+		_log_info("%s: %s" % [service_name, ready_status])
 
-	print("===============================")
+	_log_info("===============================")
 
 #  CONVENIENCE METHODS
 
@@ -183,4 +211,25 @@ func get_scene_controller():
 
 func _exit_tree():
 	stop_all_services()
-	print("ServiceManager: Cleanup complete")
+	_log_info("ServiceManager: Cleanup complete")
+
+#  LOGGING HELPERS
+
+func _ensure_logger():
+	if _logger:
+		return
+	_logger = get_service("DebugService")
+
+func _log_info(message: String):
+	_ensure_logger()
+	if _logger and _logger.has_method("info"):
+		_logger.info(message)
+	else:
+		print("[ServiceManager][INFO] %s" % message)
+
+func _log_error(message: String):
+	_ensure_logger()
+	if _logger and _logger.has_method("error"):
+		_logger.error(message)
+	else:
+		push_error("ServiceManager: %s" % message)

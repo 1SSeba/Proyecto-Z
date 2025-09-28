@@ -1,4 +1,4 @@
-extends "res://game/core/services/BaseService.gd"
+extends Node
 
 # AudioService: centraliza control de volúmenes y opciones de audio para el juego.
 # API esperada por SettingsMenu.gd:
@@ -15,11 +15,14 @@ const BUS_SFX_NAME := "SFX"
 signal volume_changed(section: String, key: String, value)
 signal settings_applied()
 
+var service_name: String = "AudioService"
 var master_volume: float = 1.0 # 0..1
 var music_volume: float = 1.0
 var sfx_volume: float = 1.0
 var spatial_audio_enabled: bool = false
 var config_service: Node = null
+var debug_service: Node = null
+var is_service_ready: bool = false
 
 # Editable bus names (can be changed at runtime or in editor)
 @export var bus_master_name: String = BUS_MASTER_NAME
@@ -35,25 +38,44 @@ var _ramp_speeds: Dictionary = {}
 
 # Debug helper: usa DebugService si está cargado, si no hace print directo
 func _dbg(level: String, message: String) -> void:
-	var dbg = null
-	if ServiceManager:
-		dbg = ServiceManager.get_service("DebugService")
-	if dbg and dbg.has_method(level):
-		dbg.call(level, message)
+	_ensure_debug_service()
+	if debug_service and debug_service.has_method(level):
+		debug_service.call(level, message)
 	else:
 		print("[AudioService][%s] %s" % [level, message])
 
+func _ensure_debug_service() -> void:
+	if debug_service:
+		return
+	if ServiceManager and ServiceManager.has_service("DebugService"):
+		debug_service = ServiceManager.get_service("DebugService")
+
+func start_service() -> void:
+	if is_service_ready:
+		return
+	_initialize_service()
+	is_service_ready = true
+	_dbg("info", "AudioService started")
+
 func _ready():
+	# Si el servicio no es gestionado por ServiceManager (por ejemplo, en escena suelta), inicializar manualmente.
+	if Engine.is_editor_hint():
+		return
+	if not is_service_ready:
+		start_service()
+
+func _initialize_service() -> void:
 	if AudioServer.get_bus_count() == 0:
 		push_warning("AudioService: No audio buses detected in project. Buses will be refreshed later.")
 	else:
 		_dbg("info", "Detected %d audio buses" % AudioServer.get_bus_count())
+
 	_refresh_bus_cache()
-	# Try to load persisted settings first (ConfigService expected to be ready before AudioService)
-	var loaded = _load_from_config()
-	if not loaded:
+
+	var loaded_from_config := _load_from_config()
+	if not loaded_from_config:
 		_sync_from_server()
-	# Apply current values to audio buses
+
 	apply_all_settings(0.0)
 	set_process(true)
 	_dbg("info", "AudioService ready: master=%.2f music=%.2f sfx=%.2f" % [master_volume, music_volume, sfx_volume])
@@ -86,6 +108,21 @@ func _load_from_config() -> bool:
 		return false
 
 	var any_loaded = false
+
+	var master = config_service.get_audio_setting("master_volume", null)
+	if master != null:
+		master_volume = _normalize_loaded_volume(master )
+		any_loaded = true
+
+	var music = config_service.get_audio_setting("music_volume", null)
+	if music != null:
+		music_volume = _normalize_loaded_volume(music)
+		any_loaded = true
+
+	var sfx = config_service.get_audio_setting("sfx_volume", null)
+	if sfx != null:
+		sfx_volume = _normalize_loaded_volume(sfx)
+		any_loaded = true
 
 	var spa = config_service.get_audio_setting("spatial_audio", null)
 	if spa != null:

@@ -24,7 +24,9 @@ buses/default_bus_layout="res://config/default_bus_layout.tres"
 
 EventBus="*res://game/core/events/EventBus.gd"
 ServiceManager="*res://game/core/ServiceManager.gd"
-GameStateManager="*res://game/systems/game-state/GameStateManager.gd"
+GameStateManager="*res://game/core/systems/StateMachine/GameStateManager.gd"
+StateMachine="*res://game/core/systems/StateMachine/StateMachine.gd"
+SceneController="*res://game/core/systems/SceneController.gd"
 
 [display]
 

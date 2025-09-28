@@ -2,6 +2,7 @@ extends Node
 
 var service_name: String = "ResourceLibrary"
 var is_service_ready: bool = false
+var debug_service: Node = null
 
 enum ResourceCategory {
 	AUDIO,
@@ -56,7 +57,7 @@ func _start():
 	service_name = "ResourceLibrary"
 	_initialize_library()
 	is_service_ready = true
-	print("ResourceLibrary: Initialized successfully")
+	_log_info("ResourceLibrary: Initialized successfully")
 
 func start_service():
 	_start()
@@ -79,7 +80,7 @@ func _initialize_library():
 func register_resource(resource_path: String, category: ResourceCategory, resource_type: ResourceType, tags: Array[String] = [], metadata: Dictionary = {}):
 	# Validate resource path
 	if not _validate_resource_path(resource_path):
-		print("ResourceLibrary: Invalid resource path: ", resource_path)
+		_log_warn("ResourceLibrary: Invalid resource path: %s" % resource_path)
 		return false
 
 	# Create resource entry
@@ -107,7 +108,7 @@ func register_resource(resource_path: String, category: ResourceCategory, resour
 	# Save catalog
 	_save_resource_catalog()
 
-	print("ResourceLibrary: Registered resource: ", resource_path)
+	_log_info("ResourceLibrary: Registered resource: %s" % resource_path)
 	return true
 
 func unregister_resource(resource_path: String):
@@ -131,7 +132,7 @@ func unregister_resource(resource_path: String):
 		# Save catalog
 		_save_resource_catalog()
 
-		print("ResourceLibrary: Unregistered resource: ", resource_path)
+		_log_info("ResourceLibrary: Unregistered resource: %s" % resource_path)
 		return true
 
 	return false
@@ -211,7 +212,7 @@ func add_tag_to_resource(resource_path: String, tag: String):
 
 			_update_tag_index(resource_path, tags_array)
 			_save_resource_catalog()
-			print("ResourceLibrary: Added tag '$tag' to resource: ", resource_path)
+			_log_info("ResourceLibrary: Added tag '%s' to resource: %s" % [tag, resource_path])
 
 func remove_tag_from_resource(resource_path: String, tag: String):
 	if resource_catalog.has(resource_path):
@@ -226,7 +227,7 @@ func remove_tag_from_resource(resource_path: String, tag: String):
 
 			_update_tag_index(resource_path, tags_array)
 			_save_resource_catalog()
-			print("ResourceLibrary: Removed tag '$tag' from resource: ", resource_path)
+			_log_info("ResourceLibrary: Removed tag '%s' from resource: %s" % [tag, resource_path])
 
 func get_all_tags() -> Array[String]:
 	var tags: Array[String] = []
@@ -325,12 +326,12 @@ func add_dependency(resource_path: String, dependency_path: String):
 
 	if dependency_path not in resource_dependencies[resource_path]:
 		resource_dependencies[resource_path].append(dependency_path)
-		print("ResourceLibrary: Added dependency: ", resource_path, " -> ", dependency_path)
+		_log_info("ResourceLibrary: Added dependency: %s -> %s" % [resource_path, dependency_path])
 
 func remove_dependency(resource_path: String, dependency_path: String):
 	if resource_dependencies.has(resource_path):
 		resource_dependencies[resource_path].erase(dependency_path)
-		print("ResourceLibrary: Removed dependency: ", resource_path, " -> ", dependency_path)
+		_log_info("ResourceLibrary: Removed dependency: %s -> %s" % [resource_path, dependency_path])
 
 func get_dependencies(resource_path: String) -> Array[String]:
 	return resource_dependencies.get(resource_path, [])
@@ -393,7 +394,7 @@ func _load_resource_catalog():
 
 			if parse_result == OK:
 				resource_catalog = json.data
-				print("ResourceLibrary: Loaded catalog with ", resource_catalog.size(), " resources")
+				_log_info("ResourceLibrary: Loaded catalog with %d resources" % resource_catalog.size())
 
 func _save_resource_catalog():
 	var catalog_file = "user://resource_library/catalog.json"
@@ -588,4 +589,33 @@ func _calculate_resource_hash(resource_path: String) -> String:
 
 func _exit_tree():
 	_save_resource_catalog()
-	print("ResourceLibrary: Cleanup complete")
+	_log_info("ResourceLibrary: Cleanup complete")
+
+#  LOGGING HELPERS
+
+func _ensure_debug_service():
+	if debug_service:
+		return
+	if ServiceManager and ServiceManager.has_service("DebugService"):
+		debug_service = ServiceManager.get_service("DebugService")
+
+func _log_info(message: String):
+	_ensure_debug_service()
+	if debug_service and debug_service.has_method("info"):
+		debug_service.info(message)
+	else:
+		print("[ResourceLibrary][INFO] %s" % message)
+
+func _log_warn(message: String):
+	_ensure_debug_service()
+	if debug_service and debug_service.has_method("warn"):
+		debug_service.warn(message)
+	else:
+		print("[ResourceLibrary][WARN] %s" % message)
+
+func _log_error(message: String):
+	_ensure_debug_service()
+	if debug_service and debug_service.has_method("error"):
+		debug_service.error(message)
+	else:
+		push_error("ResourceLibrary: %s" % message)
