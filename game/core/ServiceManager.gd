@@ -12,24 +12,9 @@ const SERVICE_DEFINITIONS: Array[Dictionary] = [
 		"priority": - 50
 	},
 	{
-		"name": "ResourceLibrary",
-		"path": "res://game/core/services/ResourceLibrary.gd",
-		"priority": - 40
-	},
-	{
 		"name": "InputService",
 		"path": "res://game/core/services/InputService.gd",
 		"priority": - 30
-	},
-	{
-		"name": "AudioService",
-		"path": "res://game/core/services/AudioService.gd",
-		"priority": - 20
-	},
-	{
-		"name": "TransitionService",
-		"path": "res://game/ui/components/TransitionManager.gd",
-		"priority": - 10
 	},
 	{
 		"name": "GameFlowController",
@@ -192,20 +177,8 @@ func get_config_service():
 func get_input_service():
 	return get_service("InputService")
 
-func get_audio_service():
-	return get_service("AudioService")
-
-func get_transition_service():
-	return get_service("TransitionService")
-
-func get_resource_library():
-	return get_service("ResourceLibrary")
-
 func get_game_flow_controller():
 	return get_service("GameFlowController")
-
-func get_scene_controller():
-	return get_service("SceneController")
 
 #  CLEANUP
 

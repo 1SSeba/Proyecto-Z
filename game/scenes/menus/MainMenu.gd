@@ -188,9 +188,7 @@ func _on_settings_back_pressed():
 # AUDIO EFFECTS
 
 func _play_button_sound():
-	if EventBus:
-		EventBus.request_audio("sfx", "button_press")
+	pass
 
 func _play_focus_sound():
-	if EventBus:
-		EventBus.request_audio("sfx", "button_hover")
+	pass

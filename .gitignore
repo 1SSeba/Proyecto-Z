@@ -260,16 +260,16 @@ site/
 !/.github/**
 
 # Keep build directory structure
-!builds/README.md
-!builds/.gitkeep
+# !builds/README.md
+# !builds/.gitkeep
 
 # Keep config examples
 !config/example_*
 !config/*.example
 
 # Keep documentation
-!docs/
-!docs/**/*.md
+# !docs/
+# !docs/**/*.md
 
 # ============================================================================
 # CUSTOM PROJECT IGNORES
