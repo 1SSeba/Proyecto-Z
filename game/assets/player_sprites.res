@@ -1,4 +1,6 @@
-[gd_resource type="Resource" format=3]
+[gd_resource type="Resource" script=ExtResource(1) format=3]
+
+[ext_resource type="Script" path="res://game/assets/catalogs/PlayerSpriteCatalog.gd" id="1"]
 
 [sub_resource type="Texture2D" id="Texture2D_1"]
 load_path = "res://game/assets/textures/Maps/Texture/characters/Player/Attack1/attack1_down.png"
@@ -49,7 +51,6 @@ load_path = "res://game/assets/textures/Maps/Texture/characters/Player/Run/run_r
 load_path = "res://game/assets/textures/Maps/Texture/characters/Player/Run/run_up.png"
 
 [resource]
-script_name = "PlayerSprites"
 attack1_down = SubResource("Texture2D_1")
 attack1_left = SubResource("Texture2D_2")
 attack1_right = SubResource("Texture2D_3")
@@ -66,4 +67,3 @@ run_down = SubResource("Texture2D_13")
 run_left = SubResource("Texture2D_14")
 run_right = SubResource("Texture2D_15")
 run_up = SubResource("Texture2D_16")
-

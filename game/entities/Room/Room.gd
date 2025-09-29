@@ -23,8 +23,10 @@ func _ready():
 func _setup_connections():
 	"""Setup signal connections"""
 	if room_bounds:
-		room_bounds.body_entered.connect(_on_room_bounds_body_entered)
-		room_bounds.body_exited.connect(_on_room_bounds_body_exited)
+		if not room_bounds.body_entered.is_connected(_on_room_bounds_body_entered):
+			room_bounds.body_entered.connect(_on_room_bounds_body_entered)
+		if not room_bounds.body_exited.is_connected(_on_room_bounds_body_exited):
+			room_bounds.body_exited.connect(_on_room_bounds_body_exited)
 
 func _on_room_bounds_body_entered(body: Node2D):
 	"""Handle when a body enters the room bounds"""

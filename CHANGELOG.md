@@ -1,5 +1,7 @@
 # 📝 Changelog - Topdown Game
 
+<!-- markdownlint-disable MD024 -->
+
 Todos los cambios notables del proyecto se documentan en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -8,14 +10,32 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ## [Unreleased]
 
 ### 🔄 En Desarrollo
+
 - Sistema de inventario básico
 - Múltiples tipos de enemigos
 - Sistema de mejoras/upgrades
 - Boss battles
 
+### 🔧 Cambiado
+
+- Arquitectura central orientada a MVCS con servicios livianos y dependencias explícitas.
+- `ConfigService` y `SettingsMenu` reorganizados para separar lógica, datos y vista.
+- `Player` migrado a un conjunto de componentes modulares (`Movement`, `Animation`, `Health`) para aislar responsabilidades.
+
+### 🗑️ Removido
+
+- Scripts de componentes heredados y artefactos generados que ya no se utilizaban.
+
+### 📚 Documentación
+
+- Nuevo `docs/commit_plan.md` con lineamientos para agrupar commits del refactor actual.
+- `README` actualizado con objetivos de la refactorización y flujo de pruebas.
+- Documentación extendida para reflejar la composición del jugador basada en componentes reutilizables.
+
 ## [1.0.0] - 2025-08-22
 
 ### ✨ Añadido
+
 - **Sistema de Estados Completo**: StateMachine profesional con estados Loading, MainMenu, Playing, Paused, RunComplete, RunFailed
 - **Arquitectura de Managers**: Sistema modular con ConfigManager, InputManager, AudioManager, GameStateManager, GameManager, DebugManager
 - **Generación Procedural de Mundo**: Sistema completo con chunks, biomas (Grass, Desert, Forest, Mountains, Water, Snow), y ruido FastNoiseLite
@@ -29,6 +49,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 - **Documentación Completa**: README formal, guías de desarrollo, troubleshooting
 
 ### 🔧 Técnico
+
 - **Autoloads Optimizados**: Orden de carga correcto, inicialización asíncrona
 - **ManagerUtils**: Utilidades centralizadas para acceso a managers
 - **Error Handling**: Verificaciones robustas de dependencias
@@ -36,6 +57,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 - **Testing**: Herramientas integradas de testing y benchmarking
 
 ### 🎮 Gameplay
+
 - **Mundo Procedural**: 6 biomas diferentes con características únicas
 - **Sistema de Chunks**: Carga dinámica optimizada para mundos grandes
 - **Estadísticas Avanzadas**: Tracking completo de runs, tiempos, éxito
@@ -45,27 +67,32 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ## [0.3.0] - 2025-08-20
 
 ### ✨ Añadido
+
 - Sistema básico de StateMachine
 - Managers fundamentales (Config, Input, Audio)
 - Estructura de proyecto organizada
 
 ### 🐛 Corregido
+
 - Errores de inicialización de managers
 - Problemas de orden de autoloads
 - Transiciones de estado inconsistentes
 
 ### 📚 Documentación
+
 - Estructura inicial de documentación
 - Guías básicas de uso
 
 ## [0.2.0] - 2025-08-15
 
 ### ✨ Añadido
+
 - Sistema de menús básico
 - Configuración inicial de audio
 - Estructura de escenas
 
 ### 🔧 Técnico
+
 - Configuración de proyecto Godot 4.4
 - Autoloads básicos
 - Sistema de escenas modular
@@ -73,6 +100,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ## [0.1.0] - 2025-08-10
 
 ### ✨ Añadido
+
 - Configuración inicial del proyecto
 - Estructura de directorios básica
 - Assets placeholder
@@ -94,16 +122,19 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ## 📋 Convenciones de Versionado
 
 ### Major (X.0.0)
+
 - Cambios arquitecturales significativos
 - Breaking changes en APIs públicas
 - Nuevas mecánicas core del juego
 
 ### Minor (1.X.0)
+
 - Nuevas funcionalidades compatibles
 - Nuevos sistemas que no rompen existentes
 - Mejoras significativas de UX
 
 ### Patch (1.0.X)
+
 - Bug fixes
 - Mejoras menores de performance
 - Actualizaciones de documentación
@@ -112,24 +143,28 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ## 🎯 Roadmap por Versiones
 
 ### v1.1.0 - Combate y Enemigos
+
 - [ ] Sistema de combate básico
 - [ ] AI de enemigos
 - [ ] Sistema de daño y vida
 - [ ] Efectos visuales de combate
 
 ### v1.2.0 - Inventario y Items
+
 - [ ] Sistema de inventario
 - [ ] Items y equipamiento
 - [ ] Tienda básica
 - [ ] Sistema de drop de items
 
 ### v1.3.0 - Progresión
+
 - [ ] Sistema de niveles
 - [ ] Habilidades y upgrades
 - [ ] Árbol de progresión
 - [ ] Unlockables
 
 ### v2.0.0 - Contenido Mayor
+
 - [ ] Múltiples niveles/mundos
 - [ ] Boss battles
 - [ ] Historia/narrativa

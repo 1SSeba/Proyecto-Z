@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script="res://game/data/entities/EnemyDefinition.gd"]
+
+[resource]
+enemy_id = "slime"
+display_name = "Slime"
+description = "Criatura básica que inflige daño leve por contacto."
+max_health = 30
+move_speed = 90.0
+acceleration = 450.0
+friction = 400.0
+attack_damage = 6.0
+attack_cooldown = 1.5
+attack_range = 48.0
+experience_reward = 3
+loot_table_id = "starter"

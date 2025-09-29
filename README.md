@@ -4,15 +4,16 @@ Un proyecto de juego tipo RougeLike desarrollado en Godot 4.5.
 
 ## Descripción
 
-Este es un juego base que incluye un sistema completo de estados, gestión de servicios, componentes modulares y una arquitectura escalable para proyectos de juegos.
+Este repositorio contiene una base de roguelite construida sobre Godot 4.5 actualmente en plena refactorización para adoptar flujos **data-driven + MVCS**. La meta es ofrecer una base ligera y extensible con servicios mínimos, escenas limpias y herramientas de edición enfocadas en datos.
 
 ## Características Principales
 
-- **Sistema de Estados Completo**: StateMachine profesional con estados Loading, MainMenu, Playing, Paused, RunComplete, RunFailed
-- **Gestión de Servicios**: AudioService, ConfigService, DebugService, InputService, ResourceLibrary
-- **Componentes Modulares**: HealthComponent, MovementComponent, MenuComponent
-- **Sistema de Eventos**: EventBus centralizado para comunicación entre sistemas
-- **Arquitectura Escalable**: Diseño modular que facilita la expansión del proyecto
+- **Máquina de estados**: flujo principal gestionado por `GameFlowController` + `GameStateManager`.
+- **Servicios Autoload mínimos**: `DebugService`, `ConfigService`, `InputService`, `GameFlowController`.
+- **Sistema de eventos ligero**: `EventBus` centralizado con eventos esenciales.
+- **Menús reactivos**: `SettingsMenu` reescrito con sliders normalizados y aplicación inmediata.
+- **Base data-driven en progreso**: assets agrupados en recursos `.res` y plan de migración a `Resource` personalizados.
+- **Jugador modular**: `Player.tscn` utiliza componentes `Movement`, `Animation` y `Health` reutilizables.
 
 ## Estructura del Proyecto
 
@@ -20,7 +21,6 @@ Este es un juego base que incluye un sistema completo de estados, gestión de se
 game/
 ├── assets/          # Recursos del juego (audio, texturas, etc.)
 ├── core/           # Sistemas centrales
-│   ├── components/ # Componentes reutilizables
 │   ├── events/     # Sistema de eventos
 │   ├── services/   # Servicios del juego
 │   └── systems/    # Sistemas principales (StateMachine, SceneController)
@@ -51,17 +51,13 @@ El juego utiliza un StateMachine robusto que maneja los diferentes estados:
 
 ### Servicios Disponibles
 
-- **AudioService**: Gestión de audio y música
-- **ConfigService**: Configuración del juego
-- **DebugService**: Herramientas de debug
-- **InputService**: Gestión de entrada del usuario
-- **ResourceLibrary**: Carga y gestión de recursos
-
-### Componentes
-
-- **HealthComponent**: Gestión de vida de entidades
-- **MovementComponent**: Manejo de movimiento
-- **MenuComponent**: Funcionalidad de menús
+- **ConfigService**: Persistencia de configuración del usuario apoyada en recursos data-driven.
+- **DataService**: Abstracción para cargar `Resource` declarativos (settings, flujo de juego, catálogos).
+- **DebugService**: Logging estructurado y utilidades de depuración.
+- **InputService**: Gestión de entradas a alto nivel.
+- **AudioService**: Mixer centralizado de música/efectos.
+- **ResourceLibrary**: Índice de recursos taggeados disponible para entidades y sistemas.
+- **GameFlowController**: Arranque y control de estados principales.
 
 ## Arquitectura
 
@@ -109,21 +105,21 @@ Para contribuir al proyecto:
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
-## Tasks Disponibles
+## Cómo Probar Rápido
 
-### Quick Export Debug
+### Validación headless
+
+```bash
+godot --headless --quit
+```
+
+### Export debug (task VS Code "Quick Export Debug")
 
 ```bash
 godot --headless --export-debug "Linux/X11" builds/debug/game_debug
 ```
 
-### Run Game - Graphic Mode
-
-```bash
-godot --resolution 1280x720
-```
-
-### Test Game - Simple Settings
+### Ejecución local con ventana
 
 ```bash
 godot --resolution 1280x720
@@ -139,24 +135,21 @@ Este proyecto está bajo la licencia MIT. Ver el archivo `LICENSE` para más det
 
 **Características Implementadas**:
 
-- Sistema de estados base
-- Servicios principales
-- Componentes básicos
-- UI y menús base
+- Flujo de estados base y menús principales.
+- Servicios mínimos para configuración, debug y entrada.
+- Menú de opciones reconstruido.
 
-**En Desarrollo**:
+**En Refactor**:
 
-- Mecánicas de gameplay
-- Sistema de inventario
-- Sistema de combate
-- Generación procedural
+- Migración data-driven (`GameSettingsData`, `DataService`).
+- Adopción de MVCS en menús y gameplay.
+- Catálogos de assets y validadores automáticos.
 
 **Planificado**:
 
-- Multijugador
-- Sistema de logros
-- Personalización de personajes
-- Más tipos de enemigos
+- Editor plugin para gestionar datos.
+- Sistema de enemigos configurable vía resources.
+- Perfilado y automatización de builds.
 
 ---
 

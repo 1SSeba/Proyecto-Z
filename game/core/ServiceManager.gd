@@ -7,9 +7,19 @@ const SERVICE_DEFINITIONS: Array[Dictionary] = [
 		"priority": - 100
 	},
 	{
+		"name": "DataService",
+		"path": "res://game/core/services/DataService.gd",
+		"priority": - 75
+	},
+	{
 		"name": "ConfigService",
 		"path": "res://game/core/services/ConfigService.gd",
 		"priority": - 50
+	},
+	{
+		"name": "ResourceLibrary",
+		"path": "res://game/core/services/ResourceLibrary.gd",
+		"priority": - 40
 	},
 	{
 		"name": "InputService",
@@ -179,6 +189,9 @@ func get_input_service():
 
 func get_game_flow_controller():
 	return get_service("GameFlowController")
+
+func get_data_service():
+	return get_service("DataService")
 
 #  CLEANUP
 

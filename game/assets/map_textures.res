@@ -1,4 +1,6 @@
-[gd_resource type="Resource" format=3]
+[gd_resource type="Resource" script=ExtResource(1) format=3]
+
+[ext_resource type="Script" path="res://game/assets/catalogs/MapTextureCatalog.gd" id="1"]
 
 [sub_resource type="Texture2D" id="Texture2D_1"]
 load_path = "res://game/assets/textures/Maps/Texture/TX Plant.png"
@@ -34,7 +36,6 @@ load_path = "res://game/assets/textures/Maps/Texture/Extra/TX Plant with Shadow.
 load_path = "res://game/assets/textures/Maps/Texture/Extra/TX Props with Shadow.png"
 
 [resource]
-script_name = "MapTextures"
 plant = SubResource("Texture2D_1")
 player = SubResource("Texture2D_2")
 props = SubResource("Texture2D_3")
@@ -46,4 +47,3 @@ tileset_stone = SubResource("Texture2D_8")
 tileset_wall = SubResource("Texture2D_9")
 plant_with_shadow = SubResource("Texture2D_10")
 props_with_shadow = SubResource("Texture2D_11")
-

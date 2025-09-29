@@ -5,8 +5,25 @@ class_name DebugService
 
 signal debug_message_emitted(level: String, message: String)
 
+enum LogLevel {
+    LOG,
+    INFO,
+    WARN,
+    ERROR
+}
+
+const _LEVEL_TO_INT: Dictionary = {
+    "LOG": LogLevel.LOG,
+    "INFO": LogLevel.INFO,
+    "WARN": LogLevel.WARN,
+    "ERROR": LogLevel.ERROR
+}
+
+const _INT_TO_LEVEL: Array[String] = ["LOG", "INFO", "WARN", "ERROR"]
+
 var service_name: String = "DebugService"
 var is_initialized: bool = false
+var _level_threshold: int = LogLevel.LOG
 
 func _ready():
     # No hacer prints excesivos en _ready; está bien para debug
@@ -39,10 +56,27 @@ func warn(message: String) -> void:
 func error(message: String) -> void:
     _emit_and_print("ERROR", message)
 
-func _emit_and_print(level: String, message: String) -> void:
-    var formatted = "[%s] %s" % [level, message]
+func set_level(level_name: String) -> void:
+    var upper := level_name.to_upper()
+    if _LEVEL_TO_INT.has(upper):
+        _level_threshold = _LEVEL_TO_INT[upper]
+        _emit_and_print("LOG", "DebugService log level set to %s" % upper, true)
+    else:
+        _emit_and_print("WARN", "DebugService: Unknown log level '%s'" % level_name, true)
+
+func get_level() -> String:
+    return _INT_TO_LEVEL[_level_threshold]
+
+func _emit_and_print(level: String, message: String, force: bool = false) -> void:
+    var normalized: String = level.to_upper()
+    var level_index: int = int(_LEVEL_TO_INT.get(normalized, LogLevel.LOG))
+    if not force and level_index < _level_threshold:
+        return
+
+    var timestamp := Time.get_datetime_string_from_system(true)
+    var formatted: String = "[%s][%s] %s" % [timestamp, normalized, message]
     print(formatted)
-    emit_signal("debug_message_emitted", level, message)
+    emit_signal("debug_message_emitted", normalized, message)
 
 # Async convenience: print message after N frames
 func print_after_frames(message: String, frames: int) -> void:
@@ -68,16 +102,16 @@ func _delayed_print_async(frames_to_wait: int, msg: String):
 # Note: no separate _wait_async needed; wait_frames implements the awaitable behavior.
 
 # Timing helper: execute function and return elapsed seconds
-func measure_time(callable_func) -> float:
+func measure_time(callable_func: Callable) -> float:
     # Use high-resolution ticks (microseconds) and Callable.call()
-    var start = Time.get_ticks_usec()
-    var _result = callable_func.call()
-    var elapsed = (Time.get_ticks_usec() - start) / 1000000.0
+    var start_time: int = Time.get_ticks_usec()
+    callable_func.call()
+    var elapsed: float = (Time.get_ticks_usec() - start_time) / 1000000.0
     return elapsed
 
 # Quick helper para imprimir estructuras de forma legible
 func dump(var_value) -> void:
-    var dumped = JSON.stringify(var_value)
+    var dumped: String = JSON.stringify(var_value)
     print(dumped)
 
 # Ejemplo de uso (poner en cualquier script):

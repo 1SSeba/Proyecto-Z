@@ -1,34 +1,21 @@
 extends Node
 
+const GAME_SETTINGS_DATA_SCRIPT := preload("res://game/data/settings/GameSettingsData.gd")
+
 var service_name: String = "ConfigService"
 var is_service_ready: bool = false
 var _logger: Node = null
 
 const CONFIG_PATH: String = "user://settings.cfg"
-const DEFAULT_CONFIG: Dictionary = {
-	"audio": {
-		"master_volume": 0.8,
-		"music_volume": 0.8,
-		"sfx_volume": 0.9,
-		"spatial_audio": false
-	},
-	"video": {
-		"resolution_index": 2,
-		"window_mode_index": 0,
-		"fps_index": 1,
-		"vsync": true
-	},
-	"controls": {
-		"mouse_sensitivity": 1.0,
-		"mouse_invert_x": false,
-		"mouse_invert_y": false
-	}
-}
+const SETTINGS_RESOURCE_PATH: String = "res://game/data/settings/default_game_settings.tres"
 
 var _config_data: Dictionary = {}
+var _default_config: Dictionary = {}
+var _default_source: String = "hardcoded"
 
 func start_service() -> void:
 	_load_logger()
+	_load_default_settings()
 	_load_config()
 	is_service_ready = true
 	_log_info("ConfigService: Service initialized")
@@ -41,7 +28,7 @@ func is_service_available() -> bool:
 	return is_service_ready
 
 func _load_config() -> void:
-	_config_data = DEFAULT_CONFIG.duplicate(true)
+	_config_data = _default_config.duplicate(true)
 
 	var file := ConfigFile.new()
 	var result := file.load(CONFIG_PATH)
@@ -74,7 +61,8 @@ func save_config() -> void:
 		_log_info("ConfigService: Configuration saved")
 
 func reset_to_defaults() -> void:
-	_config_data = DEFAULT_CONFIG.duplicate(true)
+	_load_default_settings()
+	_config_data = _default_config.duplicate(true)
 	save_config()
 
 func get_all_settings() -> Dictionary:
@@ -118,7 +106,63 @@ func get_service_status() -> Dictionary:
 	return {
 		"config_path": CONFIG_PATH,
 		"sections": _config_data.keys(),
-		"ready": is_service_ready
+		"ready": is_service_ready,
+		"default_source": _default_source
+	}
+
+func _load_default_settings() -> void:
+	var source := "hardcoded"
+	var defaults := _get_defaults_from_data_service()
+	if defaults.is_empty():
+		defaults = _get_defaults_from_resource()
+		if defaults.is_empty():
+			defaults = _get_hardcoded_defaults()
+		else:
+			source = "resource"
+	else:
+		source = "service"
+
+	_default_config = defaults
+	_default_source = source
+
+func _get_defaults_from_data_service() -> Dictionary:
+	if not ServiceManager:
+		return {}
+
+	var data_service = ServiceManager.get_data_service()
+	if not data_service or not data_service.has_method("get_settings_defaults_dict"):
+		return {}
+
+	var defaults: Dictionary = data_service.get_settings_defaults_dict()
+	return defaults.duplicate(true)
+
+func _get_defaults_from_resource() -> Dictionary:
+	var resource = ResourceLoader.load(SETTINGS_RESOURCE_PATH)
+	if resource and resource is Resource:
+		if resource.get_script() == GAME_SETTINGS_DATA_SCRIPT and resource.has_method("to_dictionary"):
+			return resource.call("to_dictionary")
+
+	return {}
+
+func _get_hardcoded_defaults() -> Dictionary:
+	return {
+		"audio": {
+			"master_volume": 0.8,
+			"music_volume": 0.8,
+			"sfx_volume": 0.9,
+			"spatial_audio": false
+		},
+		"video": {
+			"resolution_index": 2,
+			"window_mode_index": 0,
+			"fps_index": 1,
+			"vsync": true
+		},
+		"controls": {
+			"mouse_sensitivity": 1.0,
+			"mouse_invert_x": false,
+			"mouse_invert_y": false
+		}
 	}
 
 func _load_logger() -> void:

@@ -1,5 +1,7 @@
 # 📚 Documentación Técnica Completa - RougeLike Base
 
+<!-- markdownlint-disable MD022 MD032 MD031 MD040 MD058 -->
+
 ![Version](https://img.shields.io/badge/version-pre--alpha__v0.0.1-orange)
 ![Godot](https://img.shields.io/badge/Godot-4.4-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -145,24 +147,23 @@ topdown-game/                          # Raíz del proyecto
 │   │
 │   ├── 🏗️ core/                        # Arquitectura base del sistema
 │   │   ├── ServiceManager.gd           # Gestor central de servicios
-│   │   ├── ResourceLoader.gd           # Cargador de recursos .res
 │   │   │
-│   │   ├── 🧩 components/               # Sistema de componentes
+│   │   ├── 🧩 components/               # Sistema de componentes reutilizables
 │   │   │   ├── Component.gd            # Clase base de componentes
-│   │   │   ├── HealthComponent.gd      # Gestión de vida/daño
-│   │   │   ├── MenuComponent.gd        # Lógica de menús
-│   │   │   └── MovementComponent.gd    # Control de movimiento
+│   │   │   ├── MovementComponent.gd    # Control de movimiento para CharacterBody2D
+│   │   │   ├── AnimationComponent.gd   # Animaciones direccionales guiadas por movimiento
+│   │   │   └── HealthComponent.gd      # Gestión de vida/daño e invulnerabilidad
 │   │   │
 │   │   ├── 📡 events/                   # Sistema de eventos
 │   │   │   └── EventBus.gd             # Bus global de eventos
 │   │   │
 │   │   ├── ⚙️ services/                 # Servicios globales
-│   │   │   ├── BaseService.gd          # Clase base de servicios
-│   │   │   ├── ConfigService.gd        # Gestión de configuración
 │   │   │   ├── AudioService.gd         # Control de audio
+│   │   │   ├── ConfigService.gd        # Gestión de configuración
+│   │   │   ├── DataService.gd          # Carga de recursos de datos
+│   │   │   ├── DebugService.gd         # Utilidades y logging de depuración
 │   │   │   ├── InputService.gd         # Gestión de input
-│   │   │   ├── ResourceLibrary.gd      # Biblioteca de recursos
-│   │   │   └── ResourceManager.gd      # Gestor de recursos
+│   │   │   └── ResourceLibrary.gd      # Biblioteca de recursos
 │   │   │
 │   │   └── 🔄 systems/                  # Sistemas del juego
 │   │       ├── README.md               # Info de sistemas
@@ -173,7 +174,7 @@ topdown-game/                          # Raíz del proyecto
 │   ├── 🎭 entities/                     # Entidades del juego
 │   │   └── characters/                 # Personajes
 │   │       ├── Player.gd               # Lógica del jugador
-│   │       └── Player.tscn             # Escena del jugador
+│   │       └── Player.tscn             # Escena del jugador + componentes Movement/Animation/Health
 │   │
 │   ├── 🎬 scenes/                       # Escenas principales
 │   │   ├── environments/               # Entornos de juego
@@ -383,9 +384,13 @@ extends Component
 class_name HealthComponent
 
 # Funcionalidad específica encapsulada
-func take_damage(amount: int):
-    current_health -= amount
-    health_changed.emit(current_health, max_health)
+func _on_component_ready() -> void:
+    set_physics_process(true)
+
+func _physics_process(delta: float) -> void:
+    if not can_process():
+        return
+    # Lógica de componente desacoplada del nodo principal
 ```
 
 #### 4. Patrón State Machine (GameStateManager)
@@ -397,6 +402,24 @@ enum GameState {
 func change_state(new_state: GameState):
     # Transiciones controladas entre estados
 ```
+
+#### 5. Patrón MVCS (Model-View-Controller-Service)
+
+El nuevo flujo de menús adopta un patrón **MVCS** para desacoplar la lógica de UI:
+
+| Capa | Clase | Responsabilidad |
+|------|-------|-----------------|
+| **Model** | `SettingsModel` | Gestiona el estado de configuración, validación y persistencia. |
+| **View** | `SettingsMenu` + `BaseView` | Renderiza controles y emite señales genéricas reutilizables. |
+| **Controller** | `SettingsController` | Coordina interacciones entre la vista y el modelo, aplica cambios de runtime (p. ej. video). |
+| **Service** | `ConfigService` + `DataService` | Proveen configuración persistente y datos por defecto basados en recursos. |
+
+Este patrón permite:
+
+- **Tests unitarios** de la lógica de configuración sin depender de nodos.
+- **Reutilización** de bindings de UI gracias a `BaseView`.
+- **Datos declarativos** mediante recursos (`GameSettingsData`) administrados por `DataService`.
+- **Escalabilidad**: nuevos menús pueden reutilizar el mismo flujo Model/Controller.
 
 ### Módulos y Clases Importantes
 
@@ -437,28 +460,32 @@ signal item_collected(item_name: String, quantity: int)
 **Propósito**: Clase base para todos los componentes del sistema.
 
 **Funcionalidades Clave**:
-- Inicialización automática y manual
-- Sistema de dependencias entre componentes
-- Habilitación/deshabilitación dinámica
-- Acceso fácil a otros componentes
+- Asignación automática del actor propietario (nodo padre)
+- Ciclo de vida controlado por `set_enabled()` con soporte para `_on_enabled_changed`
+- Método `can_process()` para validar estado antes de ejecutar lógica
+- Punto de extensión `_on_component_ready()` para inicializar dependencias
 
 ```gdscript
 # Crear componente personalizado
 extends Component
 class_name AttackComponent
 
-func _initialize():
-    component_id = "AttackComponent"
-    add_dependency(get_component("HealthComponent"))
+func _on_component_ready() -> void:
+    set_physics_process(true)
+
+func _physics_process(delta: float) -> void:
+    if not can_process():
+        return
+    # Implementar lógica de ataque aquí
 ```
 
 #### Player.gd
 **Propósito**: Lógica principal del personaje jugador.
 
 **Funcionalidades Clave**:
-- Sistema de movimiento fluido con aceleración/fricción
-- Animaciones direccionales automáticas
-- Sistema de salud integrado
+- Sistema de movimiento fluido con aceleración/fricción encapsulado en `MovementComponent`
+- Animaciones direccionales automáticas gestionadas por `AnimationComponent`
+- Sistema de salud con invulnerabilidad y señales expuesto por `HealthComponent`
 - Controles de debug para desarrollo
 - Integración con servicios globales
 
