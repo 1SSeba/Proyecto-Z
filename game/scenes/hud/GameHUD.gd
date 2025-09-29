@@ -2,11 +2,17 @@ extends Control
 
 const Log := preload("res://game/core/utils/Logger.gd")
 
+@export var console_toggle_action: StringName = "debug_toggle_console"
+@export var show_console_on_start: bool = true
+@export var max_console_messages: int = 20
+
 @onready var health_bar: ProgressBar = $HealthBar
 @onready var health_text: Label = $HealthText
 @onready var fps_label: Label = $FPSLabel
-@onready var movement_keys: VBoxContainer = $MovementKeys
-@onready var console_logs: VBoxContainer = $ConsoleLogs
+@onready var console_panel: PanelContainer = $ConsolePanel
+@onready var movement_keys: VBoxContainer = $ConsolePanel/Margin/Content/MovementKeys
+@onready var console_logs: VBoxContainer = $ConsolePanel/Margin/Content/ConsoleScroll/ConsoleLogs
+@onready var console_scroll: ScrollContainer = $ConsolePanel/Margin/Content/ConsoleScroll
 
 var player_reference: CharacterBody2D = null
 var console_messages: Array[String] = []
@@ -17,6 +23,9 @@ func _ready():
 	_load_resources()
 	_setup_movement_keys()
 	_connect_to_player()
+	_set_console_visibility(show_console_on_start)
+	if console_toggle_action != StringName() and not InputMap.has_action(console_toggle_action):
+		Log.warn("GameHUD: Input action '%s' not found; console toggle disabled" % console_toggle_action)
 
 func _load_resources():
 	if ServiceManager:
@@ -45,6 +54,9 @@ func _setup_movement_keys():
 		"ESC - Menú"
 	]
 
+	for child in movement_keys.get_children():
+		child.queue_free()
+
 	for key in keys:
 		var label = Label.new()
 		label.text = key
@@ -63,6 +75,13 @@ func _process(_delta):
 	if fps_label:
 		fps_label.text = "FPS: " + str(Engine.get_frames_per_second())
 
+func _unhandled_input(event: InputEvent) -> void:
+	if console_toggle_action == StringName():
+		return
+	if InputMap.has_action(console_toggle_action) and event.is_action_pressed(console_toggle_action):
+		toggle_console_visibility()
+		get_viewport().set_input_as_handled()
+
 func _on_health_changed(current: float, max_health: float):
 	if health_bar:
 		health_bar.max_value = max_health
@@ -77,7 +96,7 @@ func _on_health_changed(current: float, max_health: float):
 func add_log(message: String):
 	console_messages.append(message)
 
-	if console_messages.size() > 8:
+	if max_console_messages > 0 and console_messages.size() > max_console_messages:
 		console_messages.pop_front()
 
 	_update_console()
@@ -89,5 +108,22 @@ func _update_console():
 	for msg in console_messages:
 		var label = Label.new()
 		label.text = msg
-		label.add_theme_font_size_override("font_size", 10)
+		label.add_theme_font_size_override("font_size", 11)
 		console_logs.add_child(label)
+
+	call_deferred("_scroll_console_to_bottom")
+
+func _scroll_console_to_bottom() -> void:
+	if not is_instance_valid(console_scroll):
+		return
+	var v_bar := console_scroll.get_v_scroll_bar()
+	if v_bar:
+		console_scroll.scroll_vertical = v_bar.max_value
+
+func _set_console_visibility(value: bool) -> void:
+	if not is_instance_valid(console_panel):
+		return
+	console_panel.visible = value
+
+func toggle_console_visibility() -> void:
+	_set_console_visibility(not console_panel.visible)
