@@ -6,15 +6,15 @@ signal settings_changed(section: String, key: String, value)
 signal settings_reset(data: Dictionary)
 signal settings_applied(data: Dictionary)
 
-var _config_service: Node = null
-var _data_service: Node = null
+var _config_service = null
+var _data_service = null
 var _current_settings: Dictionary = {}
 var _default_settings: Dictionary = {}
 var _dirty_map: Dictionary = {}
 
 const GAME_SETTINGS_DATA_SCRIPT := preload("res://game/data/settings/GameSettingsData.gd")
 
-func setup(config_service: Node, data_service: Node) -> void:
+func setup(config_service, data_service) -> void:
 	_config_service = config_service
 	_data_service = data_service
 	_load_default_settings()

@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+const Log := preload("res://game/core/utils/Logger.gd")
+
 signal died
 signal damaged(damage_amount: float)
 signal health_changed(current: float, max_health: float)
@@ -18,11 +20,11 @@ var is_initialized: bool = false
 
 # Inicialización
 func _ready() -> void:
-	await _wait_for_managers()
+	await _ensure_services_ready()
 	_load_resources()
 	_wire_components()
 	is_initialized = true
-	print("Player: Initialized with modular components")
+	_log_info("Initialized with modular components")
 
 func _wire_components() -> void:
 	if movement_component:
@@ -34,6 +36,8 @@ func _wire_components() -> void:
 		health_component.died.connect(_on_died)
 		health_changed.emit(health_component.current_health, health_component.max_health)
 
+	_log_info("Components wired")
+
 func _load_resources() -> void:
 	if ServiceManager and ServiceManager.has_service("ResourceLibrary"):
 		resource_library = ServiceManager.get_service("ResourceLibrary")
@@ -43,21 +47,17 @@ func _load_resources() -> void:
 		if sprite_resources.size() > 0:
 			player_sprites = load(sprite_resources[0])
 		else:
-			print("Player: Warning - No player sprite resources found in ResourceLibrary")
+			_log_warn("No player sprite resources found in ResourceLibrary")
 	else:
-		print("Player: Warning - ResourceLibrary service not available")
+		_log_warn("ResourceLibrary service not available")
 
-	print("Player: Resources loaded")
+	_log_info("Resources loaded")
 
-func _wait_for_managers() -> void:
-	var max_wait := 100
-	var wait_count := 0
+func _ensure_services_ready() -> void:
+	if not ServiceManager:
+		return
 
-	while wait_count < max_wait:
-		if ServiceManager and ServiceManager.get_game_flow_controller():
-			break
-		await get_tree().process_frame
-		wait_count += 1
+	await ServiceManager.wait_for_services(["GameFlowController", "ResourceLibrary"])
 
 func _physics_process(_delta: float) -> void:
 	if not is_initialized or not is_player_alive():
@@ -80,14 +80,14 @@ func _on_health_changed(current: float, max_health: float) -> void:
 
 func _on_damaged(damage_amount: float) -> void:
 	if health_component:
-		print("Player: Took damage: %.1f, Health: %.1f/%.1f" % [damage_amount, health_component.current_health, health_component.max_health])
+		_log_info("Took damage: %.1f, Health: %.1f/%.1f" % [damage_amount, health_component.current_health, health_component.max_health])
 	damaged.emit(damage_amount)
 
 func _on_died() -> void:
 	if movement_component:
 		movement_component.set_enabled(false)
 	velocity = Vector2.ZERO
-	print("Player: Died")
+	_log_warn("Died")
 	var game_flow = ServiceManager.get_game_flow_controller() if ServiceManager else null
 	if game_flow:
 		game_flow.on_player_died()
@@ -101,7 +101,7 @@ func take_damage(damage_amount: float) -> void:
 func heal(heal_amount: float) -> void:
 	if health_component:
 		health_component.heal(heal_amount)
-		print("Player: Healed: %.1f, Health: %.1f/%.1f" % [heal_amount, health_component.current_health, health_component.max_health])
+		_log_info("Healed: %.1f, Health: %.1f/%.1f" % [heal_amount, health_component.current_health, health_component.max_health])
 
 func die() -> void:
 	if health_component:
@@ -114,7 +114,7 @@ func revive() -> void:
 	health_component.revive()
 	if was_dead and movement_component:
 		movement_component.set_enabled(true)
-	print("Player: Revived")
+	_log_info("Revived")
 
 # Debug y testing
 func _handle_debug_input() -> void:
@@ -132,14 +132,14 @@ func _handle_debug_input() -> void:
 		die()
 
 func debug_info() -> void:
-	print("=== PLAYER DEBUG INFO ===")
-	print("Alive: %s" % is_player_alive())
+	Log.log("=== PLAYER DEBUG INFO ===")
+	Log.log("Alive: %s" % is_player_alive())
 	if health_component:
-		print("Health: %.1f/%.1f" % [health_component.current_health, health_component.max_health])
-	print("Position: %s" % global_position)
-	print("Velocity: %s" % velocity)
-	print("Last Direction: %s" % last_direction)
-	print("=========================")
+		Log.log("Health: %.1f/%.1f" % [health_component.current_health, health_component.max_health])
+	Log.log("Position: %s" % global_position)
+	Log.log("Velocity: %s" % velocity)
+	Log.log("Last Direction: %s" % last_direction)
+	Log.log("=========================")
 
 # Funciones públicas
 func get_health_percentage() -> float:
@@ -157,3 +157,11 @@ func set_speed(new_speed: float) -> void:
 
 func get_speed() -> float:
 	return movement_component.speed if movement_component else 0.0
+
+# Logging helpers
+
+func _log_info(message: String) -> void:
+	Log.info("Player: %s" % message)
+
+func _log_warn(message: String) -> void:
+	Log.warn("Player: %s" % message)

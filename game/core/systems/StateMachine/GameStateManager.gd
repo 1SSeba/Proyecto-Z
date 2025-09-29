@@ -1,5 +1,7 @@
 extends Node
 
+const Log := preload("res://game/core/utils/Logger.gd")
+
 enum GameStateType {
 	MAIN_MENU,
 	LOADING,
@@ -13,7 +15,6 @@ var current_state: GameStateType = GameStateType.MAIN_MENU
 var previous_state: GameStateType = GameStateType.MAIN_MENU
 var is_initialized: bool = false
 var state_machine: Node = null
-var debug_service: Node = null
 
 signal state_changed(old_state: GameStateType, new_state: GameStateType)
 signal game_started
@@ -95,30 +96,13 @@ func debug_info():
 	_log_info("===============================")
 
 # LOGGING HELPERS
-
-func _ensure_debug_service():
-	if debug_service:
-		return
-	if ServiceManager and ServiceManager.has_service("DebugService"):
-		debug_service = ServiceManager.get_service("DebugService")
-
 func _log_info(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("info"):
-		debug_service.info(message)
-	else:
-		print("[GameStateManager][INFO] %s" % message)
+	Log.info(message)
 
 func _log_warn(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("warn"):
-		debug_service.warn(message)
-	else:
-		push_warning(message)
+	Log.warn(message)
+	push_warning(message)
 
 func _log_error(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("error"):
-		debug_service.error(message)
-	else:
-		push_error(message)
+	Log.error(message)
+	push_error(message)

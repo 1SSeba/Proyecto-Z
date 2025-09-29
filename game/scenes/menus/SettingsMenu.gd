@@ -8,10 +8,10 @@ signal back_pressed
 signal settings_applied
 signal settings_changed
 
-var _config_service: Node = null
-var _data_service: Node = null
-var _controller: RefCounted = null
-var _model: RefCounted = null
+var _config_service = null
+var _data_service = null
+var _controller = null
+var _model = null
 var _is_initialized: bool = false
 
 func _ready() -> void:
@@ -24,9 +24,13 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _initialize() -> void:
-	await _wait_for_services()
-	_config_service = ServiceManager.get_config_service()
-	_data_service = ServiceManager.get_data_service()
+	if not ServiceManager:
+		push_error("SettingsMenu: ServiceManager not available")
+		return
+
+	var services: Dictionary = await ServiceManager.wait_for_services(["ConfigService", "DataService"])
+	_config_service = services.get("ConfigService")
+	_data_service = services.get("DataService")
 	if not _config_service:
 		push_error("SettingsMenu: ConfigService not available")
 		return
@@ -39,7 +43,7 @@ func _initialize() -> void:
 		push_error("SettingsMenu: SettingsModel is missing required setup() method")
 		return
 	_model = model_instance
-	model_instance.call("setup", _config_service, _data_service)
+	_model.call("setup", _config_service, _data_service)
 
 	var controller_instance := SettingsControllerScript.new()
 	if controller_instance == null or not (controller_instance is RefCounted):
@@ -49,17 +53,13 @@ func _initialize() -> void:
 		push_error("SettingsMenu: SettingsController is missing required setup() method")
 		return
 	_controller = controller_instance
-	controller_instance.call("setup", self, model_instance, _config_service)
+	_controller.call("setup", self, _model, _config_service)
 
-	if model_instance.has_signal("settings_changed"):
-		model_instance.connect("settings_changed", func(_section, _key, _value): settings_changed.emit())
-	if model_instance.has_signal("settings_applied"):
-		model_instance.connect("settings_applied", func(_data): settings_applied.emit())
-	if model_instance.has_signal("settings_reset"):
-		model_instance.connect("settings_reset", func(_data): settings_changed.emit())
+	if _model.has_signal("settings_changed"):
+		_model.settings_changed.connect(func(_section, _key, _value): settings_changed.emit())
+	if _model.has_signal("settings_applied"):
+		_model.settings_applied.connect(func(_data): settings_applied.emit())
+	if _model.has_signal("settings_reset"):
+		_model.settings_reset.connect(func(_data): settings_changed.emit())
 
 	_is_initialized = true
-
-func _wait_for_services() -> void:
-	while not ServiceManager or not ServiceManager.is_service_ready("ConfigService"):
-		await get_tree().process_frame

@@ -31,7 +31,7 @@ func _input(event: InputEvent) -> void:
 func _initialize_menu():
 	# Wait for scene tree and EventBus
 	await get_tree().process_frame
-	await _wait_for_event_bus()
+	await _ensure_event_bus_ready()
 
 	# Preload settings scene
 	_preload_settings_scene()
@@ -52,11 +52,14 @@ func _preload_settings_scene():
 		push_error("MainMenu: Failed to preload SettingsMenu.tscn")
 		settings_scene = load("res://game/scenes/menus/SettingsMenu.tscn")
 
-func _wait_for_event_bus():
-	var attempts = 0
-	while not EventBus and attempts < 10:
-		await get_tree().process_frame
-		attempts += 1
+func _ensure_event_bus_ready() -> void:
+	if EventBus:
+		return
+
+	await get_tree().process_frame
+
+	if not EventBus:
+		push_warning("MainMenu: EventBus autoload not found; menu actions might fail")
 
 func _setup_ui_content():
 	if title_label:

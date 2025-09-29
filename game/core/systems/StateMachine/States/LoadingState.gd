@@ -2,11 +2,13 @@ extends "res://game/core/systems/StateMachine/State.gd"
 class_name GameLoadingState
 # Estado de carga inicial del juego - simplificado
 
+const Log := preload("res://game/core/utils/Logger.gd")
+
 var loading_progress: float = 0.0
 
 func enter(_previous_state: GameState = null) -> void:
 	if state_machine and state_machine.debug_mode:
-		print("🔄 Entering LoadingState")
+		Log.info("🔄 Entering LoadingState")
 
 	loading_progress = 0.0
 	_start_loading()
@@ -17,7 +19,7 @@ func _start_loading():
 	loading_progress = 1.0
 
 	if state_machine and state_machine.debug_mode:
-		print("✅ Loading completed")
+		Log.info("✅ Loading completed")
 
 	# Ir al menú principal genérico
 	transition_to("MenuState", {"menu_type": "MainMenu"})
@@ -28,4 +30,4 @@ func update(_delta: float) -> void:
 
 func exit() -> void:
 	if state_machine and state_machine.debug_mode:
-		print("🔄 Exiting LoadingState")
+		Log.info("🔄 Exiting LoadingState")

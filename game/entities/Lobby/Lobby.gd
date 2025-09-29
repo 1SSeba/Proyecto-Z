@@ -2,6 +2,8 @@ extends Node2D
 
 class_name Lobby
 
+const Log := preload("res://game/core/utils/Logger.gd")
+
 # 🏛️ Lobby - Simple lobby with tileset platform
 
 @export var lobby_name: String = "Simple Lobby"
@@ -16,7 +18,7 @@ signal player_entered_lobby(player: Node)
 signal player_exited_lobby(player: Node)
 
 func _ready():
-	print("Lobby: Initialized - %s" % lobby_name)
+	Log.info("Lobby: Initialized - %s" % lobby_name)
 	_setup_connections()
 
 func _setup_connections():
@@ -28,13 +30,13 @@ func _setup_connections():
 func _on_lobby_bounds_body_entered(body: Node2D):
 	"""Handle when a body enters the lobby"""
 	if body.is_in_group("player"):
-		print("Lobby: Player entered - %s" % lobby_name)
+		Log.info("Lobby: Player entered - %s" % lobby_name)
 		player_entered_lobby.emit(body)
 
 func _on_lobby_bounds_body_exited(body: Node2D):
 	"""Handle when a body exits the lobby"""
 	if body.is_in_group("player"):
-		print("Lobby: Player exited - %s" % lobby_name)
+		Log.info("Lobby: Player exited - %s" % lobby_name)
 		player_exited_lobby.emit(body)
 
 func get_player_spawn_position() -> Vector2:

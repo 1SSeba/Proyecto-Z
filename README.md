@@ -1,6 +1,6 @@
 # Proyecto-Z
 
-Un proyecto de juego tipo RougeLike desarrollado en Godot 4.5.
+Un proyecto de juego tipo Roguelike desarrollado en Godot 4.5.
 
 ## Descripción
 
@@ -104,6 +104,11 @@ Para contribuir al proyecto:
 3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
+
+### Convenciones clave
+
+- El proyecto incluye un `.editorconfig` que define tabulaciones para GDScript y evita espacios en blanco innecesarios. Activa su soporte en tu editor antes de commitear.
+- Para sincronizarte con servicios globales usa los helpers `ServiceManager.wait_for_service(s)` en lugar de escribir bucles manuales con `await get_tree().process_frame`.
 
 ## Cómo Probar Rápido
 

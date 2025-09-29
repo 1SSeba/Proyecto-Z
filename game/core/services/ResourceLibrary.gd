@@ -1,8 +1,10 @@
 extends Node
+class_name ResourceLibrary
+
+const Log := preload("res://game/core/utils/Logger.gd")
 
 var service_name: String = "ResourceLibrary"
 var is_service_ready: bool = false
-var debug_service: Node = null
 
 enum ResourceCategory {
 	AUDIO,
@@ -593,29 +595,13 @@ func _exit_tree():
 
 #  LOGGING HELPERS
 
-func _ensure_debug_service():
-	if debug_service:
-		return
-	if ServiceManager and ServiceManager.has_service("DebugService"):
-		debug_service = ServiceManager.get_service("DebugService")
-
 func _log_info(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("info"):
-		debug_service.info(message)
-	else:
-		print("[ResourceLibrary][INFO] %s" % message)
+	Log.info(message)
 
 func _log_warn(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("warn"):
-		debug_service.warn(message)
-	else:
-		print("[ResourceLibrary][WARN] %s" % message)
+	Log.warn(message)
+	push_warning(message)
 
 func _log_error(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("error"):
-		debug_service.error(message)
-	else:
-		push_error("ResourceLibrary: %s" % message)
+	Log.error(message)
+	push_error(message)

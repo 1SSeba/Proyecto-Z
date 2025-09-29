@@ -1,5 +1,7 @@
 extends Node
 
+const Log := preload("res://game/core/utils/Logger.gd")
+
 # AudioService: centraliza control de volúmenes y opciones de audio para el juego.
 # API esperada por SettingsMenu.gd:
 # - set_master_volume(value: float)
@@ -21,7 +23,6 @@ var music_volume: float = 1.0
 var sfx_volume: float = 1.0
 var spatial_audio_enabled: bool = false
 var config_service: Node = null
-var debug_service: Node = null
 var is_service_ready: bool = false
 
 # Editable bus names (can be changed at runtime or in editor)
@@ -36,19 +37,18 @@ var _bus_index_cache: Dictionary = {}
 var _ramp_targets: Dictionary = {}
 var _ramp_speeds: Dictionary = {}
 
-# Debug helper: usa DebugService si está cargado, si no hace print directo
+# Debug helper: centraliza logs a través del DebugService
 func _dbg(level: String, message: String) -> void:
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method(level):
-		debug_service.call(level, message)
-	else:
-		print("[AudioService][%s] %s" % [level, message])
-
-func _ensure_debug_service() -> void:
-	if debug_service:
-		return
-	if ServiceManager and ServiceManager.has_service("DebugService"):
-		debug_service = ServiceManager.get_service("DebugService")
+	var formatted := "AudioService: %s" % message
+	match level.to_lower():
+		"error":
+			Log.error(formatted)
+		"warn":
+			Log.warn(formatted)
+		"info":
+			Log.info(formatted)
+		_:
+			Log.log(formatted)
 
 func start_service() -> void:
 	if is_service_ready:

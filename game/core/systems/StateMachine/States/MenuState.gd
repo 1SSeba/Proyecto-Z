@@ -1,13 +1,15 @@
 extends "res://game/core/systems/StateMachine/State.gd"
 # MenuState.gd - Estado genérico para menús (principal, configuración, etc.)
 
+const Log := preload("res://game/core/utils/Logger.gd")
+
 var menu_scene: PackedScene
 var menu_node: Node
 var menu_type: String = "MainMenu" # Puede ser "MainMenu", "Settings", etc.
 var return_state: String = ""
 
 func enter(_previous_state: GameState = null) -> void:
-	print("🟦 Entering MenuState: %s" % menu_type)
+	Log.info("🟦 Entering MenuState: %s" % menu_type)
 	var data = state_machine.get_transition_data()
 	if "menu_type" in data:
 		menu_type = data["menu_type"]
@@ -27,9 +29,9 @@ func _load_menu_scene():
 			current_scene.add_child(menu_node)
 			_connect_menu_signals()
 		else:
-			print("❌ No current scene available for menu: %s" % menu_type)
+			Log.warn("❌ No current scene available for menu: %s" % menu_type)
 	else:
-		print("❌ Could not load menu scene: %s" % scene_path)
+		Log.error("❌ Could not load menu scene: %s" % scene_path)
 		if return_state:
 			transition_to(return_state)
 
@@ -69,7 +71,7 @@ func handle_input(event: InputEvent) -> void:
 			transition_to(return_state)
 
 func exit() -> void:
-	print("🟦 Exiting MenuState: %s" % menu_type)
+	Log.info("🟦 Exiting MenuState: %s" % menu_type)
 	if menu_node:
 		menu_node.queue_free()
 		menu_node = null

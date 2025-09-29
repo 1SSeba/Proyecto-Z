@@ -28,7 +28,7 @@ const FPS_OPTIONS: Array[String] = [
 
 var view: Control
 var model
-var config_service: Node
+var config_service
 var current_tab: String = "audio"
 
 var _settings_content: VBoxContainer
@@ -45,7 +45,7 @@ var _reset_button: Button
 var _close_button: Button
 var _tabs: Dictionary = {}
 
-func setup(view_ref: Control, model_ref, config_ref: Node) -> void:
+func setup(view_ref: Control, model_ref, config_ref) -> void:
 	view = view_ref
 	model = model_ref
 	config_service = config_ref

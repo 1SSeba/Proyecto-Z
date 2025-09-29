@@ -1,10 +1,11 @@
 extends Node
+class_name ConfigService
 
 const GAME_SETTINGS_DATA_SCRIPT := preload("res://game/data/settings/GameSettingsData.gd")
+const Log := preload("res://game/core/utils/Logger.gd")
 
 var service_name: String = "ConfigService"
 var is_service_ready: bool = false
-var _logger: Node = null
 
 const CONFIG_PATH: String = "user://settings.cfg"
 const SETTINGS_RESOURCE_PATH: String = "res://game/data/settings/default_game_settings.tres"
@@ -14,7 +15,6 @@ var _default_config: Dictionary = {}
 var _default_source: String = "hardcoded"
 
 func start_service() -> void:
-	_load_logger()
 	_load_default_settings()
 	_load_config()
 	is_service_ready = true
@@ -165,20 +165,9 @@ func _get_hardcoded_defaults() -> Dictionary:
 		}
 	}
 
-func _load_logger() -> void:
-	if _logger:
-		return
-	if ServiceManager and ServiceManager.has_service("DebugService"):
-		_logger = ServiceManager.get_service("DebugService")
-
 func _log_info(message: String) -> void:
-	if _logger and _logger.has_method("info"):
-		_logger.info(message)
-	else:
-		print("[ConfigService][INFO] %s" % message)
+	Log.info(message)
 
 func _log_error(message: String) -> void:
-	if _logger and _logger.has_method("error"):
-		_logger.error(message)
-	else:
-		push_error("ConfigService: %s" % message)
+	Log.error(message)
+	push_error(message)

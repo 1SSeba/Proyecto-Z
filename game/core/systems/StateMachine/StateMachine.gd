@@ -1,5 +1,7 @@
 extends Node
 
+const Log := preload("res://game/core/utils/Logger.gd")
+
 # State Machine simplificada pero funcional
 # Diseñada para ser práctica y fácil de usar
 
@@ -21,7 +23,6 @@ var transition_data: Dictionary = {}
 # Configuración
 @export var debug_mode: bool = false
 @export var auto_register_children: bool = true
-var debug_service: Node = null
 
 func _ready():
 	if debug_mode:
@@ -158,23 +159,8 @@ func _to_string() -> String:
 	return "StateMachine[%s -> %s]" % [get_previous_state_name(), get_current_state_name()]
 
 #  LOGGING HELPERS
-
-func _ensure_debug_service():
-	if debug_service:
-		return
-	if ServiceManager and ServiceManager.has_service("DebugService"):
-		debug_service = ServiceManager.get_service("DebugService")
-
 func _log_info(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("info"):
-		debug_service.info(message)
-	else:
-		print("[StateMachine][INFO] %s" % message)
+	Log.info(message)
 
 func _log_warn(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("warn"):
-		debug_service.warn(message)
-	else:
-		print("[StateMachine][WARN] %s" % message)
+	Log.warn(message)

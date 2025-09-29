@@ -1,5 +1,7 @@
 extends Control
 
+const Log := preload("res://game/core/utils/Logger.gd")
+
 @onready var health_bar: ProgressBar = $HealthBar
 @onready var health_text: Label = $HealthText
 @onready var fps_label: Label = $FPSLabel
@@ -8,43 +10,33 @@ extends Control
 
 var player_reference: CharacterBody2D = null
 var console_messages: Array[String] = []
+var _resource_library: Node = null
 
 func _ready():
-	print("GameHUD: Ready")
+	Log.info("GameHUD: Ready")
 	_load_resources()
 	_setup_movement_keys()
 	_connect_to_player()
 
 func _load_resources():
-	# Wait for ServiceManager to be ready
-	await _wait_for_service_manager()
+	if ServiceManager:
+		var services := await ServiceManager.wait_for_services(["ResourceLibrary"])
+		_resource_library = services.get("ResourceLibrary")
 	_apply_game_colors()
 
-func _wait_for_service_manager():
-	var max_wait = 100
-	var wait_count = 0
-
-	while wait_count < max_wait:
-		if ServiceManager and ServiceManager.has_service("ResourceLibrary"):
-			break
-		await get_tree().process_frame
-		wait_count += 1
-
 func _apply_game_colors():
-	if not ServiceManager or not ServiceManager.has_service("ResourceLibrary"):
-		print("GameHUD: ResourceLibrary service not available")
+	if not _resource_library:
+		Log.warn("GameHUD: ResourceLibrary service not available")
 		return
 
-	var resource_library = ServiceManager.get_service("ResourceLibrary")
-
 	# Search for UI color resources
-	var ui_resources = resource_library.get_resources_by_category(resource_library.ResourceCategory.UI)
+	var ui_resources = _resource_library.get_resources_by_category(_resource_library.ResourceCategory.UI)
 
 	if ui_resources.size() > 0:
-		print("GameHUD: Found %d UI resources" % ui_resources.size())
+		Log.info("GameHUD: Found %d UI resources" % ui_resources.size())
 		# TODO: Apply colors to panels when UI resources are properly defined
 	else:
-		print("GameHUD: No UI color resources found in ResourceLibrary")
+		Log.warn("GameHUD: No UI color resources found in ResourceLibrary")
 
 func _setup_movement_keys():
 	var keys = [

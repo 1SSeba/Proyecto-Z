@@ -1,9 +1,9 @@
-# 📚 Documentación Técnica Completa - RougeLike Base
+# 📚 Documentación Técnica Completa - Roguelike Base
 
 <!-- markdownlint-disable MD022 MD032 MD031 MD040 MD058 -->
 
 ![Version](https://img.shields.io/badge/version-pre--alpha__v0.0.1-orange)
-![Godot](https://img.shields.io/badge/Godot-4.4-blue)
+![Godot](https://img.shields.io/badge/Godot-4.5-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
@@ -12,7 +12,7 @@
 
 ### Descripción del Proyecto
 
-**RougeLike Base** es un videojuego top-down desarrollado en **Godot 4.4** que implementa una arquitectura modular avanzada y escalable. El proyecto está diseñado como una base sólida para el desarrollo de juegos roguelike, proporcionando sistemas robustos de componentes, servicios centralizados y comunicación por eventos.
+**Roguelike Base** es un videojuego top-down desarrollado en **Godot 4.5** que implementa una arquitectura modular avanzada y escalable. El proyecto está diseñado como una base sólida para el desarrollo de juegos roguelike, proporcionando sistemas robustos de componentes, servicios centralizados y comunicación por eventos.
 
 ### Propósito y Público Objetivo
 
@@ -26,7 +26,7 @@
 
 | Tecnología | Versión | Uso |
 |------------|---------|-----|
-| **Godot Engine** | 4.4+ | Motor principal del juego |
+| **Godot Engine** | 4.5+ | Motor principal del juego |
 | **GDScript** | Nativo | Lenguaje de programación principal |
 | **Git** | 2.0+ | Control de versiones |
 | **Linux/Windows/macOS** | Multiplataforma | Plataformas de desarrollo y target |
@@ -38,7 +38,7 @@
 ### Requisitos Previos
 
 #### Software Necesario
-- **Godot Engine 4.4** o superior ([Descargar](https://godotengine.org/download))
+- **Godot Engine 4.5** o superior ([Descargar](https://godotengine.org/download))
 - **Git** para control de versiones
 - **Sistema Operativo**: Linux (recomendado), Windows 10+, macOS 10.14+
 
@@ -229,6 +229,11 @@ Contiene toda la lógica fundamental del sistema:
 - **Servicios**: Funcionalidades globales (audio, input, config)
 - **Eventos**: Comunicación desacoplada entre sistemas
 - **Estados**: Control del flujo del juego
+
+##### Logging centralizado
+- Importa el utilitario con `const Log := preload("res://game/core/utils/Logger.gd")`.
+- Usa `Log.info/warn/error/log/dump` en lugar de `print` directo para aprovechar el `DebugService`.
+- `Log` envía los mensajes al `DebugService` cuando está disponible y hace fallback seguro en modo offline/editor.
 
 #### `/game/entities/` - Entidades del Juego
 Objetos principales del juego como el jugador, enemigos, items, etc.
@@ -541,7 +546,7 @@ graph TD
 ### Dependencias Externas
 
 #### Dependencias de Godot
-- **Godot Engine 4.4**: Motor base
+- **Godot Engine 4.5**: Motor base
 - **GDScript**: Lenguaje principal
 - **Godot Audio System**: Sistema de audio
 - **Godot Input System**: Sistema de input
@@ -584,6 +589,9 @@ graph TD
 ## 6. 🤝 Contribución y Buenas Prácticas
 
 ### Estándares de Código
+
+- El repositorio incluye un archivo `.editorconfig` que configura indentación con tabuladores para GDScript, espacios de 2 para Markdown/JSON y fuerza `LF`. Asegúrate de que tu editor lo respete para evitar diffs innecesarios.
+- Cuando necesites esperar servicios, utiliza los helpers de `ServiceManager` (`wait_for_service`, `wait_for_services`, `wait_until_ready`) en lugar de bucles manuales con `await get_tree().process_frame`.
 
 #### Nomenclatura
 ```gdscript
@@ -852,12 +860,15 @@ EventBus.mi_evento_personalizado.connect(_on_mi_evento)
 **Solución**:
 ```gdscript
 func _ready():
-    await _wait_for_services()
-    # Usar servicios aquí
+    if not ServiceManager:
+        return
 
-func _wait_for_services():
-    while not ServiceManager.are_services_ready():
-        await get_tree().process_frame
+    var services := await ServiceManager.wait_for_services(["ConfigService", "AudioService"])
+    var config_service = services.get("ConfigService")
+    if config_service:
+        # Usar servicios aquí
+        var current_settings = config_service.get_all_settings()
+        print(current_settings)
 ```
 
 #### Error: "Component no se inicializa"
@@ -1078,6 +1089,6 @@ Si has contribuido al proyecto, tu nombre aparecerá aquí. Para contribuir:
 
 *Documentación generada el 7 de Septiembre, 2025*
 *Versión del proyecto: pre-alpha v0.0.1*
-*Godot Engine: 4.4+*
+*Godot Engine: 4.5+*
 
 ---

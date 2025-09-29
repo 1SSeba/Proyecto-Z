@@ -2,6 +2,8 @@ extends Node
 class_name GameFlowController
 # GameFlowController - Controla el flujo general del juego
 
+const Log := preload("res://game/core/utils/Logger.gd")
+
 const GAME_FLOW_DEFINITION_SCRIPT := preload("res://game/data/levels/GameFlowDefinition.gd")
 
 # Referencias a managers principales
@@ -19,7 +21,6 @@ var data_service: Node = null
 var flow_definition: Resource = null
 
 var is_initialized: bool = false
-var debug_service: Node = null
 
 signal flow_initialized
 signal game_flow_changed(new_flow: String)
@@ -163,33 +164,16 @@ func debug_info():
 	_log_info("====================================")
 
 #  LOGGING HELPERS
-
-func _ensure_debug_service():
-	if debug_service:
-		return
-	if ServiceManager and ServiceManager.has_service("DebugService"):
-		debug_service = ServiceManager.get_service("DebugService")
-
 func _log_info(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("info"):
-		debug_service.info(message)
-	else:
-		print("[GameFlowController][INFO] %s" % message)
+	Log.info(message)
 
 func _log_warn(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("warn"):
-		debug_service.warn(message)
-	else:
-		push_warning(message)
+	Log.warn(message)
+	push_warning(message)
 
 func _log_error(message: String):
-	_ensure_debug_service()
-	if debug_service and debug_service.has_method("error"):
-		debug_service.error(message)
-	else:
-		push_error(message)
+	Log.error(message)
+	push_error(message)
 
 func _load_data_definitions() -> void:
 	if ServiceManager and ServiceManager.has_service("DataService"):
