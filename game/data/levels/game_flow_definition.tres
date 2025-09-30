@@ -1,3 +1,16 @@
-[gd_resource type="Resource" script="res://game/data/levels/GameFlowDefinition.gd"]
+[gd_resource type="Resource" script_class="GameFlowDefinition" load_steps=5 format=3 uid="uid://c6ixqy1rrp4vi"]
+
+[ext_resource type="Script" path="res://game/data/levels/GameFlowDefinition.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://game/scenes/menus/MainMenu.tscn" id="2_menu"]
+[ext_resource type="PackedScene" path="res://game/scenes/gameplay/Main.tscn" id="3_gameplay"]
+[ext_resource type="PackedScene" path="res://game/scenes/environments/Lobby/Lobby.tscn" id="4_lobby"]
 
 [resource]
+script = ExtResource("1_main")
+main_menu_scene = ExtResource("2_menu")
+gameplay_scene = ExtResource("3_gameplay")
+lobby_scene = ExtResource("4_lobby")
+fallback_scene_controller = true
+loading_state = &"LoadingState"
+playing_state = &"PlayingState"
+lobby_state = &"LobbyState"
