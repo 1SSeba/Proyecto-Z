@@ -161,8 +161,8 @@ func wait_for_service(service_name: StringName, timeout_frames: int = DEFAULT_WA
 
 func wait_for_services(service_names: Array, timeout_frames: int = DEFAULT_WAIT_FRAMES) -> Dictionary:
 	var normalized: Array[String] = []
-	for name in service_names:
-		normalized.append(String(name))
+	for service_name in service_names:
+		normalized.append(String(service_name))
 
 	var resolved: Dictionary = {}
 	var frames_elapsed := 0

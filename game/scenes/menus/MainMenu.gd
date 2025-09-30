@@ -4,11 +4,6 @@ extends Control
 @onready var multiplayer_button: Button = %MultiplayerButton
 @onready var settings_button: Button = %SettingsButton
 @onready var quit_button: Button = %QuitButton
-@onready var title_label: Label = %GameTitle
-@onready var subtitle_label: Label = %SubtitleLabel
-@onready var version_label: Label = %VersionLabel
-@onready var developer_label: Label = %DeveloperLabel
-@onready var button_container: VBoxContainer = %ButtonContainer
 
 var current_settings_menu: Control = null
 var is_settings_open: bool = false
@@ -37,7 +32,6 @@ func _initialize_menu():
 	_preload_settings_scene()
 
 	# Setup UI elements
-	_setup_ui_content()
 	_setup_button_focus()
 
 	# Set initial focus
@@ -60,16 +54,6 @@ func _ensure_event_bus_ready() -> void:
 
 	if not EventBus:
 		push_warning("MainMenu: EventBus autoload not found; menu actions might fail")
-
-func _setup_ui_content():
-	if title_label:
-		title_label.text = "ROGUELIKE ADVENTURE"
-	if subtitle_label:
-		subtitle_label.text = "A Modern Indie Experience"
-	if version_label:
-		version_label.text = "Version 1.0.0"
-	if developer_label:
-		developer_label.text = "Made with ❤️ by Indie Studio"
 
 func _setup_button_focus():
 	if not (start_button and multiplayer_button and settings_button and quit_button):

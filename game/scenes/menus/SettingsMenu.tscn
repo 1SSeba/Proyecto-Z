@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bv7b1qqslf1m3" path="res://game/scenes/menus/SettingsMenu.gd" id="1_1k8gm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1mwp2"]
-bg_color = Color(0.1, 0.1, 0.1, 0.95)
+bg_color = Color(0.11, 0.11, 0.11, 0.96)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -47,13 +47,13 @@ layout_mode = 2
 [node name="TitleLabel" type="Label" parent="MainContainer/HeaderContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 32
+theme_type_variation = "Title"
 text = "Settings"
 horizontal_alignment = 1
 
 [node name="CloseButton" type="Button" parent="MainContainer/HeaderContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = "Icon"
 text = "X"
 
 [node name="HSeparator" type="HSeparator" parent="MainContainer"]
@@ -110,7 +110,7 @@ layout_mode = 2
 
 [node name="AudioTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = "Subtitle"
 text = "Audio Settings"
 
 [node name="MasterVolumeContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AudioSettings"]
@@ -208,7 +208,7 @@ layout_mode = 2
 
 [node name="VideoTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = "Subtitle"
 text = "Video Settings"
 
 [node name="QualityPresetContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/VideoSettings"]
@@ -276,7 +276,7 @@ layout_mode = 2
 
 [node name="ControlsTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = "Subtitle"
 text = "Controls Settings"
 
 [node name="MouseSensitivityContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
@@ -303,7 +303,7 @@ horizontal_alignment = 2
 
 [node name="KeybindingsLabel" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_type_variation = "Caption"
 text = "Key Bindings:"
 
 [node name="KeybindingsContainer" type="VBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
@@ -333,7 +333,7 @@ layout_mode = 2
 
 [node name="GamepadTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_type_variation = "Caption"
 text = "Gamepad Settings:"
 
 [node name="GamepadDeadzoneContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/ControlsSettings"]
@@ -374,7 +374,7 @@ layout_mode = 2
 
 [node name="GameplayTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = "Subtitle"
 text = "Gameplay Settings"
 
 [node name="AutoSaveContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/GameplaySettings"]
@@ -460,7 +460,7 @@ layout_mode = 2
 
 [node name="AccessibilityTitle" type="Label" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = "Subtitle"
 text = "Accessibility Settings"
 
 [node name="LargeFontContainer" type="HBoxContainer" parent="MainContainer/ContentContainer/SettingsContainer/SettingsContent/AccessibilitySettings"]

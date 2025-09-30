@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dwxl2w52rmt77"]
+[gd_scene load_steps=4 format=3 uid="uid://dwxl2w52rmt77"]
 
-[ext_resource type="Script" path="res://game/entities/Room/Room.gd" id="1_rj5oc"]
+[ext_resource type="Script" uid="uid://kc8x1fiv8lpv" path="res://game/entities/Room/Room.gd" id="1_rj5oc"]
 [ext_resource type="TileSet" path="res://game/assets/Maps/Texture/dungeon_tileset.tres" id="2_vadfg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_room_bounds"]
@@ -10,11 +10,10 @@ size = Vector2(640, 480)
 script = ExtResource("1_rj5oc")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
+rotation = -0.0039081485
 tile_set = ExtResource("2_vadfg")
-tile_map_data = PackedByteArray()
 
 [node name="PlayerSpawn" type="Node2D" parent="."]
-position = Vector2(0, 0)
 
 [node name="RoomBounds" type="Area2D" parent="."]
 

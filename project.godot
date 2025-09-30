@@ -38,6 +38,10 @@ window/stretch/mode="viewport"
 
 project/assembly_name="New Game Project"
 
+[gui]
+
+theme/custom="res://game/ui/themes/grayscale_theme.tres"
+
 [input]
 
 move_up={

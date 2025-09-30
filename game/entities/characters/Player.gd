@@ -70,10 +70,13 @@ func _ensure_services_ready() -> void:
 	await ServiceManager.wait_for_services(["GameFlowController", "ResourceLibrary"])
 
 func _physics_process(_delta: float) -> void:
-	if not is_initialized or not is_player_alive():
+	if not is_initialized:
 		return
 
 	_handle_debug_input()
+
+	if not is_player_alive():
+		return
 
 func is_player_alive() -> bool:
 	return health_component != null and health_component.is_alive
@@ -124,10 +127,27 @@ func revive() -> void:
 	health_component.revive()
 	if was_dead and movement_component:
 		movement_component.set_enabled(true)
+	if was_dead:
+		var game_state_manager = _get_game_state_manager()
+		if game_state_manager and game_state_manager.has_method("is_playing") and not game_state_manager.call("is_playing"):
+			if game_state_manager.has_method("start_game"):
+				game_state_manager.start_game()
+		if get_tree().paused:
+			get_tree().paused = false
 	_log_info("Revived")
+
+func _get_game_state_manager() -> Node:
+	if ServiceManager:
+		var game_flow = ServiceManager.get_game_flow_controller()
+		if game_flow and "game_state_manager" in game_flow:
+			return game_flow.game_state_manager
+	return get_tree().root.get_node_or_null("GameStateManager")
 
 # Debug y testing
 func _handle_debug_input() -> void:
+	if Input.is_action_just_pressed("debug_revive"):
+		revive()
+
 	var game_flow = ServiceManager.get_game_flow_controller() if ServiceManager else null
 	if not game_flow or not game_flow.is_playing():
 		return
@@ -140,9 +160,6 @@ func _handle_debug_input() -> void:
 
 	if Input.is_action_just_pressed("debug_die"):
 		die()
-
-	if Input.is_action_just_pressed("debug_revive"):
-		revive()
 
 	if Input.is_action_just_pressed("debug_print_info"):
 		debug_info()

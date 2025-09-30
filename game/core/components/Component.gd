@@ -27,7 +27,7 @@ func set_enabled(value: bool) -> void:
 	_apply_enabled_state(value)
 	_on_enabled_changed(value)
 
-func _on_enabled_changed(value: bool) -> void:
+func _on_enabled_changed(_value: bool) -> void:
 	# Override in child components to react to enabled state changes.
 	pass
 

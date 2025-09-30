@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://dnoayasg0nmts" path="res://game/entities/characters/Player.tscn" id="2_player"]
 [ext_resource type="PackedScene" uid="uid://dwxl2w52rmt77" path="res://game/scenes/environments/Room/Room.tscn" id="3_world"]
 [ext_resource type="PackedScene" path="res://game/scenes/hud/GameHUD.tscn" id="4_hud"]
+[ext_resource type="PackedScene" uid="uid://c2qm3v8h1xj0r" path="res://game/scenes/debug/DebugUI.tscn" id="5_debug"]
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_2x8k5")
 
@@ -18,5 +20,10 @@ position = Vector2(576, 312)
 layer = 10
 
 [node name="GameHUD" parent="UILayer" instance=ExtResource("4_hud")]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DebugUI" parent="UILayer" instance=ExtResource("5_debug")]
+process_mode = 3
 grow_horizontal = 2
 grow_vertical = 2

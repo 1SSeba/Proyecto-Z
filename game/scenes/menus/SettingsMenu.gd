@@ -3,8 +3,8 @@ extends "res://game/ui/components/BaseView.gd"
 const SettingsControllerScript := preload("res://game/ui/settings/SettingsController.gd")
 const SettingsModelScript := preload("res://game/ui/settings/SettingsModel.gd")
 
-signal settings_closed
-signal back_pressed
+signal settings_closed # Used by parent nodes (GameHUD, MainMenu)
+signal back_pressed # Used by parent nodes (GameHUD, MainMenu)
 signal settings_applied
 signal settings_changed
 

@@ -328,7 +328,10 @@ func _apply_video_settings() -> void:
 		DisplayServer.window_set_size(new_size)
 		await view.get_tree().process_frame
 		var screen_size: Vector2i = DisplayServer.screen_get_size()
-		var window_pos: Vector2i = Vector2i((screen_size.x - new_size.x) / 2, (screen_size.y - new_size.y) / 2)
+		var window_pos: Vector2i = Vector2i(
+			int((screen_size.x - new_size.x) / 2.0),
+			int((screen_size.y - new_size.y) / 2.0)
+		)
 		DisplayServer.window_set_position(window_pos)
 
 	DisplayServer.window_set_vsync_mode(

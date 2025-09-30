@@ -5,9 +5,9 @@ signal game_start_requested()
 signal multiplayer_requested()
 signal quit_requested()
 
-# Input events raised by the input service for interested listeners
-signal input_action_pressed(action: String)
-signal input_action_released(action: String)
+# Input events - can be raised by InputService for listeners (optional feature)
+signal input_action_pressed(action: String) # Reserved for future input system extensions
+signal input_action_released(action: String) # Reserved for future input system extensions
 
 var event_history: Array[Dictionary] = []
 var max_history_size: int = 50
