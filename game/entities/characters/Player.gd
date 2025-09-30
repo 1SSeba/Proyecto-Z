@@ -2,6 +2,15 @@ extends CharacterBody2D
 
 const Log := preload("res://game/core/utils/Logger.gd")
 
+const DEFAULT_DEBUG_ACTIONS := {
+	"debug_damage": KEY_F5,
+	"debug_heal": KEY_F6,
+	"debug_die": KEY_F7,
+	"debug_revive": KEY_F8,
+	"debug_toggle_console": KEY_F9,
+	"debug_print_info": KEY_F10
+}
+
 signal died
 signal damaged(damage_amount: float)
 signal health_changed(current: float, max_health: float)
@@ -20,6 +29,7 @@ var is_initialized: bool = false
 
 # Inicialización
 func _ready() -> void:
+	_ensure_debug_actions()
 	await _ensure_services_ready()
 	_load_resources()
 	_wire_components()
@@ -122,14 +132,20 @@ func _handle_debug_input() -> void:
 	if not game_flow or not game_flow.is_playing():
 		return
 
-	if Input.is_action_just_pressed("ui_accept"):
+	if Input.is_action_just_pressed("debug_damage"):
 		take_damage(10.0)
 
-	if Input.is_key_pressed(KEY_F2):
+	if Input.is_action_just_pressed("debug_heal"):
 		heal(20.0)
 
-	if Input.is_key_pressed(KEY_F3):
+	if Input.is_action_just_pressed("debug_die"):
 		die()
+
+	if Input.is_action_just_pressed("debug_revive"):
+		revive()
+
+	if Input.is_action_just_pressed("debug_print_info"):
+		debug_info()
 
 func debug_info() -> void:
 	Log.log("=== PLAYER DEBUG INFO ===")
@@ -165,3 +181,14 @@ func _log_info(message: String) -> void:
 
 func _log_warn(message: String) -> void:
 	Log.warn("Player: %s" % message)
+
+func _ensure_debug_actions() -> void:
+	for action in DEFAULT_DEBUG_ACTIONS.keys():
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+		var events := InputMap.action_get_events(action)
+		if events.size() == 0:
+			var event := InputEventKey.new()
+			event.physical_keycode = DEFAULT_DEBUG_ACTIONS[action]
+			event.keycode = DEFAULT_DEBUG_ACTIONS[action]
+			InputMap.action_add_event(action, event)
