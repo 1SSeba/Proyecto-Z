@@ -5,9 +5,11 @@ signal game_start_requested()
 signal multiplayer_requested()
 signal quit_requested()
 
-# Input events - can be raised by InputService for listeners (optional feature)
-signal input_action_pressed(action: String) # Reserved for future input system extensions
-signal input_action_released(action: String) # Reserved for future input system extensions
+# Input events - reserved for future InputService integration
+@warning_ignore("unused_signal")
+signal input_action_pressed(action: String)
+@warning_ignore("unused_signal")
+signal input_action_released(action: String)
 
 var event_history: Array[Dictionary] = []
 var max_history_size: int = 50

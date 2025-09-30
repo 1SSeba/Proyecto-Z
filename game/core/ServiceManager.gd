@@ -242,7 +242,8 @@ func print_services_status():
 
 	_log_info("===============================")
 
-#  CONVENIENCE METHODS
+#  CONVENIENCE METHODS (deprecated - use get_service() directly)
+# Estos métodos se mantienen temporalmente por compatibilidad con código existente
 
 func get_config_service():
 	return get_service("ConfigService")

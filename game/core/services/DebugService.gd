@@ -1,4 +1,4 @@
-extends Node
+extends "res://game/core/services/BaseService.gd"
 class_name DebugService
 # DebugService.gd - Servicio de depuración global
 # Proporciona helpers para logging, prints asíncronos y utilidades de timing.
@@ -21,27 +21,25 @@ const _LEVEL_TO_INT: Dictionary = {
 
 const _INT_TO_LEVEL: Array[String] = ["LOG", "INFO", "WARN", "ERROR"]
 
-var service_name: String = "DebugService"
-var is_initialized: bool = false
 var _level_threshold: int = LogLevel.LOG
 
 func _ready():
-    # No hacer prints excesivos en _ready; está bien para debug
-    print("DebugService: ready")
+    super._ready()
+    service_name = "DebugService"
 
 func start_service():
-    is_initialized = true
-    print("DebugService: started")
+    super.start_service()
+    _logger.log_info("Debug service started")
 
 func stop_service():
-    is_initialized = false
-    print("DebugService: stopped")
-
-func is_service_available() -> bool:
-    return is_initialized
+    _logger.log_info("Debug service stopped")
+    super.stop_service()
 
 func get_service_status() -> Dictionary:
-    return {"initialized": is_initialized}
+    var status := super.get_service_status()
+    status["log_level"] = get_level()
+    status["log_threshold"] = _level_threshold
+    return status
 
 # Logging helpers
 func log(message: String) -> void:
@@ -60,9 +58,9 @@ func set_level(level_name: String) -> void:
     var upper := level_name.to_upper()
     if _LEVEL_TO_INT.has(upper):
         _level_threshold = _LEVEL_TO_INT[upper]
-        _emit_and_print("LOG", "DebugService log level set to %s" % upper, true)
+        _emit_and_print("LOG", "Log level set to %s" % upper, true)
     else:
-        _emit_and_print("WARN", "DebugService: Unknown log level '%s'" % level_name, true)
+        _emit_and_print("WARN", "Unknown log level '%s'" % level_name, true)
 
 func get_level() -> String:
     return _INT_TO_LEVEL[_level_threshold]

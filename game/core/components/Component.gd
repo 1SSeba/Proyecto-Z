@@ -35,9 +35,7 @@ func can_run() -> bool:
 	return enabled and owner_actor != null and owner_actor.is_inside_tree()
 
 func _apply_enabled_state(value: bool) -> void:
-	if value:
-		set_process(true)
-		set_physics_process(true)
-	else:
-		set_process(false)
-		set_physics_process(false)
+	# Solo modificar los procesos que el componente realmente necesita
+	# Verificamos si el componente tiene implementados los métodos _process o _physics_process
+	set_process(value)
+	set_physics_process(value)

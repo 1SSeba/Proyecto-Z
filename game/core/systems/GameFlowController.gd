@@ -2,8 +2,7 @@ extends Node
 class_name GameFlowController
 # GameFlowController - Controla el flujo general del juego
 
-const Log := preload("res://game/core/utils/Logger.gd")
-
+const LoggableBehavior := preload("res://game/core/utils/LoggableBehavior.gd")
 const GAME_FLOW_DEFINITION_SCRIPT := preload("res://game/data/levels/GameFlowDefinition.gd")
 
 # Referencias a managers principales
@@ -21,13 +20,15 @@ var data_service: Node = null
 var flow_definition: Resource = null
 
 var is_initialized: bool = false
+var _logger: LoggableBehavior
 
 signal flow_initialized
 signal game_flow_changed(new_flow: String)
 signal scene_change_requested(scene_path: String)
 
 func _ready():
-	_log_info("GameFlowController: Initializing...")
+	_logger = LoggableBehavior.new("GameFlowController")
+	_logger.log_info("Initializing...")
 	_initialize_flow_controller()
 
 func _initialize_flow_controller():
@@ -48,27 +49,27 @@ func _initialize_flow_controller():
 			scene_controller = sm2.get_service("SceneController")
 
 	if not state_machine:
-		_log_warn("GameFlowController: StateMachine not found")
+		_logger.log_warn("StateMachine not found")
 
 	if not scene_controller:
-		_log_warn("GameFlowController: SceneController not found")
+		_logger.log_warn("SceneController not found")
 
 	if not game_state_manager:
-		_log_warn("GameFlowController: GameStateManager not found")
+		_logger.log_warn("GameStateManager not found")
 
 	_load_data_definitions()
 
 	is_initialized = true
 	flow_initialized.emit()
-	_log_info("GameFlowController: Ready")
+	_logger.log_info("Ready")
 
 # Control del flujo del juego
 func start_new_game():
 	if not is_initialized:
-		push_error("GameFlowController: Not initialized yet")
+		_logger.log_error("Not initialized yet")
 		return
 
-	_log_info("GameFlowController: Starting new game")
+	_logger.log_info("Starting new game")
 	game_flow_changed.emit("new_game")
 
 	# Prefer GameStateManager simple path
@@ -88,10 +89,10 @@ func start_new_game():
 
 func continue_game():
 	if not is_initialized:
-		push_error("GameFlowController: Not initialized yet")
+		_logger.log_error("Not initialized yet")
 		return
 
-	_log_info("GameFlowController: Continuing game")
+	_logger.log_info("Continuing game")
 	game_flow_changed.emit("continue_game")
 
 	# Lógica para cargar partida guardada
@@ -99,7 +100,7 @@ func continue_game():
 		state_machine.transition_to(_get_loading_state_name(), {"next_state": _get_playing_state_name(), "load_save": true})
 
 func return_to_main_menu():
-	_log_info("GameFlowController: Returning to main menu")
+	_logger.log_info("Returning to main menu")
 	game_flow_changed.emit("main_menu")
 
 	# Simple: ir directo al MainMenu scene
@@ -111,14 +112,14 @@ func return_to_main_menu():
 
 func go_to_lobby():
 	"""Navigate to the main lobby"""
-	_log_info("GameFlowController: Going to lobby")
+	_logger.log_info("Going to lobby")
 	game_flow_changed.emit("lobby")
 
 	var lobby_path = _get_lobby_scene_path()
 	scene_change_requested.emit(lobby_path)
 
 func quit_game():
-	_log_info("GameFlowController: Quitting game")
+	_logger.log_info("Quitting game")
 	game_flow_changed.emit("quit")
 	get_tree().quit()
 
@@ -156,24 +157,12 @@ func on_player_died():
 
 # Debug
 func debug_info():
-	_log_info("=== GAME FLOW CONTROLLER DEBUG ===")
-	_log_info("Is Initialized: %s" % is_initialized)
-	_log_info("Current Flow State: %s" % get_current_flow_state())
-	_log_info("Is In Game: %s" % is_in_game())
-	_log_info("Is In Menu: %s" % is_in_menu())
-	_log_info("====================================")
-
-#  LOGGING HELPERS
-func _log_info(message: String):
-	Log.info(message)
-
-func _log_warn(message: String):
-	Log.warn(message)
-	push_warning(message)
-
-func _log_error(message: String):
-	Log.error(message)
-	push_error(message)
+	_logger.log_info("=== GAME FLOW CONTROLLER DEBUG ===")
+	_logger.log_info("Is Initialized: %s" % is_initialized)
+	_logger.log_info("Current Flow State: %s" % get_current_flow_state())
+	_logger.log_info("Is In Game: %s" % is_in_game())
+	_logger.log_info("Is In Menu: %s" % is_in_menu())
+	_logger.log_info("====================================")
 
 func _load_data_definitions() -> void:
 	if ServiceManager and ServiceManager.has_service("DataService"):
@@ -182,10 +171,10 @@ func _load_data_definitions() -> void:
 		var definition = data_service.get_game_flow_definition()
 		if definition and definition is GAME_FLOW_DEFINITION_SCRIPT:
 			flow_definition = definition
-			_log_info("GameFlowController: Game flow definition loaded")
+			_logger.log_info("Game flow definition loaded")
 			return
 	flow_definition = GAME_FLOW_DEFINITION_SCRIPT.new()
-	_log_warn("GameFlowController: Using fallback GameFlowDefinition")
+	_logger.log_warn("Using fallback GameFlowDefinition")
 
 func _get_main_menu_scene_path() -> String:
 	if flow_definition:

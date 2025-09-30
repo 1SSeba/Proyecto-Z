@@ -1,4 +1,4 @@
-extends Node
+extends "res://game/core/services/BaseService.gd"
 class_name InputService
 
 @export var enable_keyboard: bool = true
@@ -11,12 +11,8 @@ class_name InputService
 
 @export var gamepad_deadzone: float = 0.2
 @export var gamepad_vibration: bool = true
-const Log := preload("res://game/core/utils/Logger.gd")
 
 # Input state
-var service_name: String = "InputService"
-var is_service_ready: bool = false
-
 var input_actions: Dictionary = {}
 var custom_bindings: Dictionary = {}
 var current_input: Dictionary = {}
@@ -28,16 +24,16 @@ var tracked_actions: Array[String] = [
 	"interact", "cancel", "ui_accept", "ui_cancel"
 ]
 
-# Service lifecycle
-func _start():
+func _ready() -> void:
+	super._ready()
 	service_name = "InputService"
+
+# Service lifecycle
+func start_service() -> void:
+	super.start_service()
 	set_process_unhandled_input(true)
 	_initialize_input_state()
-	is_service_ready = true
-	_log_info("InputService: Input system initialized")
-
-func start_service():
-	_start()
+	_logger.log_info("Input system initialized with %d tracked actions" % tracked_actions.size())
 
 func _initialize_input_state():
 	for action in tracked_actions:
@@ -180,7 +176,3 @@ func get_input_status() -> Dictionary:
 		"gamepad_deadzone": gamepad_deadzone,
 		"gamepad_vibration": gamepad_vibration
 	}
-
-#  LOGGING HELPERS
-func _log_info(message: String):
-	Log.info(message)

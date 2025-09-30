@@ -1,11 +1,7 @@
-extends Node
+extends "res://game/core/services/BaseService.gd"
 class_name ConfigService
 
 const GAME_SETTINGS_DATA_SCRIPT := preload("res://game/data/settings/GameSettingsData.gd")
-const Log := preload("res://game/core/utils/Logger.gd")
-
-var service_name: String = "ConfigService"
-var is_service_ready: bool = false
 
 const CONFIG_PATH: String = "user://settings.cfg"
 const SETTINGS_RESOURCE_PATH: String = "res://game/data/settings/default_game_settings.tres"
@@ -14,18 +10,19 @@ var _config_data: Dictionary = {}
 var _default_config: Dictionary = {}
 var _default_source: String = "hardcoded"
 
+func _ready() -> void:
+	super._ready()
+	service_name = "ConfigService"
+
 func start_service() -> void:
+	super.start_service()
 	_load_default_settings()
 	_load_config()
-	is_service_ready = true
-	_log_info("ConfigService: Service initialized")
+	_logger.log_info("Service initialized with %d sections" % _config_data.size())
 
 func stop_service() -> void:
 	save_config()
-	is_service_ready = false
-
-func is_service_available() -> bool:
-	return is_service_ready
+	super.stop_service()
 
 func _load_config() -> void:
 	_config_data = _default_config.duplicate(true)
@@ -34,7 +31,7 @@ func _load_config() -> void:
 	var result := file.load(CONFIG_PATH)
 
 	if result != OK:
-		_log_info("ConfigService: Using default configuration")
+		_logger.log_info("Using default configuration")
 		save_config()
 		return
 
@@ -45,7 +42,7 @@ func _load_config() -> void:
 		for key in file.get_section_keys(section):
 			_config_data[section][key] = file.get_value(section, key)
 
-	_log_info("ConfigService: Configuration loaded from %s" % CONFIG_PATH)
+	_logger.log_info("Configuration loaded from %s" % CONFIG_PATH)
 
 func save_config() -> void:
 	var file := ConfigFile.new()
@@ -56,9 +53,9 @@ func save_config() -> void:
 
 	var result := file.save(CONFIG_PATH)
 	if result != OK:
-		_log_error("ConfigService: Failed to save settings (%s)" % CONFIG_PATH)
+		_logger.log_error("Failed to save settings to %s" % CONFIG_PATH)
 	else:
-		_log_info("ConfigService: Configuration saved")
+		_logger.log_info("Configuration saved")
 
 func reset_to_defaults() -> void:
 	_load_default_settings()
@@ -103,12 +100,11 @@ func set_controls_setting(key: String, value) -> void:
 	set_setting("controls", key, value)
 
 func get_service_status() -> Dictionary:
-	return {
-		"config_path": CONFIG_PATH,
-		"sections": _config_data.keys(),
-		"ready": is_service_ready,
-		"default_source": _default_source
-	}
+	var status := super.get_service_status()
+	status["config_path"] = CONFIG_PATH
+	status["sections"] = _config_data.keys()
+	status["default_source"] = _default_source
+	return status
 
 func _load_default_settings() -> void:
 	var source := "hardcoded"
@@ -164,10 +160,3 @@ func _get_hardcoded_defaults() -> Dictionary:
 			"mouse_invert_y": false
 		}
 	}
-
-func _log_info(message: String) -> void:
-	Log.info(message)
-
-func _log_error(message: String) -> void:
-	Log.error(message)
-	push_error(message)
